@@ -1,0 +1,47 @@
+<%@page import="org.gs1us.sgl.webapp.HomeController"%>
+<%@page import="org.gs1us.sgl.webapp.TestController"%>
+<%@page import="java.util.Collection"%>
+<%@page import="org.gs1us.sgl.webapp.ProductController"%>
+<%@page import="org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder"%>
+<%@page import="org.gs1us.sgl.webapp.SignupController"%>
+<%@page import="org.gs1us.sgg.gbservice.api.Product"%>
+<%@page import="java.util.List"%>
+<%@page import="org.gs1us.sgg.gbservice.api.GBAccount"%>
+<%@page import="java.security.Principal"%>
+<%@page import="org.springframework.web.util.UriComponentsBuilder"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+    
+
+<%
+	String actionUrl = MvcUriComponentsBuilder.fromMethodName(TestController.class, "setTimePost", null, null, null).toUriString();
+	String cancelUrl = MvcUriComponentsBuilder.fromMethodName(HomeController.class, "home", null, null).toUriString();
+%>
+    
+<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+  <jsp:param name="pageTitle" value="Set date/time" />
+  <jsp:param name="selectedItem" value="test" />
+</jsp:include>
+
+<h3>Set the date and time for testing purposes</h3>
+
+<p>
+Set a fixed date and time for testing purposes, or leave blank to revert to normal time-keeping.
+</p>
+<div>
+	<form:form commandName="setTimeCommand" role="form" action="<%= actionUrl %>">
+		<form:errors path="*" cssClass="alert alert-danger" element="div" />
+		<div class="form-group">
+			<label>Date/time (YYYY-MM-DD HH:MM:SS TZ)</label>
+			<form:input type="text" class="form-control" errorClass="form-control alert-danger" path="nowString" />
+		</div>
+		<button type="submit" class="btn-primary btn-margin ">Set</button>
+		<button type="button" class="btn-secondary btn-margin " onclick='window.location.href="<%=cancelUrl%>"'>Cancel</button>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	</form:form>
+</div>
+
+<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />

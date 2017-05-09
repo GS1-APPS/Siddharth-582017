@@ -1,0 +1,337 @@
+.pagination {
+	margin-top: 0px ;
+	margin-bottom: 0px !important;
+}
+
+.toolkit textarea.form-control {
+	height: auto;
+}
+
+/** New as of 5 May 2015 */
+
+.toolkit .logo img
+{
+	margin-right: 0px;
+}
+
+.ae-banner-text {
+	font-size: 24px;
+	font-weight: bold;
+}
+.ae-banner-company {
+	color: #002c6c; /* GS1 Blue */
+}
+.ae-banner-product {
+	color: #f26334; /* GS1 Orange */
+}
+#ae-banner-image {
+	width: 484px;
+	height: 41px;
+
+}
+
+
+.ae-entity-list {
+	border-top: solid 1px #b1b3b3;
+}
+
+.ae-entity {
+	color: #454545; /* GS1 Dark Grey */
+	font-size: 16px;
+}
+
+a > .ae-entity {
+	font-weight: normal; /* Overrides toolkit setting for links */
+}
+
+a > .ae-entity:hover {
+  background-color: #ddd; /*rgb(255,255,234);*/
+}
+
+.ae-entity-title {
+	font-size: 18px;
+	margin-top: 10px; /* entity-gap */
+	margin-bottom: 10px; /* entity-gap */
+}
+
+.ae-attribute-name {
+	color: #f26334; /* GS1 Orange */
+}
+
+.ae-codevalue-name {
+	color: #22bcb9; /* GS1 Teal */
+}
+
+.ae-entity-datatype {
+	margin-left: 10px; /* entity-gap */
+	color: #888b8d; /* GS1 Dark Medium Grey */
+}
+
+.ae-entity-properties {
+		margin-bottom: 10px; /* entity-gap */
+		color: #454545;
+}
+
+.ae-entity .ae-entity-properties {
+		color: #b1b3b3;	
+	
+}
+
+.ae-entity-properties  .head {
+	font-weight: 500;
+
+}
+
+.ae-entity-definition {
+	margin-bottom: 10px; /* entity-gap */
+}
+
+.ae-catmemb
+{
+	width: 100%;
+}
+.ae-catmemb tr
+{
+	border-top: 1px solid #b1b3b3;
+}
+
+.ae-catmemb tr  td
+{
+	padding: 5px 0px;
+}
+
+.ae-catmemb tr:nth-child(odd)
+{
+
+}
+.ae-catmemb tr:first-child
+{
+	border-top: none;
+}
+
+.ae-catmemb-value 
+{
+	padding-left: 6px;
+	color: #7ac143; /* GS1 Grass */
+	text-align: right;
+
+}
+
+
+
+
+.ae-version-bar {
+	background-color: #f26334;
+	color: white;
+	margin-top: 20px;
+	margin-bottom: -20px;
+	text-align: center;
+	padding: 6px;
+}
+
+.attribute-edit-links {
+	float: right;
+}
+
+.facet-values {
+	margin-left: 12px;
+}
+.facet-value {
+	padding: 2px 3px;
+	border-bottom: solid 1px #b1b3b3;
+}
+.facet-value-link-constraint .facet-value {
+	background-color: #f4f4f4; /* GS1 Light Gray */
+	/*margin: 2px 0px;*/
+}
+.facet-value-c {
+	color: #88888d;
+	font-size: smaller;
+	margin-left: 6px;
+	margin-top: 4px;
+}
+.facet-value-link-constraint .facet-value-v {
+	color: #002c6c;  /* GS1 Blue */ /* #f26334; */
+}
+
+.facet-value-link-constraint .facet-value-c {
+	display: none;
+}
+
+.facet-value-x {
+	padding-right: 3px;
+	color: #888b8d;
+}
+
+a:hover .facet-value-x {
+	color: #008dbd; /* GS1 Link */
+}
+
+.search-results-heading
+{
+	margin-top: 10px !important;
+}
+
+.search-results-heading .paren
+{
+	color: #999;
+}
+
+.search-results-filter-trail
+{
+	font-size: 12px;
+	margin-top: -6px;
+	margin-bottom: 12px;
+}
+.search-results-filter-trail > div
+{
+	margin: 3px 0px;
+}
+.search-results-filter-trail-facet-value
+{
+	background-color: #f4f4f4;
+	margin-left: 3px;
+	margin-right: 3px;
+	padding: 1px;
+
+}
+.ae-filter-trail-value
+{
+	color: #002c6c; /* GS1 Blue */
+}
+.search-results-filter-trail-facet-value:hover > .facet-value-x
+{
+	color: #008dbd; /* GS1 Link */
+}
+.ae-matrix
+{
+	width: auto;
+}
+
+.ae-matrix td, .ae-matrix th
+{
+	padding-left: 12px !important;
+	padding-right: 12px !important;
+}
+
+.ae-matrix-value 
+{
+	color: #7ac143; /* GS1 Grass */
+}
+
+.ae-matrix .ae-entity-datatype
+{
+	font-size: smaller;
+	margin-left: 0px;
+}
+
+
+
+
+.ae-auto-width
+{
+	margin-right: auto !important;
+	width: auto !important;
+}
+
+.ae-no-margin-top
+{
+	margin-top: 0px !important;
+}
+
+.ae-cursor-pointer
+{
+	cursor: pointer;
+}
+
+.ae-class-name
+{
+	border-bottom: 1px solid #b1b3b3;
+	text-align: center;
+	padding: 3px;
+}
+
+.ae-class-body
+{
+	border: 2px solid #b1b3b3;
+	border-top: 4px solid #f26334;
+	/*width: 100%;*/
+
+}
+
+.ae-class-body tr
+{
+	vertical-align: top;
+}
+
+.ae-class-card,
+.ae-class-attr
+{
+	padding: 1px 3px;
+}
+
+.ae-class-card
+{
+	text-align: right;
+	font-size: smaller;
+	color: #454545;
+	padding-top: 4px;
+	padding-right: 6px;
+}
+
+.ae-attribute-accent
+{
+	font-style: italic;
+	color: #b78b20;
+}
+
+.ae-add-template
+{
+	display: none;
+}
+
+.ae-property-table-editor .form-control
+{
+	display: inline;
+	width: auto;
+}
+
+.sgl-product-attribute-instr
+{
+	font-size: 12px;
+	color: #888B8D;
+	font-style: italic;
+}
+
+
+.sgl-app-table > tbody > tr > td 
+{
+	text-align: center;
+	padding-right: 12px;
+	padding-bottom: 12px;
+}
+.sgl-app-table-title
+{
+	font-size: 14px;
+}
+
+.sg-measurement-value
+{
+	display: inline-block;
+	width: 33%;
+}
+
+.sg-measurement-unit
+{
+	display: inline-block;
+	width: auto;
+}
+
+.toolkit [class^="icon-"],.toolkit [class*=" icon-"] {
+	/* font-size: 22px; */
+}
+
+/* Fix layering bug in theme.css */
+.toolkit .modal-dialog {
+  z-index: 10012;
+}
