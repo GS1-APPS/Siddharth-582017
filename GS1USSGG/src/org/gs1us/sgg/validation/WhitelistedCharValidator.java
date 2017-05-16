@@ -39,6 +39,7 @@ public class WhitelistedCharValidator extends SimpleAttributeValidator
         for (int i = 0; i < value.length(); i++)
         {
             char c = value.charAt(i);
+                        
             if (!isValid(c))
             {
                 validationErrors.add(new ProductValidationErrorImpl(attrDesc.getName(), attrDesc.getTitle() + " contains a character (" + c + ") that is not allowed"));
@@ -62,6 +63,14 @@ public class WhitelistedCharValidator extends SimpleAttributeValidator
         
         if (c == '+' || c == '=' || c == '~' || c == '|')
             return true;
+        
+        
+        int specialSymbolAsInt = (int) c;
+
+        if (specialSymbolAsInt == 174 || specialSymbolAsInt == 8482 || specialSymbolAsInt == 169 )
+        {
+        	return true;
+        }
         
         return false;
     }

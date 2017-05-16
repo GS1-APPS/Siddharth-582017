@@ -19,4 +19,6 @@ public interface Product extends HasAttributes
     public Date getNextActionDate();
     public Date getPendingNextActionDate();
     public String[] getPendingOrderIds();
+    public Integer getTargetCountryCode();
+    public String getGpcCategoryCode();
 }

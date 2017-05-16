@@ -22,6 +22,7 @@
 	String errorMessage = (String)request.getAttribute("errorMessage");
 	String displayMessage = (String) request.getAttribute("ProductName");
 	String productSearchUri = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "search", (Object)null).toUriString();
+	String productItemNumber = (String) request.getAttribute("itemNumber");
 %>
     
     
@@ -30,7 +31,7 @@
   <jsp:param name="selectedItem" value="productSearch" />
 </jsp:include>
 
-<h1><a href="<%= productSearchUri %>">Search for Products:</a> Key Authentication</h1>
+<h1><a href="<%= productSearchUri %>">Search:</a> Key Authentication</h1>
 
 <c:if test="<%= errorMessage != null %>">
   <h1></h1>
@@ -49,7 +50,7 @@
 <form method="post">
   <div class="form-group">
     <label>Global Trade Item Number</label>
-    <input name="itemNumber" type="text" class="form-control" />
+    <input name="itemNumber" type="text" class="form-control" value="<%=productItemNumber%>" />
   </div>
 	<button type="submit" class="btn-primary btn-margin ">Search</button>
     <input type="hidden"

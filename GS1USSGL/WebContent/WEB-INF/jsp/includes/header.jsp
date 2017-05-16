@@ -25,13 +25,10 @@
 <% String contextPath = request.getContextPath(); %>
 <%
  	ClockService clockService = (ClockService)request.getAttribute("clockService");
-   String searchUri;
-	String homeUri = MvcUriComponentsBuilder.fromMethodName(HomeController.class, "home", (Object)null, (Object)null).toUriString();	
-	
-	String productSearchUri = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "search", (Object)null).toUriString();
-	
-	String reportsUri = MvcUriComponentsBuilder.fromMethodName(ReportController.class, "report", (Object)null).toUriString();
-	
+    String searchUri;
+	String homeUri = MvcUriComponentsBuilder.fromMethodName(HomeController.class, "home", (Object)null, (Object)null).toUriString();		
+	String productSearchUri = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "search", (Object)null).toUriString();	
+	String reportsUri = MvcUriComponentsBuilder.fromMethodName(ReportController.class, "report", (Object)null).toUriString();	
 	String loginUri = MvcUriComponentsBuilder.fromMethodName(LoginController.class, "login", (Object)null).toUriString();
 	String logoutUri = MvcUriComponentsBuilder.fromMethodName(LogoutController.class, "logout", (Object)null).toUriString();
 	String productsUri = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "showProducts", (Object)null, (Object)null).toUriString();
@@ -161,8 +158,8 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.cr
 							<% if (request.getUserPrincipal() != null) { 
 							    StandaloneUser user = (StandaloneUser)((Authentication)request.getUserPrincipal()).getPrincipal();
 							    String greeting = user.getSalutation();
-
 							%>
+														
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                         Hello, <%= greeting %>
@@ -213,27 +210,25 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.cr
 							<ul class="nav navbar-nav">
 								<li class='<%= selectedItem.equals("home") ? "active" : "" %>'><a href="<%= homeUri %>">Home</a></li>
 								
-								<li class='<%= selectedItem.equals("productSearch") ? "active" : "" %>'><a href="<%= productSearchUri %>">Product Search</a></li>
+								<li class='<%= selectedItem.equals("productSearch") ? "active" : "" %>'><a href="<%= productSearchUri %>">Search</a></li>
 								
 								<c:if test='<%= request.isUserInRole("ROLE_USER") %>'>
 									<li class='<%= selectedItem.equals("products") ? "active" : "" %>'><a href="<%= productsUri %>">Products</a></li>
 								</c:if>
+								
 								<!-- 
 								<c:if test='<%= request.isUserInRole("ROLE_USER") %>'>
 									<li class='<%= selectedItem.equals("apps") ? "active" : "" %>'><a href="<%= appsUri %>">Apps</a></li>
 								</c:if>
-								-->
+								
 								<c:if test='<%= request.isUserInRole("ROLE_USER") %>'>
 									<li class='<%= selectedItem.equals("account") ? "active" : "" %>'><a href="<%= accountUri %>">Purchases</a></li>
 								</c:if>
 								<c:if test='<%= request.isUserInRole("ROLE_USER") %>'>
 									<li class='<%= selectedItem.equals("agreements") ? "active" : "" %>'><a href="<%= agreementsUri %>">Agreements</a></li>
 								</c:if>
-								
-								<c:if test='<%= request.isUserInRole("ROLE_USER") %>'>
-									<li class='<%= selectedItem.equals("reports") ? "active" : "" %>'><a href="<%= reportsUri %>">Reports</a></li>
-								</c:if>
-								
+								-->
+																
 								<!-- 
 								<c:if test='<%= request.isUserInRole("ROLE_USER") %>'>
 									<li class='<%= (selectedItem.equals("account") ? "active" : "") + " dropdown " %>'><a data-toggle="dropdown" class="dropdown-toggle" href="#">Account</a>
@@ -246,17 +241,23 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.cr
 									</li>
 								</c:if>
 								 -->
+								
 								<c:if test='<%= request.isUserInRole("ROLE_ADMIN") %>'>
 									<li class='<%= selectedItem.equals("members") ? "active" : "" %>'><a href="<%= membersUri %>">Members</a></li>
 								</c:if>
 								<c:if test='<%= request.isUserInRole("ROLE_ADMIN") %>'>
 									<li class='<%= selectedItem.equals("users") ? "active" : "" %>'><a href="<%= usersUri %>">Users</a></li>
 								</c:if>
+								<c:if test='<%= request.isUserInRole("ROLE_ADMIN") %>'>
+									<li class='<%= selectedItem.equals("reports") ? "active" : "" %>'><a href="<%= reportsUri %>">Admin Reports</a></li>
+								</c:if>
+																
 								<!-- 
 								<c:if test='<%= request.isUserInRole("ROLE_ADMIN") %>'>
 									<li class='<%= selectedItem.equals("billing") ? "active" : "" %>'><a href="#">Billing</a></li>
 								</c:if>
 								 -->
+								<!--  
 								<c:if test='<%= request.isUserInRole("ROLE_ADMIN") %>'>
 									<li class='<%= (selectedItem.equals("billing") ? "active" : "") + " dropdown " %>'><a data-toggle="dropdown" class="dropdown-toggle" href="#">Billing</a>
 										<ul class="dropdown-menu"><li>
@@ -271,6 +272,8 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.cr
 										</li></ul>
 									</li>
 								</c:if>
+								 -->
+								 
 								<c:if test='<%= request.isUserInRole("ROLE_TESTER") %>'>
 									<li class='<%= (selectedItem.equals("test") ? "active" : "") + " dropdown " %>'><a data-toggle="dropdown" class="dropdown-toggle" href="#">Test</a>
 										<ul class="dropdown-menu"><li>

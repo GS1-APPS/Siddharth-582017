@@ -22,16 +22,14 @@
 	String keyAuthenticationUrl = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "searchByAuthentication", (Object)null).toUriString();
 	String productValidationUrl = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "searchByValidation", (Object)null).toUriString();
 	String searchFunctionUrl = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "searchByProduct", (Object)null).toUriString();
-	String productSearchUri = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "search", (Object)null).toUriString();
 %>
-    
-    
+        
 <jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Product Search" />
   <jsp:param name="selectedItem" value="productSearch" />
 </jsp:include>
 
-<h1>Search for Products</h1>
+<h1>Search</h1>
 
 
 <section>
@@ -45,7 +43,7 @@
                     <a href="<%= productValidationUrl %>">Product Validation:</a>
                     <i>selecting this will return all available attributes for a given Global Trade Number (GTIN)</i>
                     <br/><br/>
-                    <a href="<%= productSearchUri %>">Search Function:</a> 
+                    <a href="<%= searchFunctionUrl %>">Search Function:</a> 
                     <i>selecting this will allow you to search products by the Global Product Classification (GPC) and Target Market</i>                    
                 </div>
             </div>

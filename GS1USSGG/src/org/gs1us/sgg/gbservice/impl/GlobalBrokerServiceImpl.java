@@ -32,6 +32,7 @@ import org.gs1us.sgg.gbservice.api.Import;
 import org.gs1us.sgg.gbservice.api.ImportPrevalidationSegmentSettings;
 import org.gs1us.sgg.gbservice.api.Invoice;
 import org.gs1us.sgg.gbservice.api.InvoiceExtra;
+import org.gs1us.sgg.gbservice.api.IsoCountryRef;
 import org.gs1us.sgg.gbservice.api.ModuleDesc;
 import org.gs1us.sgg.gbservice.api.NoSuchAccountException;
 import org.gs1us.sgg.gbservice.api.OrderLineItem;
@@ -607,19 +608,40 @@ public class GlobalBrokerServiceImpl
     {
         return m_testManager.test(testName, testParam);
     }
-    
-    
+        
     public Product getProductByGtinOnly(String gtin)
             throws GlobalBrokerException
     {
     	return m_productManager.getProductByGtin(null, gtin);
     }
-    
-
+/*    
     public Collection<? extends Product> getProductsForReport()
             throws GlobalBrokerException
     {
         return m_productManager.getProductsForReport();
+    }
+*/
+    
+    public Long getProductsForReport()
+            throws GlobalBrokerException
+    {
+        return m_productManager.getProductsForReport();
+    }
+    
+    public Long getProductsForReportByDate()
+            throws GlobalBrokerException
+    {
+        return m_productManager.getProductsForReportByDate();
+    }
+    
+    public Collection<? extends IsoCountryRef> getAllIsoCountryRef() throws GlobalBrokerException
+    {
+        return m_productManager.getAllIsoCountryRef();
+    }
+    
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
+    {
+        return m_productManager.getProductsBasedOnGpcAndTargetMarket(gpc, marketCode);
     }
     
 }

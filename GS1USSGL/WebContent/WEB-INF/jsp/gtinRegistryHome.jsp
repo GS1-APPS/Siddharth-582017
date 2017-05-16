@@ -110,6 +110,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- 
                                 <div class="col-sm-4">
                                     <div class="content-module-wrapper top-border-blue">
                                         <div class="content-module content-module-padding">
@@ -119,6 +120,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                 -->
                             </div>
                         </section>
                     </div>

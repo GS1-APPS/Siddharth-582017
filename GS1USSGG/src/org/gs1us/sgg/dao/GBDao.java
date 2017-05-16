@@ -1,6 +1,12 @@
 package org.gs1us.sgg.dao;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+
+import javax.persistence.Query;
 
 import org.gs1us.sgg.gbservice.api.Amount;
 import org.gs1us.sgg.gbservice.api.GBAccount;
@@ -85,7 +91,15 @@ public interface GBDao
     AuditEventRecord newAuditEvent();
     void updateAuditEvent(AuditEventRecord event);
     
-    Collection<? extends ProductRecord> getProductsForReport();
-    //Collection<? extends ProductRecord> getProductsForReportByLastModifiedDate(String modifiedDate);
+    //Collection<? extends ProductRecord> getProductsForReport();
     
+    Long getProductsForReport();
+    
+    Long getProductsForReportByDate();
+    
+    Collection<? extends IsoCountryRefRecord> getAllIsoCountryRef();
+
+    Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode);   
+    
+    Integer getTargetMarketNotBasedOnId(String value);       
 }

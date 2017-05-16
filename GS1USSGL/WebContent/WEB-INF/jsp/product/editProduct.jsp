@@ -98,7 +98,7 @@
   <h3 class="color-orange">Data accuracy (required)</h3>
     <div class='<%= (hasError ? "form-group has-error" : "form-group") %>'>
       <div>
-        <input type="checkbox" name="dataAccuracyAck" /> I certify that I am duly authorized on behalf of the brand owner to provide the data above and represent that all data provided is accurate.
+        <input type="checkbox" name="dataAccuracyAck" /> I certify that I am duly authorized on behalf of the brand owner to provide the data above.
       </div>
       <c:if test='<%= hasError  %>'>
       	 <div class="form-control-feedback alert-danger"><span class="icon-warning_sign"></span>&nbsp;<c:out value='<%= errors.get(0) %>'/></div>

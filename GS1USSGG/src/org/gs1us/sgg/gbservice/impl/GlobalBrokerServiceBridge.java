@@ -20,6 +20,7 @@ import org.gs1us.sgg.gbservice.api.Import;
 import org.gs1us.sgg.gbservice.api.ImportPrevalidationSegmentSettings;
 import org.gs1us.sgg.gbservice.api.Invoice;
 import org.gs1us.sgg.gbservice.api.InvoiceExtra;
+import org.gs1us.sgg.gbservice.api.IsoCountryRef;
 import org.gs1us.sgg.gbservice.api.OrderLineItem;
 import org.gs1us.sgg.gbservice.api.OrderStatus;
 import org.gs1us.sgg.gbservice.api.Payment;
@@ -311,11 +312,30 @@ public class GlobalBrokerServiceBridge implements GlobalBrokerService
     {
     	return null;
     }
-    
+/*    
     public Collection<? extends Product> getProductsForReport() throws GlobalBrokerException
     {
         return m_globalBrokerServiceImpl.getProductsForReport();
     }
+*/
+    public Long getProductsForReport() throws GlobalBrokerException
+    {
+        return m_globalBrokerServiceImpl.getProductsForReport();
+    }
     
+    public Long getProductsForReportByDate() throws GlobalBrokerException
+    {
+        return m_globalBrokerServiceImpl.getProductsForReportByDate();
+    }
+    
+    public Collection<? extends IsoCountryRef> getAllIsoCountryRef() throws GlobalBrokerException
+    {
+        return m_globalBrokerServiceImpl.getAllIsoCountryRef();
+    }
 
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
+    {
+        return m_globalBrokerServiceImpl.getProductsBasedOnGpcAndTargetMarket(gpc, marketCode);
+    }
+    
 }

@@ -44,6 +44,14 @@ public abstract class ProductRecord implements Product
     public abstract Date getPendingNextActionDate();
     public abstract void setPendingNextActionDate(Date nextActionDate);
 
+    @Override
+    public abstract Integer getTargetCountryCode();
+    public abstract void setTargetCountryCode(Integer targetCountryCode);
+
+    @Override
+    public abstract String getGpcCategoryCode();
+    public abstract void setGpcCategoryCode(String gpcCategoryCode);
+        
     public abstract String[] getPendingOrderIds();
     public abstract void addPendingOrderId(String invoiceId);
     public abstract void removePendingOrderId(String invoiceId);

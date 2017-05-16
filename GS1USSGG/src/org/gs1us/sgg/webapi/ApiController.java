@@ -28,6 +28,7 @@ import org.gs1us.sgg.gbservice.api.GlobalBrokerServiceException;
 import org.gs1us.sgg.gbservice.api.Import;
 import org.gs1us.sgg.gbservice.api.Invoice;
 import org.gs1us.sgg.gbservice.api.InvoiceException;
+import org.gs1us.sgg.gbservice.api.IsoCountryRef;
 import org.gs1us.sgg.gbservice.api.NoSuchAccountException;
 import org.gs1us.sgg.gbservice.api.NoSuchAppException;
 import org.gs1us.sgg.gbservice.api.NoSuchInvoiceException;
@@ -203,8 +204,7 @@ public class ApiController
         return products;
     }
     
-    //return m_jsonHttpClient.doRequest(Collection.class, InboundProduct.class, HttpMethod.GET, null, "/api/productList");
-
+/*    
     @RequestMapping(value = "/productList", method = RequestMethod.GET)
     @ResponseBody
     public Collection<? extends Product> productListGet(Model model) throws JsonProcessingException, GlobalBrokerException 
@@ -212,7 +212,31 @@ public class ApiController
         Collection<? extends Product> products = m_gbServiceImpl.getProductsForReport();
         return products;
     }
+  */
     
+    @RequestMapping(value = "/productList", method = RequestMethod.GET)
+    @ResponseBody
+    public Long productListGet(Model model) throws JsonProcessingException, GlobalBrokerException 
+    {        
+        Long products = m_gbServiceImpl.getProductsForReport();
+        return products;
+    }
+    
+    @RequestMapping(value = "/productListByDate", method = RequestMethod.GET)
+    @ResponseBody
+    public Long productListByDateGet(Model model) throws JsonProcessingException, GlobalBrokerException 
+    {        
+        Long products = m_gbServiceImpl.getProductsForReportByDate();
+        return products;
+    }
+        
+    @RequestMapping(value = "/isoCountryList", method = RequestMethod.GET)
+    @ResponseBody
+    public Collection<? extends IsoCountryRef> isoCountryListGet(Model model) throws JsonProcessingException, GlobalBrokerException 
+    {        
+        Collection<? extends IsoCountryRef> countryList = m_gbServiceImpl.getAllIsoCountryRef();
+        return countryList;
+    }
     
     @RequestMapping(value = "/product/{gtin}", method = RequestMethod.GET)
     @ResponseBody
@@ -226,7 +250,17 @@ public class ApiController
 
         return product;
     }
-
+    
+    @RequestMapping(value = "/productBasedOnGpcAndTargetMarket/{gpc}", method = RequestMethod.GET)
+    @ResponseBody
+    public Collection<? extends Product> productBasedOnGpcAndTargetMarketGet(Model model,
+                                         @PathVariable String gpc,
+                                         @RequestParam(value="param", required=true) String param) throws JsonProcessingException, GlobalBrokerException 
+    {
+    	Collection<? extends Product> products = m_gbServiceImpl.getProductsBasedOnGpcAndTargetMarket(gpc, param);
+        return products;
+    }    
+    
     @RequestMapping(value = "/productById/{gtin}", method = RequestMethod.GET)
     @ResponseBody
     public Product accountProductGtinOnlyGet(Model model, @PathVariable String gtin) throws JsonProcessingException, GlobalBrokerException 

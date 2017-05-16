@@ -15,6 +15,28 @@ public class InboundProduct implements Product
     private Date m_nextActionDate;
     private Date m_pendingNextActionDate;
     private String[] m_pendingOrderIds;
+    public Integer m_TargetCountryCode;
+    public String m_GpcCategoryCode;        
+
+    
+    public Integer getTargetCountryCode()
+    {
+        return m_TargetCountryCode;
+    }
+    public void setTargetCountryCode(Integer countryCode)
+    {
+    	m_TargetCountryCode = countryCode;
+    }
+
+    public String getGpcCategoryCode()
+    {
+        return m_GpcCategoryCode;
+    }
+    public void setGpcCategoryCode(String gpcCategoryCode)
+    {
+    	m_GpcCategoryCode = gpcCategoryCode;
+    }
+    
     public String getGtin()
     {
         return m_gtin;

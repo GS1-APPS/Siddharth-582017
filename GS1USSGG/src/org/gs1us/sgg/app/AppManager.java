@@ -55,6 +55,7 @@ import org.gs1us.sgg.validation.LengthAttributeValidator;
 import org.gs1us.sgg.validation.MeasurementAttributeValidator;
 import org.gs1us.sgg.validation.OtherAttributeRequiredValidator;
 import org.gs1us.sgg.validation.RequiredAttributeValidator;
+import org.gs1us.sgg.validation.TargetMarketAttributeValidator;
 import org.gs1us.sgg.validation.UPCEValidator;
 import org.gs1us.sgg.validation.UrlValidator;
 import org.gs1us.sgg.validation.WhitelistedCharValidator;
@@ -85,6 +86,7 @@ public class AppManager
     private List<AttributeEnumValue> m_stateTaxJurisdictions;
     private List<AttributeEnumValue> m_localTaxJurisdictions;
     private List<AttributeEnumValue> m_dmLicenseTypes;
+    private List<AttributeEnumValue> m_countryCodes;
 
     private AppDescImpl m_basicAppDesc;
     private List<AppDesc> m_appDescs;
@@ -109,7 +111,9 @@ public class AppManager
         initUoms();
         initStateTaxJurisdictions();
         initLocalTaxJurisdictions();
+        initCountryCodes();
         initDmLicenseTypes();
+        
         m_quoter = new Quoter();
         
         m_basicAppDesc = initBasicApp();
@@ -362,35 +366,71 @@ public class AppManager
         cpPkAttributes.add(m_productManager.newProductAttributeDesc("gtin", "GTIN", new String[]{"gtin"}, null, AttributeType.STRING, true, 
                                                                        "The GTIN of the product, as printed on the package.",
                                                                        new AttributeValidator[]{new RequiredAttributeValidator()}));
-
-        List<AttributeDesc> cpAttributes = new ArrayList<>();
-        cpAttributes.add(m_productManager.newProductAttributeDesc("brandOwnerName", "Brand Owner Name", new String[]{"brand owner name", "brandownername", "brandowner", "brand owner"}, "Basic product info", AttributeType.STRING, true, 
-                                                                  "The name of the brand owner of the product, as printed on the package.",
-                                                                  new AttributeValidator[]{new RequiredAttributeValidator(), new WhitelistedCharValidator()}));
-        cpAttributes.add(m_productManager.newProductAttributeDesc("brandName", "Brand Name", new String[]{"brand name", "brandname", "brand"}, "Basic product info", AttributeType.STRING, true, 
-                                                         "The brand of the product, as printed on the package.",
-                                                         new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(70), new WhitelistedCharValidator()}));
         
-        cpAttributes.add(m_productManager.newProductAttributeDesc("subBrand", "Sub-brand Name", new String[]{"subbrand", "sub-brand", "subbrand name", "sub-brand name"}, "Basic product info", AttributeType.STRING, false, 
-                "The sub-brand of the product, as printed on the package. Required when the product package includes both a brand name and a"
-                + " sub brand within the main brand. Leave blank if not applicable.",
-                new AttributeValidator[]{new LengthAttributeValidator(70), new WhitelistedCharValidator()}));
+        
+      
+        List<AttributeDesc> cpAttributes = new ArrayList<>();
+        
+        cpAttributes.add(m_productManager.newProductAttributeDesc("targetMarket", 
+                "Target Market", 
+                new String[]{"targetmarket", "Target Market", "Target Market", "targetMarket"},
+                null,
+                AttributeType.ENUM,
+                m_countryCodes,
+                true, 
+                Action.ALL_ACTIONS_MASK,
+                "The Target Market where the product is sold.",
+                new AttributeValidator[]{new RequiredAttributeValidator(), new TargetMarketAttributeValidator()}));
                 
-        cpAttributes.add(m_productManager.newProductAttributeDesc("functionalName", "Functional Product Name", new String[]{"functionalproductname", "functional product name"}, "Basic product info", AttributeType.STRING, false, 
+        /*cpAttributes.add(m_productManager.newProductAttributeDesc("brandOwnerName", "Brand", new String[]{"brand owner name", "brandownername", "brandowner", "brand owner"}, "Basic product info", AttributeType.STRING, true, 
+                                                                  "The name of the brand owner of the product, as printed on the package.",
+                                                                  new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(70), new WhitelistedCharValidator()}));*/
+      cpAttributes.add(m_productManager.newProductAttributeDesc("brandName", "Brand", new String[]{
+    		  "brand name", "brandname", "brand"}, "Basic product info", AttributeType.STRING, true, 
+                                                         "The brand of the product, as printed on the package.",
+                                                         new AttributeValidator[]{new RequiredAttributeValidator(), 
+                                                        		 new LengthAttributeValidator(70), new WhitelistedCharValidator()}));
+        
+       /* cpAttributes.add(m_productManager.newProductAttributeDesc("subBrand", "Sub-brand Name", new String[]{"subbrand", "sub-brand", "subbrand name", "sub-brand name"}, "Basic product info", AttributeType.STRING, false, 
+                "The sub-brand of the product, as printed on the package. Required when the product package includes both a brand name and a"
+						+ " sub brand within the main brand. Leave blank if not applicable.",
+                new AttributeValidator[]{new LengthAttributeValidator(70), new WhitelistedCharValidator()}));*/
+                
+      /*  cpAttributes.add(m_productManager.newProductAttributeDesc("functionalName", "Product Name", new String[]{"functionalproductname", "functional product name"}, "Basic product info", AttributeType.STRING, false, 
                 "Describes use of the product or service by the consumer. Should help clarify the product classification associated with the GTIN.",
                 new AttributeValidator[]{new LengthAttributeValidator(35), new WhitelistedCharValidator()}));
+        
+   
         cpAttributes.add(m_productManager.newProductAttributeDesc("tradeItemDescription", "Product Name", new String[]{"tradeitemdescription", "trade item description", "productname", "product name", "name"}, "Basic product info", AttributeType.STRING, true, 
-                                                                  "An understandable and useable description of a trade item using brand and other descriptors.",
-                                                                  new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(200), new WhitelistedCharValidator()}));
-        cpAttributes.add(m_productManager.newProductAttributeDesc("additionalTradeItemDescription", "Description", new String[]{"additionaltradeitemdescription", "description"}, "Basic product info", AttributeType.STRING, false, 
-                "Additional variants necessary to communicate to the industry to help define the product. Multiple variants can be established for each GTIN.",
-                new AttributeValidator[]{new LengthAttributeValidator(500), new WhitelistedCharValidator()}));
+                "An understandable and useable description of a trade item using brand and other descriptors.",
+                new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(200), new WhitelistedCharValidator()}));*/
+        
+		cpAttributes.add(m_productManager.newProductAttributeDesc("additionalTradeItemDescription", "Label Description",
+				new String[]{"additionaltradeitemdescription","description"}, "Basic product info", 
+				AttributeType.STRING, true, "Description of the product as printed on the product label.",
+				new AttributeValidator[]{new RequiredAttributeValidator(),new LengthAttributeValidator(500),
+				new WhitelistedCharValidator()}));
+        
+        cpAttributes.add(m_productManager.newProductAttributeDesc("companyName", "Company Name", new String[]{"companyName", "company name"}, "Basic product info", AttributeType.STRING, true, 
+                "Additional description about the company name to communicate to industry will help define the product.",
+                new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(200), new WhitelistedCharValidator()}));
+        
+        cpAttributes.add(m_productManager.newProductAttributeDesc("gpcCategoryCode", "Product Classification", new String[]{"gpccategorycode", "gpc category code", "gpc category", "gpccategory", "gpc"}, "Basic product info", AttributeType.STRING, true, 
+                "The 8-digit GPC category code for the product",
+                new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(8, 8), new DigitOnlyAttributeValidator()}));
+        
+        cpAttributes.add(m_productManager.newProductAttributeDesc("uriProductImage", "Medium Resolution Image URL", new String[]{"uriproductimage", "uri product image", "product image url", "productimageurl"}, "Basic product info", AttributeType.WEBURL, true, 
+                "A publicly-accessible Web URL of an image of the product. "
+                + "This URL should be for an image (jpg, png, etc), not for a web page (html).",
+                new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(2500), new UrlValidator(), new WhitelistedCharValidator()}));
 
-        AttributeDesc declaredQuantity1Desc = m_productManager.newProductAttributeDesc("netContent1", "Declared Quantity / Net Content 1", 
+               
+
+       /* AttributeDesc declaredQuantity1Desc = m_productManager.newProductAttributeDesc("netContent1", "Declared Quantity / Net Content 1", 
                                                                                        new String[]{"declaredquantity", "declared quantity", "netcontent", "net content", "declared quantity / net content", "declaredquantity1", "declared quantity 1", "netcontent 1", "net content 1", "declared quantity / net content 1",},
                                                                                        "Declared quantity and/or net content", AttributeType.MEASUREMENT, m_uoms, false, Action.ALL_ACTIONS_MASK,
                 "The first (or only) declared quantity or net content, as printed on the package.",
-                new AttributeValidator[]{/*new RequiredAttributeValidator(), */new MeasurementAttributeValidator()});
+                new AttributeValidator[]{new RequiredAttributeValidator(), new MeasurementAttributeValidator()});
         cpAttributes.add(declaredQuantity1Desc);
         AttributeDesc declaredQuantity2Desc = m_productManager.newProductAttributeDesc("netContent2", "Declared Quantity / Net Content 2",  
                                                                                        new String[]{"declaredquantity2", "declared quantity 2", "netcontent 2", "net content 2", "declared quantity / net content 2"},
@@ -410,34 +450,34 @@ public class AppManager
                                                                      "The fourth declared quantity or net content, as printed on the package. Required if the package indicates four or more declared quantity or net content values.",
                                                                      new AttributeValidator[]{new MeasurementAttributeValidator(), new OtherAttributeRequiredValidator(declaredQuantity3Desc)}));
  
-       cpAttributes.add(m_productManager.newProductAttributeDesc("descriptiveSize", "Size", new String[]{"descriptivesize", "descriptive size", "size"}, "Product characteristics", AttributeType.STRING, false, 
+ */     
+        
+        
+        /*cpAttributes.add(m_productManager.newProductAttributeDesc("descriptiveSize", "Size", new String[]{"descriptivesize", "descriptive size", "size"}, "Product characteristics", AttributeType.STRING, false, 
                                                          "The size of the product, or similar distinguishing characteristic, as printed on the package. This or \"flavor or color\" is required if needed to"
                                                          + " distinguish multiple products that share the same functional product name. Unlike \"declared quantity / net content\", this attribute "
                                                          + "is free text, often something like S, M, L, XL, etc. Leave blank if not applicable.",
                                                          new AttributeValidator[]{new LengthAttributeValidator(500), new WhitelistedCharValidator()}));
        cpAttributes.add(m_productManager.newProductAttributeDesc("gpcCategoryCode", "GPC Category", new String[]{"gpccategorycode", "gpc category code", "gpc category", "gpccategory", "gpc"}, "Product classification", AttributeType.STRING, true, 
                                                                  "The 8-digit GPC category code for the product",
-                                                                 new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(8, 8), new DigitOnlyAttributeValidator()}));
-       cpAttributes.add(m_productManager.newProductAttributeDesc("informationProviderGLN", "Information Provider", new String[]{"informationprovidergln", "information provider gln", "information provider", "informationprovider"}, "Product info metadata", AttributeType.STRING, true, 
+                                                                 new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(8, 8), new DigitOnlyAttributeValidator()}));*/
+       cpAttributes.add(m_productManager.newProductAttributeDesc("informationProviderGLN", "Information Provider GLN", new String[]{"informationprovidergln", "information provider gln", "information provider", "informationprovider"}, "Product info metadata", AttributeType.STRING, true, 
                                                                  "The Global Location Number (GLN) of the party responsible for populating the database entry for this item",
                                                                  new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(13, 13), new DigitOnlyAttributeValidator(), new GLNAttributeValidator()}));
        cpAttributes.add(m_productManager.newProductAttributeDesc("itemDataLanguage", "Language Code", new String[]{"language code", "languagecode", "item data language", "itemdatalanguage"}, "Product info metadata", AttributeType.STRING, true, 
                                                                  "The language of the item data, as an ISO 2-letter language code. Example: English=en",
                                                                  new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(2,2)}));
-       cpAttributes.add(m_productManager.newProductAttributeDesc("uriProductImage", "Product Image URL", new String[]{"uriproductimage", "uri product image", "product image url", "productimageurl"}, "Hyperlinks", AttributeType.WEBURL, false, 
-                                                                 "A publicly-accessible Web URL of an image of the product. "
-                                                                 + "This URL should be for an image (jpg, png, etc), not for a web page (html).",
-                                                                 new AttributeValidator[]{new LengthAttributeValidator(2500), new UrlValidator(), new WhitelistedCharValidator()}));
-       cpAttributes.add(m_productManager.newProductAttributeDesc("uriProductWebsite", "Product Website URL", new String[]{"uriproductwebsite", "uri product website", "productwebsiteurl", "product website url"}, "Hyperlinks", AttributeType.WEBURL, false, 
+    
+      /* cpAttributes.add(m_productManager.newProductAttributeDesc("uriProductWebsite", "Product Website URL", new String[]{"uriproductwebsite", "uri product website", "productwebsiteurl", "product website url"}, "Hyperlinks", AttributeType.WEBURL, false, 
                                                                  "A publicly-accessible Web URL of a webpage appropriate for the product. "
                                                                  + "This URL should be for a web page (html), not for an image (jpg, png, etc).",
-                                                                 new AttributeValidator[]{new LengthAttributeValidator(2500), new UrlValidator(), new WhitelistedCharValidator()}));
-       AttributeDesc cpStartDateAttribute = m_productManager.newProductAttributeDesc("cpStartDate", "Start Date (MM/DD/YYYY)", new String[]{"start date", "startdate"}, "Start date", AttributeType.DATE, false, 
+                                                                 new AttributeValidator[]{new LengthAttributeValidator(2500), new UrlValidator(), new WhitelistedCharValidator()}));*/
+      /*AttributeDesc cpStartDateAttribute = m_productManager.newProductAttributeDesc("cpStartDate", "Start Date (MM/DD/YYYY)", new String[]{"start date", "startdate"}, "Start date", AttributeType.DATE, false, 
                                                                                     "The date upon which the GTIN and product data is available for consumers to use. "
                                                                                             + "Set this in the future if you want to enter a product before it is ready to enter the market.",
                                                                                             new AttributeValidator[]{new DateValidator()});
-        cpAttributes.add(cpStartDateAttribute);
-        AttributeDesc cpEndDateAttribute = m_productManager.newProductAttributeDesc("cpEndDate", "End Date", null, null, AttributeType.DATE, false, 
+        cpAttributes.add(cpStartDateAttribute);*/
+       /* AttributeDesc cpEndDateAttribute = m_productManager.newProductAttributeDesc("cpEndDate", "End Date", null, null, AttributeType.DATE, false, 
                                                                                     "The date upon which the GTIN and product data is no longer available for consumers to use. "
                                                                                             + "Leave blank if the data should be available indefinitely.",
                                                                                             new AttributeValidator[]{new DateValidator()});
@@ -446,7 +486,8 @@ public class AppManager
                                                                                                     new AttributeValidator[]{new DateValidator()});
         AttributeDesc cpPendingPaidThruAttribute = m_productManager.newProductAttributeDesc("cpPendingPaidThru", null, null, "Paid Through (pending)", AttributeType.DATE, false, 
                                                                                                         "The pending date through which cp product data is valid.",
-                                                                                                                new AttributeValidator[]{new DateValidator()});
+                                                                                                                new AttributeValidator[]{new DateValidator()});*/
+
         List<AttributeDesc> cpAccountAttributes = new ArrayList<>();
 
         
@@ -459,12 +500,255 @@ public class AppManager
                                                             cpAccountAttributes,
                                                             new FreePricer()),
                                          null,
-                                         new ModuleDescImpl(null, 
-                                                            cpStartDateAttribute, cpEndDateAttribute, 
-                                                            cpPaidThruAttribute, cpPendingPaidThruAttribute,
+                                         new ModuleDescImpl(null, null, null, null, null,
                                                             cpPkAttributes,
                                                             cpAttributes,
                                                             new FreePricer()));
+    }
+    
+    
+    
+    private void initCountryCodes(){
+    	m_countryCodes = new ArrayList<>();
+    	m_countryCodes.add(new AttributeEnumValueImpl("1","AFGHANISTAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("2","ALBANIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("3","ALGERIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("4","AMERICAN SAMOA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("5","ANDORRA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("6","ANGOLA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("7","ANGUILLA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("8","ANTARCTICA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("9","ANTIGUA AND BARBUDA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("10","ARGENTINA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("11","ARMENIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("12","ARUBA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("13","AUSTRALIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("14","AUSTRIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("15","AZERBAIJAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("16","BAHAMAS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("17","BAHRAIN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("18","BANGLADESH"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("19","BARBADOS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("20","BELARUS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("21","BELGIUM"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("22","BELIZE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("23","BENIN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("24","BERMUDA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("25","BHUTAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("26","BOLIVIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("27","BOSNIA AND HERZEGOWINA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("28","BOTSWANA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("29","BOUVET ISLAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("30","BRAZIL"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("31","BRITISH INDIAN OCEAN TERRITORY"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("32","BRUNEI DARUSSALAM"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("33","BULGARIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("34","BURKINA FASO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("35","BURUNDI"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("36","CAMBODIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("37","CAMEROON"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("38","CANADA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("39","CAPE VERDE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("40","CAYMAN ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("41","CENTRAL AFRICAN REPUBLIC"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("42","CHAD"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("43","CHILE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("44","CHINA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("45","CHRISTMAS ISLAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("46","COCOS (KEELING) ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("47","COLOMBIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("48","COMOROS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("49","CONGO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("50","COOK ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("51","COSTA RICA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("52","COTE D'IVOIRE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("53","CROATIA (local name: Hrvatska)"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("54","CUBA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("55","CYPRUS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("56","CZECH REPUBLIC"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("57","DENMARK"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("58","DJIBOUTI"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("59","DOMINICA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("60","DOMINICAN REPUBLIC"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("61","EAST TIMOR"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("62","ECUADOR"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("63","EGYPT"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("64","EL SALVADOR"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("65","EQUATORIAL GUINEA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("66","ERITREA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("67","ESTONIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("68","ETHIOPIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("69","FALKLAND ISLANDS (MALVINAS)"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("70","FAROE ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("71","FIJI"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("72","FINLAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("73","FRANCE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("74","FRANCE, METROPOLITAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("75","FRENCH GUIANA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("76","FRENCH POLYNESIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("77","FRENCH SOUTHERN TERRITORIES"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("78","GABON"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("79","GAMBIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("80","GEORGIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("81","GERMANY"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("82","GHANA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("83","GIBRALTAR"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("84","GREECE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("85","GREENLAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("86","GRENADA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("87","GUADELOUPE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("88","GUAM"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("89","GUATEMALA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("90","GUINEA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("91","GUINEA-BISSAU"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("92","GUYANA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("93","HAITI"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("94","HEARD AND MC DONALD ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("95","HONDURAS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("96","HONG KONG"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("97","HUNGARY"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("98","ICELAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("99","INDIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("100","INDONESIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("101","IRAN (ISLAMIC REPUBLIC OF)"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("102","IRAQ"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("103","IRELAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("104","ISRAEL"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("105","ITALY"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("106","JAMAICA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("107","JAPAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("108","JORDAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("109","KAZAKHSTAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("110","KENYA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("111","KIRIBATI"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("112","KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("113","KOREA, REPUBLIC OF"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("114","KUWAIT"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("115","KYRGYZSTAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("116","LAO PEOPLE'S DEMOCRATIC REPUBLIC"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("117","LATVIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("118","LEBANON"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("119","LESOTHO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("120","LIBERIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("121","LIBYAN ARAB JAMAHIRIYA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("122","LIECHTENSTEIN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("123","LITHUANIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("124","LUXEMBOURG"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("125","MACAU"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("126","MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("127","MADAGASCAR"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("128","MALAWI"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("129","MALAYSIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("130","MALDIVES"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("131","MALI"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("132","MALTA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("133","MARSHALL ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("134","MARTINIQUE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("135","MAURITANIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("136","MAURITIUS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("137","MAYOTTE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("138","MEXICO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("139","MICRONESIA, FEDERATED STATES OF"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("140","MOLDOVA, REPUBLIC OF"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("141","MONACO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("142","MONGOLIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("143","MONTSERRAT"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("144","MOROCCO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("145","MOZAMBIQUE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("146","MYANMAR"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("147","NAMIBIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("148","NAURU"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("149","NEPAL"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("150","NETHERLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("151","NETHERLANDS ANTILLES"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("152","NEW CALEDONIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("153","NEW ZEALAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("154","NICARAGUA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("155","NIGER"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("156","NIGERIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("157","NIUE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("158","NORFOLK ISLAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("159","NORTHERN MARIANA ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("160","NORWAY"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("161","OMAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("162","PAKISTAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("163","PALAU"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("164","PANAMA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("165","PAPUA NEW GUINEA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("166","PARAGUAY"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("167","PERU"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("168","PHILIPPINES"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("169","PITCAIRN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("170","POLAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("171","PORTUGAL"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("172","PUERTO RICO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("173","QATAR"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("174","REUNION"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("175","ROMANIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("176","RUSSIAN FEDERATION"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("177","RWANDA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("178","SAINT KITTS AND NEVIS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("179","SAINT LUCIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("180","SAINT VINCENT AND THE GRENADINES"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("181","SAMOA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("182","SAN MARINO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("183","SAO TOME AND PRINCIPE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("184","SAUDI ARABIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("185","SENEGAL"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("186","SEYCHELLES"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("187","SIERRA LEONE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("188","SINGAPORE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("189","SLOVAKIA (Slovak Republic)"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("190","SLOVENIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("191","SOLOMON ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("192","SOMALIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("193","SOUTH AFRICA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("194","SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("195","SPAIN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("196","SRI LANKA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("197","ST. HELENA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("198","ST. PIERRE AND MIQUELON"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("199","SUDAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("200","SURINAME"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("201","SVALBARD AND JAN MAYEN ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("202","SWAZILAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("203","SWEDEN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("204","SWITZERLAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("205","SYRIAN ARAB REPUBLIC"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("206","TAIWAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("207","TAJIKISTAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("208","TANZANIA, UNITED REPUBLIC OF"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("209","THAILAND"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("210","TOGO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("211","TOKELAU"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("212","TONGA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("213","TRINIDAD AND TOBAGO"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("214","TUNISIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("215","TURKEY"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("216","TURKMENISTAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("217","TURKS AND CAICOS ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("218","TUVALU"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("219","UGANDA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("220","UKRAINE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("221","UNITED ARAB EMIRATES"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("222","UNITED KINGDOM"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("223","UNITED STATES"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("224","UNITED STATES MINOR OUTLYING ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("225","URUGUAY"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("226","UZBEKISTAN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("227","VANUATU"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("228","VATICAN CITY STATE (HOLY SEE)"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("229","VENEZUELA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("230","VIET NAM"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("231","VIRGIN ISLANDS (BRITISH)"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("232","VIRGIN ISLANDS (U.S.)"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("233","WALLIS AND FUTUNA ISLANDS"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("234","WESTERN SAHARA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("235","YEMEN"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("236","YUGOSLAVIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("237","ZAIRE"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("238","ZAMBIA"));
+    	m_countryCodes.add(new AttributeEnumValueImpl("239","ZIMBABWE"));
     }
     
     private static class FreePricer implements Pricer
@@ -596,6 +880,8 @@ public class AppManager
         m_dmLicenseTypes.add(new AttributeEnumValueImpl("Enterprise", "GS1 US Customer, Enterprise License"));
         m_dmLicenseTypes.add(new AttributeEnumValueImpl("DMCustomer", "Digimarc Customer (no GS1 portal access)"));
      }
+    
+  
 
 
     private void updateNextActionDates(ProductRecord productRecord)
@@ -944,6 +1230,4 @@ public class AppManager
         
         return m_quoter.validateTerms(appContext, newProduct, oldProduct, renew, validationErrors, today);
     }
-
-
 }

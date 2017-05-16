@@ -321,6 +321,16 @@ public class ProductOpsManager
             return padGtin(unpaddedGtin);
         }
 
+        public Integer getTargetCountryCode()
+        {
+            return m_unpaddedProduct.getTargetCountryCode();
+        }
+
+        public String getGpcCategoryCode()
+        {
+            return m_unpaddedProduct.getGpcCategoryCode();
+        }
+        
         public String getDataAccuracyAckUser()
         {
             return m_unpaddedProduct.getDataAccuracyAckUser();

@@ -41,6 +41,8 @@ public class JpaProductRecord  extends ProductRecord
         m_modifiedDate = o.m_modifiedDate;
         m_nextActionDate = o.m_nextActionDate;
         m_pendingNextActionDate = o.m_pendingNextActionDate;
+        m_TargetCountryCodeId = o.m_TargetCountryCodeId;
+        m_GpcCategoryCode = o.m_GpcCategoryCode;        
         //m_pendingOrderIds = o.m_pendingOrderIds;
         if (o.m_pendingOrderIdSet != null)
             m_pendingOrderIdSet = new StringSet(o.m_pendingOrderIdSet);                
@@ -78,7 +80,30 @@ public class JpaProductRecord  extends ProductRecord
     @Convert(converter = StringSetConverter.class)
     private StringSet m_pendingOrderIdSet;
 
+    @Basic
+    private Integer m_TargetCountryCodeId;
+
+    @Basic
+    private String m_GpcCategoryCode;
     
+    public Integer getTargetCountryCode()
+    {
+        return m_TargetCountryCodeId;
+    }
+    public void setTargetCountryCode(Integer targetCountryCode)
+    {
+    	m_TargetCountryCodeId = targetCountryCode;
+    }
+
+    public String getGpcCategoryCode()
+    {
+        return m_GpcCategoryCode;
+    }
+    public void setGpcCategoryCode(String gpcCategoryCode)
+    {
+    	m_GpcCategoryCode = gpcCategoryCode;
+    }
+        
     public String getId()
     {
         return KEY_MAPPER.keyToId(m_id);

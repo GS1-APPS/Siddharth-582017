@@ -34,13 +34,13 @@ public class WebappUtil
     private static String s_shortProductName = "DWCode Portal";
     private static String s_longProductName = s_productBrand + " " + s_shortProductName;
     //private static String s_shortProductHtml = "<strong>DW</strong>Code Portal";    
-    private static String s_shortProductHtml = "Cloud Prototype";    
+    private static String s_shortProductHtml = "Cloud Phase1";    
     private static String s_longProductHtml = s_productBrand + " " + s_shortProductHtml;
     private static String s_valueAddedPhrase =  " and sign up for value added services such as DWCodes";
     private static String s_homeJsp = "gtinRegistryHome.jsp"; //"home.jsp";    
     private static String s_showProductsLine1AttributeName = "brandName";
     private static String s_showProductsLine2AttributeName = "productName";
-    private static boolean s_showExperimentalFeatures = false;
+    private static boolean s_showExperimentalFeatures = true;
     
     public static void setBranding(String operator, String homeLink, String productName, String productHtml, String logoFilename, 
             String valueAddedPhrase, String homeJsp, String showProductsLine1AttributeName, String showProductsLine2AttributeName,
@@ -219,6 +219,10 @@ public class WebappUtil
                                                 String nullValue, String timeZoneId)
     {
         String value = UserInputUtil.trimToNull((String)request.getParameter(attrName));
+        
+        //System.out.println("attrName == " + attrName);
+        //System.out.println("value == " + value);
+        
         if (isAppEnabled && value != null)
         {
             if (attrDesc != null && attrDesc.getType() == AttributeType.DATE)

@@ -28,7 +28,7 @@
   <jsp:param name="selectedItem" value="productSearch" />
 </jsp:include>
 
-<h1><a href="<%= productSearchUri %>">Search for Products:</a> Key Authentication</h1>
+<h1><a href="<%= productSearchUri %>">Search:</a> Key Authentication</h1>
 
 <div class="row">
 <div class="col-md-6">

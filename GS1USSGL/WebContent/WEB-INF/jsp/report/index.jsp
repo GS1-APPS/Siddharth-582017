@@ -22,15 +22,17 @@
 </jsp:include>
 
 <%
-	int count = (Integer) request.getAttribute("TotalCount");
-	int olderCount = (Integer) request.getAttribute("OldDataCount");
+	String count = (String) request.getAttribute("TotalCount");
+	String olderCount = (String) request.getAttribute("OldDataCount");
 %>
 
-<h1>Reports</h1>
+<h1>Admin Reports</h1>
 <br/>
 <strong>Current Stats of System</strong>
-<!-- 
-<h3>Total # of GTIN records: <%=count%> </h3>
+
+<h3># of GTIN records: <%=count%> </h3>
 <h3># of GTIN records 60 days or older: <%=olderCount%> </h3>
- -->
+<h3># of requests for data: "Still developing" </h3>
+<h3># of requests for data where no product was found: "Still developing" </h3>
+
 <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />

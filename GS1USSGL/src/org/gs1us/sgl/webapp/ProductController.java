@@ -49,8 +49,6 @@ public class ProductController extends GBAwareController
     {
         String gbAccountGln = getGBAccountGln(principal);
         
-        //System.out.println(" gbAccountGln == " + gbAccountGln);
-        
         Collection<? extends AppSubscription> subs = getGbService().getAppSubscriptions(gbAccountGln, true);
 
         
@@ -299,8 +297,10 @@ public class ProductController extends GBAwareController
     @RequestMapping(value = "/product/{gtin}/delete", method = RequestMethod.GET)
     public String deleteProductGet(Model model, Principal principal, @PathVariable String gtin) throws GlobalBrokerException 
     {
-        // TODO
-        return null;
+    	String gbAccountGln = getGBAccountGln(principal);
+        User user = (User)((Authentication)principal).getPrincipal();
+        getGbService().deleteProduct(user.getUsername(), gbAccountGln, gtin, null);
+        return showProducts(model, principal);
     }
 
 }

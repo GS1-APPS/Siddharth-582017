@@ -53,7 +53,8 @@
     User user = (User) ((Authentication) request.getUserPrincipal()).getPrincipal();
     String timeZoneId = user.getTimezone();
 %>
-    
+
+   
 <jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Products" />
   <jsp:param name="selectedItem" value="products" />
@@ -101,11 +102,12 @@
 							<th>GTIN</th>
 							<th>Product</th>
 							<th>Last Modified</th>
-							<th>Renewal Date</th>
+							<%--<th>
+							 <th>Renewal Date</th>
 							<c:if test="<%= dwcodeSub != null %>">
 								<th>DWCode</th>
 							</c:if>
-							<th>Status</th>
+							<th>Status</th> --%>
 							<th>Actions</th>
 						</tr>
 					</thead>
@@ -124,7 +126,7 @@
 									<div class="sgl-show-product-name"><c:out value='<%= productLine2 %>' /></div>
 								</td>
 								<td><c:out value='<%= UserInputUtil.dateToString(product.getModifiedDate(), timeZoneId) %>' /></td>
-								<td>
+							<%-- 	<td>
 									<c:choose>
 										<c:when test='<%= product.getNextActionDate() != null %>'>
 											<div><c:out value='<%= UserInputUtil.dateOnlyToString(product.getNextActionDate(), timeZoneId) %>' /></div>
@@ -138,7 +140,7 @@
 											</c:if>
 										</c:otherwise>
 									</c:choose>
-								</td>
+								</td> 
 								<c:if test="<%= dwcodeSub != null %>">
 								<td class="color-forest">
 									<% ProductApp productApp = new ProductApp(dwcodeSub.getAppDesc(), product);
@@ -165,10 +167,11 @@
 									</c:choose>
 								  </c:when>
 								  </c:choose>
-								</td>
+								</td>--%>
 								<td>
 								<c:if test="<%= forMember == null %>">
 								  <a href="<%= editLink %>" title="Edit this product's data"><small>Edit</small></a>
+								   <a href="<%= deleteLink%>" title="Delete this product's data" onclick="return confirm('Are you sure you want to delete this product?');"><small>Delete</small></a>
 								</c:if>
 								</td>
 							</tr>
@@ -178,6 +181,9 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
+
+
+    
 </div>
 
 <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />

@@ -21,14 +21,13 @@
 <%	
 	String productSearchUri = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "search", (Object)null).toUriString();
 %>
-    
-    
+            
 <jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Product Search" />
   <jsp:param name="selectedItem" value="productSearch" />
 </jsp:include>
 
-<h1><a href="<%= productSearchUri %>">Search for Products:</a> Product Validation</h1>
+<h1><a href="<%= productSearchUri %>">Search:</a> Product Validation</h1>
 
 <div class="row">
 <div class="col-md-6">

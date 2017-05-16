@@ -119,9 +119,9 @@
     </c:if>
     
     
-    <h4>GPC category</h4>
+    <h4>Product Classification</h4>
     <p><c:out value="<%= gpcCategoryCode %>" /></p>
-    <h4>Information provider</h4>
+    <h4>Information Provider GLN</h4>
     <p><c:out value="<%= informationProviderGLN %>" /></p>
     <h4>Language</h4>
     <p><c:out value="<%= itemDataLanguage %>" /></p>

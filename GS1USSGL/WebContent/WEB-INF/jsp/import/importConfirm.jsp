@@ -159,7 +159,7 @@
   		<h3>Data accuracy (required)</h3>
    		<div class='<%= (dataAccuracyError != null ? "form-group has-error" : "form-group") %>'>
       		<div>
-        		<input type="checkbox" name="dataAccuracyAck" /> I certify that I am duly authorized on behalf of the brand owner to provide the data above and represent that all data provided is accurate <%= errorCount > 0 ? "(excluding data containing validation errors as reported above)" : "" %> .
+        		<input type="checkbox" name="dataAccuracyAck" /> I certify that I am duly authorized on behalf of the brand owner to provide the data above <%= errorCount > 0 ? "(excluding data containing validation errors as reported above)" : "" %> .
       		</div>
       		<c:if test='<%= dataAccuracyError != null  %>'>
       	 		<div class="form-control-feedback alert-danger"><span class="icon-warning_sign"></span>&nbsp;<c:out value='<%= dataAccuracyError %>'/></div>

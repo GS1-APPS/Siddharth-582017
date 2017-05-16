@@ -20,6 +20,7 @@ import org.gs1us.sgg.gbservice.api.Import;
 import org.gs1us.sgg.gbservice.api.ImportPrevalidationSegmentSettings;
 import org.gs1us.sgg.gbservice.api.Invoice;
 import org.gs1us.sgg.gbservice.api.InvoiceExtra;
+import org.gs1us.sgg.gbservice.api.IsoCountryRef;
 import org.gs1us.sgg.gbservice.api.NoSuchAccountException;
 import org.gs1us.sgg.gbservice.api.OrderLineItem;
 import org.gs1us.sgg.gbservice.api.OrderStatus;
@@ -38,6 +39,7 @@ import org.gs1us.sgg.gbservice.json.InboundGBAccount;
 import org.gs1us.sgg.gbservice.json.InboundImport;
 import org.gs1us.sgg.gbservice.json.InboundInvoice;
 import org.gs1us.sgg.gbservice.json.InboundInvoiceExtra;
+import org.gs1us.sgg.gbservice.json.InboundIsoCountryRef;
 import org.gs1us.sgg.gbservice.json.InboundOrderIdsAndExtras;
 import org.gs1us.sgg.gbservice.json.InboundOrderLineItem;
 import org.gs1us.sgg.gbservice.json.InboundPayInvoicesInfo;
@@ -419,9 +421,31 @@ public class GlobalBrokerServiceClient implements GlobalBrokerService
     	return m_jsonHttpClient.doRequest(InboundProduct.class, HttpMethod.GET, null, "/api/productById/%s", gtin);    	
     }
     
+/*    
     public Collection<? extends Product> getProductsForReport() throws GlobalBrokerException
     {
         return m_jsonHttpClient.doRequest(Collection.class, InboundProduct.class, HttpMethod.GET, null, "/api/productList");
+    }
+*/
+    
+    public Long getProductsForReport() throws GlobalBrokerException
+    {
+        return m_jsonHttpClient.doRequest(Long.class, HttpMethod.GET, null, "/api/productList");
+    }
+    
+    public Long getProductsForReportByDate() throws GlobalBrokerException
+    {
+        return m_jsonHttpClient.doRequest(Long.class, HttpMethod.GET, null, "/api/productListByDate");
+    }
+    
+    public Collection<? extends IsoCountryRef> getAllIsoCountryRef() throws GlobalBrokerException
+    {
+    	return m_jsonHttpClient.doRequest(Collection.class, InboundIsoCountryRef.class, HttpMethod.GET, null, "/api/isoCountryList");
+    }
+        
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
+    {
+        return m_jsonHttpClient.doRequest(Collection.class, InboundProduct.class, HttpMethod.GET, null, "/api/productBasedOnGpcAndTargetMarket/%s?param=%s", gpc, marketCode);
     }
     
 }

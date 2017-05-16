@@ -1,6 +1,9 @@
 package org.gs1us.sgg.dao.jpa;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -8,9 +11,11 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
@@ -23,6 +28,7 @@ import org.gs1us.sgg.dao.GcpRecord;
 import org.gs1us.sgg.dao.ImportFile;
 import org.gs1us.sgg.dao.ImportRecord;
 import org.gs1us.sgg.dao.InvoiceRecord;
+import org.gs1us.sgg.dao.IsoCountryRefRecord;
 import org.gs1us.sgg.dao.PaymentRecord;
 import org.gs1us.sgg.dao.ProductRecord;
 import org.gs1us.sgg.dao.SalesOrderRecord;
@@ -123,7 +129,6 @@ public class JpaGBDao implements GBDao
         QueryBuilder<JpaGcpRecord> qb = new QueryBuilder<>(JpaGcpRecord.class);
         qb.whereEq("m_gln", gln);
         return qb.queryAll();
-
     }
 
     @Override
@@ -210,23 +215,61 @@ public class JpaGBDao implements GBDao
 
     
     @Override
-    public Collection<? extends ProductRecord> getProductsForReport()
+    public Long getProductsForReportByDate()
+    {    	    	
+    	Calendar calendar = Calendar.getInstance();
+    	calendar.add(Calendar.DAY_OF_MONTH, -60);
+    	Date queryDate = calendar.getTime();    	
+    	final DateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
+    	String qDate = fmt.format(queryDate);
+    	Query query = m_entityManager.createNativeQuery("select count(*) from product where modified_date <= '" + qDate + "'");
+    	java.math.BigInteger obj = (java.math.BigInteger) query.getSingleResult();
+    	return (Long) obj.longValue();
+    }
+
+    public Integer getTargetMarketNotBasedOnId(String value)
     {
-        QueryBuilder<JpaProductRecord> qb = new QueryBuilder<>(JpaProductRecord.class);
-        qb.orderByDesc("m_modifiedDate");
-        return qb.queryAll();
+    	String sqlQuery = "select id from iso_country_ref where ( country_name = '" + value + "' or country_code_txt2 = '" + value + "' ";
+    	sqlQuery = sqlQuery + " or country_code_txt3 = '" + value + "' )" ; 
+    	Query query = m_entityManager.createNativeQuery(sqlQuery);
+    	List results = query.getResultList();
+    	Integer retval = new Integer(0);
+    	
+    	if (results.isEmpty())
+    	{
+    		try 
+    		{
+    		    return Integer.parseInt(value);
+    		} 
+    		catch (NumberFormatException e) 
+    		{
+    		    return retval;
+    		}    		
+    	}
+    	else
+    	{
+    		return (Integer) results.get(0);
+    	}
     }
     
-    /*
     @Override
-    public Collection<? extends ProductRecord> getProductsForReportByLastModifiedDate(String modifiedDate)
+    public Long getProductsForReport()
+    {    	    	
+    	CriteriaBuilder qb = m_entityManager.getCriteriaBuilder();
+    	CriteriaQuery<Long> cq = qb.createQuery(Long.class);
+    	cq.select(qb.count(cq.from(JpaProductRecord.class)));
+    	return m_entityManager.createQuery(cq).getSingleResult(); 
+    }
+        
+    @Override
+    public Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode)
     {
-        QueryBuilder<JpaProductRecord> qb = new QueryBuilder<>(JpaProductRecord.class);        
-        qb.whereEq("m_gbAccountGln", modifiedDate);
+        QueryBuilder<JpaProductRecord> qb = new QueryBuilder<>(JpaProductRecord.class);
+        qb.whereEq("m_GpcCategoryCode", gpc);
+        qb.whereEq("m_TargetCountryCodeId", Integer.parseInt(marketCode));
         qb.orderByDesc("m_modifiedDate");
         return qb.queryAll();
     }
-    */
     
     @Override
     public ProductRecord getProductByGtin(String gtin)
@@ -237,6 +280,14 @@ public class JpaGBDao implements GBDao
         return qb.queryOne();
     }
 
+    @Override
+    public Collection<? extends IsoCountryRefRecord> getAllIsoCountryRef()
+    {
+        QueryBuilder<JpaIsoCountryRefRecord> qb = new QueryBuilder<>(JpaIsoCountryRefRecord.class);
+        qb.orderByAsc("m_country_name");
+        return qb.queryAll();
+    }
+        
     @Override
     public ProductRecord getProductByGlnAndGtin(String gln, String gtin)
     {

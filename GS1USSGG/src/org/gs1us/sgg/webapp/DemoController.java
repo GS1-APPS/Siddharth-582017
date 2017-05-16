@@ -1,5 +1,6 @@
 package org.gs1us.sgg.webapp;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Date;
 
@@ -8,15 +9,19 @@ import javax.transaction.Transactional;
 
 import org.gs1us.sgg.account.AccountManager;
 import org.gs1us.sgg.app.AppManager;
+import org.gs1us.sgg.dao.AgentUser;
 import org.gs1us.sgg.gbservice.api.GBAccount;
+import org.gs1us.sgg.gbservice.api.GBIllegalArgumentException;
 import org.gs1us.sgg.gbservice.api.GlobalBrokerException;
 import org.gs1us.sgg.gbservice.api.Product;
 import org.gs1us.sgg.gbservice.api.ValidationException;
 import org.gs1us.sgg.gbservice.impl.ProductOpsManager;
 import org.gs1us.sgg.gbservice.json.ExceptionInfo;
 import org.gs1us.sgg.product.ProductManager;
+import org.gs1us.sgg.util.UserInputUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,10 +51,10 @@ public class DemoController
     {
         s_demoEnabled = enabled;
     }
-    
+        
     @RequestMapping(value = "/demo/deleteimports", method = RequestMethod.GET)
-    public String productInfoGet(Model model) throws NotFoundException
-    {
+    public String productInfoGet(Model model, Principal principal) throws NotFoundException
+    {    	    
         if (s_demoEnabled)
         {
             model.addAttribute("result", "Enabled is " + s_demoEnabled);

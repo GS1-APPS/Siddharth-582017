@@ -22,6 +22,27 @@ class MockProductRecord extends ProductRecord implements DaoElement<MockProductR
     private Date m_nextActionDate;
     private Date m_pendingNextActionDate;
     private Set<String> m_pendingOrderIds = new HashSet<>();
+    private Integer m_TargetCountryCode;
+    private String m_GpcCategoryCode;        
+
+    
+    public Integer getTargetCountryCode()
+    {
+        return m_TargetCountryCode;
+    }
+    public void setTargetCountryCode(Integer countryCode)
+    {
+    	m_TargetCountryCode = countryCode;
+    }
+
+    public String getGpcCategoryCode()
+    {
+        return m_GpcCategoryCode;
+    }
+    public void setGpcCategoryCode(String gpcCategoryCode)
+    {
+    	m_GpcCategoryCode = gpcCategoryCode;
+    }
     
     public String getId()
     {
@@ -133,6 +154,8 @@ class MockProductRecord extends ProductRecord implements DaoElement<MockProductR
         setModifiedDate(from.getModifiedDate());
         setNextActionDate(from.getNextActionDate());
         setPendingNextActionDate(from.getPendingNextActionDate());
+        setGpcCategoryCode(from.getGpcCategoryCode());
+        setTargetCountryCode(from.getTargetCountryCode());
         m_pendingOrderIds = from.m_pendingOrderIds; // TODO: not quite right, but should be OK
         return this;
     }

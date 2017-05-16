@@ -259,6 +259,13 @@ public interface GlobalBrokerService
         
     public Product getProductByGtinOnly(String gtin) throws GlobalBrokerException;
     
-    public Collection<? extends Product> getProductsForReport() throws GlobalBrokerException;
+    //public Collection<? extends Product> getProductsForReport() throws GlobalBrokerException;
     
+    public Long getProductsForReport() throws GlobalBrokerException;
+    
+    public Long getProductsForReportByDate() throws GlobalBrokerException;
+    
+    public Collection<? extends IsoCountryRef> getAllIsoCountryRef() throws GlobalBrokerException;
+    
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException;
 }

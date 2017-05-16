@@ -38,6 +38,9 @@ public abstract class AttributeSet
     
     public Date getDateAttribute(AttributeDesc desc)
     {
+    	if (desc == null){
+    		return null;
+    	}
         String s = getAttribute(desc);
         if (s == null)
             return null;
@@ -58,10 +61,12 @@ public abstract class AttributeSet
     }
     public void setDateAttribute(AttributeDesc desc, Date date)
     {
-        if (date == null)
-            setAttribute(desc, null);
-        else
-            setAttribute(desc, Util.DATE_FORMAT.format(date));
+    	if (desc!=null){
+	        if (date == null)
+	            setAttribute(desc, null);
+	        else
+	            setAttribute(desc, Util.DATE_FORMAT.format(date));
+    	}
     }
     
     public boolean getBooleanAttribute(AttributeDesc desc)

@@ -45,6 +45,11 @@ public class ReportController  extends GBAwareController
     @RequestMapping(value = "/ui/report", method = RequestMethod.GET)
     public String report(Model model) throws GlobalBrokerException
     {        
+    	Long products = getGbService().getProductsForReport();
+    	
+    	Long productsByDate = getGbService().getProductsForReportByDate();
+    	
+    	/*
     	Collection<? extends Product> products = getGbService().getProductsForReport();
     	int count = products.size();
     	int olderCount = 0 ;
@@ -69,6 +74,10 @@ public class ReportController  extends GBAwareController
     	
     	model.addAttribute("TotalCount", count);
     	model.addAttribute("OldDataCount", olderCount);
+    	*/
+    	
+    	model.addAttribute("TotalCount", products.toString());
+    	model.addAttribute("OldDataCount", productsByDate.toString());
     	
         return "/WEB-INF/jsp/report/index.jsp";
     }

@@ -242,7 +242,7 @@
 			<security:intercept-url pattern="/api/order*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/invoice*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
-			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('PRODUCT','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
 
 			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
@@ -291,7 +291,7 @@
 			<security:intercept-url pattern="/api/order*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/invoice*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
-			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('PRODUCT','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
 
 			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
@@ -337,7 +337,7 @@
 			<security:intercept-url pattern="/api/order*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/invoice*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
-			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('PRODUCT','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
 
 			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
@@ -378,8 +378,7 @@
 			</list></constructor-arg>
 		</bean>
 	</beans>
-	
-	
+		
 	<!-- Dev profile is on KT's development machine -->
 	<beans profile="dev">
 		<security:http>
@@ -388,7 +387,7 @@
 			<security:intercept-url pattern="/api/order*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/invoice*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
-			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('PRODUCT','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
 
 			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
@@ -402,7 +401,6 @@
  		<bean id="demoController" class="org.gs1us.sgg.webapp.DemoController">
  			<property name="enabled" value="true" />
  		</bean>
-
 		 
  		<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
  			<constructor-arg index="0" value="cp"/>

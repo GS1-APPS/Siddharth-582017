@@ -261,9 +261,9 @@ class Quoter
             Date newAppStartDate = productModuleDesc.getStartDate(newAttributes);
    
             // Can't update start dates after launch
-            if (oldAppStartDate.before(today))
+            if (oldAppStartDate!=null && oldAppStartDate.before(today))
             {
-                if (!newAppStartDate.equals(oldAppStartDate))
+                if (newAppStartDate!=null && !newAppStartDate.equals(oldAppStartDate))
                 {
                     // Disable this check so that dmStartDate can be changed after launch
                     //validationErrors.add(new ProductValidationErrorImpl(productModuleDesc.getStartDatePath(), "Cannot change launch date for " + title + " after launch."));
@@ -394,6 +394,4 @@ class Quoter
         else
             return null;
     }
-
-
 }

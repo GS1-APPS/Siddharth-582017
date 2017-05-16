@@ -13,6 +13,7 @@ import org.gs1us.sgg.dao.GcpRecord;
 import org.gs1us.sgg.dao.ImportFile;
 import org.gs1us.sgg.dao.ImportRecord;
 import org.gs1us.sgg.dao.InvoiceRecord;
+import org.gs1us.sgg.dao.IsoCountryRefRecord;
 import org.gs1us.sgg.dao.PaymentRecord;
 import org.gs1us.sgg.dao.ProductRecord;
 import org.gs1us.sgg.dao.SalesOrderRecord;
@@ -80,6 +81,14 @@ public class MockGBDao implements GBDao
         return null;
     }
 
+    
+    @Override
+    public Collection<? extends IsoCountryRefRecord> getAllIsoCountryRef()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+        
     @Override
     public Collection<? extends GcpRecord> getAllGcpRecords()
     {
@@ -169,12 +178,26 @@ public class MockGBDao implements GBDao
         return m_productRecordDao.getAllByGlnAndFilter(gln, null, null);
     }
     
+/*    
     @Override
     public Collection<? extends ProductRecord> getProductsForReport()
     {
         return null;
     }    
+*/
+    
+    @Override
+    public Long getProductsForReport()
+    {
+        return null;
+    }        
 
+    @Override
+    public Long getProductsForReportByDate()
+    {
+        return null;
+    }        
+    
     @Override
     public ProductRecord getProductByGtin(final String gtin)
     {
@@ -208,7 +231,13 @@ public class MockGBDao implements GBDao
     {
         return m_productRecordDao.getAll();
     }
-
+    
+    @Override
+    public Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode)
+    {
+        return m_productRecordDao.getAll();
+    }
+    
     @Override
     public void updateProduct(ProductRecord product)
     {
@@ -615,6 +644,10 @@ public class MockGBDao implements GBDao
         m_auditEventDao.update((MockAuditEventRecord)event);
         
     }
-
+    
+    public Integer getTargetMarketNotBasedOnId(String value)
+    {
+    	return null;
+    }
 
 }

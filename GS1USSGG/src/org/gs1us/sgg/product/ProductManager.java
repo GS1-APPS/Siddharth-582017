@@ -14,6 +14,7 @@ import org.gs1us.sgg.clockservice.ClockService;
 import org.gs1us.sgg.dao.AgentUser;
 import org.gs1us.sgg.dao.AuditEventRecord;
 import org.gs1us.sgg.dao.GBDao;
+import org.gs1us.sgg.dao.IsoCountryRefRecord;
 import org.gs1us.sgg.dao.ProductRecord;
 import org.gs1us.sgg.dao.jpa.ProductAttributesConverter;
 import org.gs1us.sgg.gbservice.api.AttributeEnumValue;
@@ -72,10 +73,36 @@ public class ProductManager
         return m_gbDao.getProductsByGln(gbAccount.getGln());
     }
 
+    /*
     public Collection<? extends Product> getProductsForReport()
             throws GlobalBrokerException
     {
         return m_gbDao.getProductsForReport();
+    }
+*/
+    
+    public Long getProductsForReport()
+            throws GlobalBrokerException
+    {
+        return m_gbDao.getProductsForReport();
+    }
+
+    public Long getProductsForReportByDate()
+            throws GlobalBrokerException
+    {
+        return m_gbDao.getProductsForReportByDate();
+    }
+    
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode)
+            throws GlobalBrokerException
+    {
+        return m_gbDao.getProductsBasedOnGpcAndTargetMarket(gpc, marketCode);
+    }
+    
+    public Collection<? extends IsoCountryRefRecord> getAllIsoCountryRef()
+            throws GlobalBrokerException
+    {
+        return m_gbDao.getAllIsoCountryRef();
     }
         
     public Product getProductByGtin(GBAccount gbAccount, String gtin)
@@ -103,6 +130,11 @@ public class ProductManager
         productRecord.setRegisteredDate(registeredDate);
         productRecord.setModifiedDate(registeredDate);
         productRecord.setAttributes(product.getAttributes());
+                
+        Integer retval = m_gbDao.getTargetMarketNotBasedOnId(product.getAttributes().getAttribute("targetMarket"));               
+        productRecord.setGpcCategoryCode(product.getAttributes().getAttribute("gpcCategoryCode"));        
+        productRecord.setTargetCountryCode( retval.intValue());        
+        productRecord.getAttributes().setAttribute("targetMarket", retval.toString());
         
         // TODO: temporary hack! Need to generalize and do it right.
         productRecord.getAttributes().setAttribute("brandOwnerName", gbAccount.getName());
@@ -137,6 +169,11 @@ public class ProductManager
             //String auditDetails = auditDetailsForProductUpdate(productRecord, product);
             productRecord.setModifiedDate(modifiedDate);
             productRecord.setAttributes(product.getAttributes());
+            
+            Integer retval = m_gbDao.getTargetMarketNotBasedOnId(product.getAttributes().getAttribute("targetMarket"));                
+            productRecord.setGpcCategoryCode(product.getAttributes().getAttribute("gpcCategoryCode"));        
+            productRecord.setTargetCountryCode( retval.intValue()); 
+            productRecord.getAttributes().setAttribute("targetMarket", retval.toString());
             internalUpdateProduct(agentUser, username, gbAccount, productRecord, callback);
             
             AuditEventRecord event = m_gbDao.newAuditEvent();
@@ -254,7 +291,4 @@ public class ProductManager
             m_gbDao.deleteProduct(productRecord);
         }
     }
-
-
-
 }
