@@ -133,6 +133,17 @@ public class ProductController extends GBAwareController
     {
         return editOrRenewProductGet(model, principal, gtin, false);
     }
+    
+    @RequestMapping(value = "/product/{gtin}/detail", method = RequestMethod.GET)
+    public String detailProductGet(Model model, Principal principal, @PathVariable String gtin) throws GlobalBrokerException, NoSuchResourceException 
+    {   	    	
+    	Product product = lookupProduct(gtin);
+    	if (product != null)
+    	{
+    		model.addAttribute("Product", product);
+    	}
+    	return "/WEB-INF/jsp/product/productDetail.jsp";
+    }
 
     @RequestMapping(value = "/product/{gtin}/renew", method = RequestMethod.GET)
     public String renewProductGet(Model model, Principal principal, @PathVariable String gtin) throws GlobalBrokerException, NoSuchResourceException 
@@ -285,6 +296,23 @@ public class ProductController extends GBAwareController
         attributes.setAttribute("dmStartDate", attributes.getAttribute("basicStartDate"));
     }
 
+    
+    private Product lookupProduct(String itemNumber) throws GlobalBrokerException, NoSuchResourceException
+    {    	
+    	Product product = null;
+    	
+    	try 
+    	{    		
+    		product = getGbService().getProductByGtinOnly(itemNumber);
+    	}
+    	catch (Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	    	    	
+    	return product;
+    }
+    
     
     private Product lookupProduct(String gbAccountGln, String gtin) throws GlobalBrokerException, NoSuchResourceException
     {

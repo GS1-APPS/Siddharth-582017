@@ -477,6 +477,7 @@ public class ApiController
     }
 
     @RequestMapping(value = "/import/{importId}", method = RequestMethod.DELETE)
+    @ResponseBody
     public void importDelete(Model model, Principal principal,
                                                      @PathVariable String importId,
                             @RequestParam(value="gln", required=true) String gln) throws GlobalBrokerException
@@ -484,7 +485,6 @@ public class ApiController
         AgentUser agentUser = findAgentUser(principal);
         m_gbServiceImpl.deleteImport(agentUser, gln, importId);
     }
-
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     @ResponseBody

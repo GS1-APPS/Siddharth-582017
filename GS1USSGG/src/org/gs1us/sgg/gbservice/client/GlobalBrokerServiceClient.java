@@ -244,7 +244,7 @@ public class GlobalBrokerServiceClient implements GlobalBrokerService
     public ProductStatus deleteProduct(String username, String gln,
             String gtin, PurchaseOrder po) throws GlobalBrokerException
     {
-        return m_jsonHttpClient.doRequest(InboundProductStatus.class, HttpMethod.DELETE, null, "/nonprod/product/%s&gln=%s&username=%s", gtin, gln, username);
+        return m_jsonHttpClient.doRequest(InboundProductStatus.class, HttpMethod.DELETE, null, "/api/nonprod/product/%s?gln=%s&username=%s", gtin, gln, username);
     }
     
     @Override
