@@ -7,4 +7,5 @@ public interface User
     public String getLastName();
     public String getTimezone();
     public Member getMember();
+    public String getApiKey();
 }

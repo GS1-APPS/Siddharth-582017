@@ -19,12 +19,9 @@ public class Validator
         String gtin = product.getGtin();
         GtinValidator gtinValidator = new GtinValidator(gcps);
         gtinValidator.validate(null, gtin, validationErrors);
-        
         DataAccuracyAckValidator dataAccuracyValidator = new DataAccuracyAckValidator();
         dataAccuracyValidator.validate(null, product.getDataAccuracyAckUser(), validationErrors);
-        
-        validateUserAttributes(attributeSchema, action, product, validationErrors);
-        
+        validateUserAttributes(attributeSchema, action, product, validationErrors);        
         return;
     }
 
@@ -37,12 +34,10 @@ public class Validator
         for (Iterator<AttributeDesc> i = attributeSchema.selectedAttributesIterator(objectToValidate); i.hasNext();)
         {
             AttributeDesc attrDesc = i.next();
-
             if (action.matches(attrDesc.getActions()))
             {
                 ((AttributeDescImpl)attrDesc).validateAttribute(objectToValidate, validationErrors);
             }
         }
     }
-
 }

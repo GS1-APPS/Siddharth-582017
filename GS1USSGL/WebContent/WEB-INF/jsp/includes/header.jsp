@@ -34,6 +34,9 @@
 	String productsUri = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "showProducts", (Object)null, (Object)null).toUriString();
 	String agreementsUri = MvcUriComponentsBuilder.fromMethodName(SignupController.class, "agreementsGet", (Object)null, (Object)null).toUriString();
 	String appsUri = MvcUriComponentsBuilder.fromMethodName(AppController.class, "showApps", (Object)null, (Object)null).toUriString();
+	
+	String userAccountUri = MvcUriComponentsBuilder.fromMethodName(UserController.class, "userAccount", (Object)null, (Object)null).toUriString();
+	
 	String accountUri = MvcUriComponentsBuilder.fromMethodName(AccountController.class, "showAccount", (Object)null, (Object)null).toUriString();
 	String transactionsUri = MvcUriComponentsBuilder.fromMethodName(AccountController.class, "showTransactions", (Object)null, (Object)null).toUriString();
 	String ordersUri = MvcUriComponentsBuilder.fromMethodName(AccountController.class, "showOrders", (Object)null, (Object)null).toUriString();
@@ -214,6 +217,10 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.cr
 								
 								<c:if test='<%= request.isUserInRole("ROLE_USER") %>'>
 									<li class='<%= selectedItem.equals("products") ? "active" : "" %>'><a href="<%= productsUri %>">Products</a></li>
+								</c:if>
+
+								<c:if test='<%= request.isUserInRole("ROLE_USER") %>'>
+									<li class='<%= selectedItem.equals("userAccount") ? "active" : "" %>'><a href="<%= userAccountUri %>">Account</a></li>
 								</c:if>
 								
 								<!-- 

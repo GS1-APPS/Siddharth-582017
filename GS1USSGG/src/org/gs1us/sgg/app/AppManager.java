@@ -286,6 +286,8 @@ public class AppManager
                                                                          new AttributeValidator[]{new DecimalValidator(), new OtherAttributeRequiredValidator(dmLocalSalesTaxJurisdiction)}));
         dmAccountAttributes.add(dmLocalSalesTaxJurisdiction);
         */
+        
+        /*
         m_dmLicenseTypeAttribute = m_productManager.newProductAttributeDesc("dmLicenseType", 
                                                                          "DWCode License Type", 
                                                                          null,
@@ -297,6 +299,7 @@ public class AppManager
                                                                          "The license type agreed with Digimarc",
                                                                          new AttributeValidator[]{new RequiredAttributeValidator()});
         dmAccountAttributes.add(m_dmLicenseTypeAttribute);
+        */
         
         List<AttributeDesc> dmAttributes = new ArrayList<>();
         dmAttributes.add(m_productManager.newProductAttributeDesc("dmExperienceUrl", "DWCode Experience URL", new String[]{"dmexperienceurl", "dwcode experience url"}, null, AttributeType.WEBURL, false, 

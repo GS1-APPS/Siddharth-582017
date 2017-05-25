@@ -31,7 +31,11 @@ public abstract class StandaloneUser implements User, UserDetails
     @Override
     public abstract Member getMember();
     public abstract void setMember(Member member);
-    
+
+    @Override
+    public abstract String getApiKey();
+    public abstract void setApiKey(String apiKey);
+        
     // Everything below is additional standalone functionality
     
     public abstract String getId();

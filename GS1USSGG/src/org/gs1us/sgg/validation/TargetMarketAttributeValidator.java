@@ -30,23 +30,275 @@ public class TargetMarketAttributeValidator implements AttributeValidator
         
         if (value != null && !value.equals(""))
         {
+        	boolean byPlanId = GetIdBasedOnPlanId(value);
         	boolean byCountry = GetIdBasedOnCountryName(value);
         	boolean byCountryCode2 = GetIdBasedOnCountryCode2(value);
         	boolean byCountryCode3 = GetIdBasedOnCountryCode3(value);
         	
-        	if (!byCountry && !byCountryCode2 && !byCountryCode3)
+        	if (!byPlanId && !byCountry && !byCountryCode2 && !byCountryCode3)
         	{
         		validationErrors.add(new ProductValidationErrorImpl("Target Market", "Target Market is not a valid value."));
-        	}        	
+        	}
         }
         else
         {
         	validationErrors.add(new ProductValidationErrorImpl("Target Market", "Target Market is a required field."));
         }
-                            
+        
         return validationErrors.size() == errorCount;
     }
-
+    
+    private boolean GetIdBasedOnPlanId(String value)
+    {
+    	HashMap<String, String>  countryCodes = new HashMap<String, String>();
+    	countryCodes.put("1", "1");
+    	countryCodes.put("2", "2");
+    	countryCodes.put("3", "3");
+    	countryCodes.put("4", "4");
+    	countryCodes.put("5", "5");
+    	countryCodes.put("6", "6");
+    	countryCodes.put("7", "7");
+    	countryCodes.put("8", "8");
+    	countryCodes.put("9", "9");
+    	countryCodes.put("10", "10");
+    	countryCodes.put("11", "11");
+    	countryCodes.put("12", "12");
+    	countryCodes.put("13", "13");
+    	countryCodes.put("14", "14");
+    	countryCodes.put("15", "15");
+    	countryCodes.put("16", "16");
+    	countryCodes.put("17", "17");
+    	countryCodes.put("18", "18");
+    	countryCodes.put("19", "19");
+    	countryCodes.put("20", "20");
+    	countryCodes.put("21", "21");
+    	countryCodes.put("22", "22");
+    	countryCodes.put("23", "23");
+    	countryCodes.put("24", "24");
+    	countryCodes.put("25", "25");
+    	countryCodes.put("26", "26");
+    	countryCodes.put("27", "27");
+    	countryCodes.put("28", "28");
+    	countryCodes.put("29", "29");
+    	countryCodes.put("30", "30");
+    	countryCodes.put("31", "31");
+    	countryCodes.put("32", "32");
+    	countryCodes.put("33", "33");
+    	countryCodes.put("34", "34");
+    	countryCodes.put("35", "35");
+    	countryCodes.put("36", "36");
+    	countryCodes.put("37", "37");
+    	countryCodes.put("38", "38");
+    	countryCodes.put("39", "39");
+    	countryCodes.put("40", "40");
+    	countryCodes.put("41", "41");
+    	countryCodes.put("42", "42");
+    	countryCodes.put("43", "43");
+    	countryCodes.put("44", "44");
+    	countryCodes.put("45", "45");
+    	countryCodes.put("46", "46");
+    	countryCodes.put("47", "47");
+    	countryCodes.put("48", "48");
+    	countryCodes.put("49", "49");
+    	countryCodes.put("50", "50");
+    	countryCodes.put("51", "51");
+    	countryCodes.put("52", "52");
+    	countryCodes.put("53", "53");
+    	countryCodes.put("54", "54");
+    	countryCodes.put("55", "55");
+    	countryCodes.put("56", "56");
+    	countryCodes.put("57", "57");
+    	countryCodes.put("58", "58");
+    	countryCodes.put("59", "59");
+    	countryCodes.put("60", "60");
+    	countryCodes.put("61", "61");
+    	countryCodes.put("62", "62");
+    	countryCodes.put("63", "63");
+    	countryCodes.put("64", "64");
+    	countryCodes.put("65", "65");
+    	countryCodes.put("66", "66");
+    	countryCodes.put("67", "67");
+    	countryCodes.put("68", "68");
+    	countryCodes.put("69", "69");
+    	countryCodes.put("70", "70");
+    	countryCodes.put("71", "71");
+    	countryCodes.put("72", "72");
+    	countryCodes.put("73", "73");
+    	countryCodes.put("74", "74");
+    	countryCodes.put("75", "75");
+    	countryCodes.put("76", "76");
+    	countryCodes.put("77", "77");
+    	countryCodes.put("78", "78");
+    	countryCodes.put("79", "79");
+    	countryCodes.put("80", "80");
+    	countryCodes.put("81", "81");
+    	countryCodes.put("82", "82");
+    	countryCodes.put("83", "83");
+    	countryCodes.put("84", "84");
+    	countryCodes.put("85", "85");
+    	countryCodes.put("86", "86");
+    	countryCodes.put("87", "87");
+    	countryCodes.put("88", "88");
+    	countryCodes.put("89", "89");
+    	countryCodes.put("90", "90");
+    	countryCodes.put("91", "91");
+    	countryCodes.put("92", "92");
+    	countryCodes.put("93", "93");
+    	countryCodes.put("94", "94");
+    	countryCodes.put("95", "95");
+    	countryCodes.put("96", "96");
+    	countryCodes.put("97", "97");
+    	countryCodes.put("98", "98");
+    	countryCodes.put("99", "99");
+    	countryCodes.put("100", "100");
+    	countryCodes.put("101", "101");
+    	countryCodes.put("102", "102");
+    	countryCodes.put("103", "103");
+    	countryCodes.put("104", "104");
+    	countryCodes.put("105", "105");
+    	countryCodes.put("106", "106");
+    	countryCodes.put("107", "107");
+    	countryCodes.put("108", "108");
+    	countryCodes.put("109", "109");
+    	countryCodes.put("110", "110");
+    	countryCodes.put("111", "111");
+    	countryCodes.put("112", "112");
+    	countryCodes.put("113", "113");
+    	countryCodes.put("114", "114");
+    	countryCodes.put("115", "115");
+    	countryCodes.put("116", "116");
+    	countryCodes.put("117", "117");
+    	countryCodes.put("118", "118");
+    	countryCodes.put("119", "119");
+    	countryCodes.put("120", "120");
+    	countryCodes.put("121", "121");
+    	countryCodes.put("122", "122");
+    	countryCodes.put("123", "123");
+    	countryCodes.put("124", "124");
+    	countryCodes.put("125", "125");
+    	countryCodes.put("126", "126");
+    	countryCodes.put("127", "127");
+    	countryCodes.put("128", "128");
+    	countryCodes.put("129", "129");
+    	countryCodes.put("130", "130");
+    	countryCodes.put("131", "131");
+    	countryCodes.put("132", "132");
+    	countryCodes.put("133", "133");
+    	countryCodes.put("134", "134");
+    	countryCodes.put("135", "135");
+    	countryCodes.put("136", "136");
+    	countryCodes.put("137", "137");
+    	countryCodes.put("138", "138");
+    	countryCodes.put("139", "139");
+    	countryCodes.put("140", "140");
+    	countryCodes.put("141", "141");
+    	countryCodes.put("142", "142");
+    	countryCodes.put("143", "143");
+    	countryCodes.put("144", "144");
+    	countryCodes.put("145", "145");
+    	countryCodes.put("146", "146");
+    	countryCodes.put("147", "147");
+    	countryCodes.put("148", "148");
+    	countryCodes.put("149", "149");
+    	countryCodes.put("150", "150");
+    	countryCodes.put("151", "151");
+    	countryCodes.put("152", "152");
+    	countryCodes.put("153", "153");
+    	countryCodes.put("154", "154");
+    	countryCodes.put("155", "155");
+    	countryCodes.put("156", "156");
+    	countryCodes.put("157", "157");
+    	countryCodes.put("158", "158");
+    	countryCodes.put("159", "159");
+    	countryCodes.put("160", "160");
+    	countryCodes.put("161", "161");
+    	countryCodes.put("162", "162");
+    	countryCodes.put("163", "163");
+    	countryCodes.put("164", "164");
+    	countryCodes.put("165", "165");
+    	countryCodes.put("166", "166");
+    	countryCodes.put("167", "167");
+    	countryCodes.put("168", "168");
+    	countryCodes.put("169", "169");
+    	countryCodes.put("170", "170");
+    	countryCodes.put("171", "171");
+    	countryCodes.put("172", "172");
+    	countryCodes.put("173", "173");
+    	countryCodes.put("174", "174");
+    	countryCodes.put("175", "175");
+    	countryCodes.put("176", "176");
+    	countryCodes.put("177", "177");
+    	countryCodes.put("178", "178");
+    	countryCodes.put("179", "179");
+    	countryCodes.put("180", "180");
+    	countryCodes.put("181", "181");
+    	countryCodes.put("182", "182");
+    	countryCodes.put("183", "183");
+    	countryCodes.put("184", "184");
+    	countryCodes.put("185", "185");
+    	countryCodes.put("186", "186");
+    	countryCodes.put("187", "187");
+    	countryCodes.put("188", "188");
+    	countryCodes.put("189", "189");
+    	countryCodes.put("190", "190");
+    	countryCodes.put("191", "191");
+    	countryCodes.put("192", "192");
+    	countryCodes.put("193", "193");
+    	countryCodes.put("194", "194");
+    	countryCodes.put("195", "195");
+    	countryCodes.put("196", "196");
+    	countryCodes.put("197", "197");
+    	countryCodes.put("198", "198");
+    	countryCodes.put("199", "199");
+    	countryCodes.put("200", "200");
+    	countryCodes.put("201", "201");
+    	countryCodes.put("202", "202");
+    	countryCodes.put("203", "203");
+    	countryCodes.put("204", "204");
+    	countryCodes.put("205", "205");
+    	countryCodes.put("206", "206");
+    	countryCodes.put("207", "207");
+    	countryCodes.put("208", "208");
+    	countryCodes.put("209", "209");
+    	countryCodes.put("210", "210");
+    	countryCodes.put("211", "211");
+    	countryCodes.put("212", "212");
+    	countryCodes.put("213", "213");
+    	countryCodes.put("214", "214");
+    	countryCodes.put("215", "215");
+    	countryCodes.put("216", "216");
+    	countryCodes.put("217", "217");
+    	countryCodes.put("218", "218");
+    	countryCodes.put("219", "219");
+    	countryCodes.put("220", "220");
+    	countryCodes.put("221", "221");
+    	countryCodes.put("222", "222");
+    	countryCodes.put("223", "223");
+    	countryCodes.put("224", "224");
+    	countryCodes.put("225", "225");
+    	countryCodes.put("226", "226");
+    	countryCodes.put("227", "227");
+    	countryCodes.put("228", "228");
+    	countryCodes.put("229", "229");
+    	countryCodes.put("230", "230");
+    	countryCodes.put("231", "231");
+    	countryCodes.put("232", "232");
+    	countryCodes.put("233", "233");
+    	countryCodes.put("234", "234");
+    	countryCodes.put("235", "235");
+    	countryCodes.put("236", "236");
+    	countryCodes.put("237", "237");
+    	countryCodes.put("238", "238");
+    	countryCodes.put("239", "239");
+    	
+    	if (countryCodes.containsValue(value))
+    	{
+    		return true;
+    	}
+    	
+        return false;    	
+    }
+    
     private boolean GetIdBasedOnCountryCode2(String countryCode2)
     {
     	countryCode2 = countryCode2.toUpperCase();    	

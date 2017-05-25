@@ -23,6 +23,8 @@
 	String[] timezones = (String[])request.getAttribute("timezones");
 	String[] userTypeNames = (String[])request.getAttribute("userTypeNames");
 	String[] userStateNames = (String[])request.getAttribute("userStateNames");
+	
+	String apiKey = (String)request.getAttribute("apiKey");
 %>
     
 <jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
@@ -79,6 +81,16 @@
     <label>Time Zone</label>
     <form:select class="form-control" cssErrorClass="form-control alert-danger" path="timezone" items="<%= timezones %>"/>
   </div>
+
+  <% if (apiKey != null && !apiKey.equals("")) { %>
+  <div class="form-group">
+    <label>API Key</label>
+    <%=apiKey %>    
+  </div>
+  <% } %>
+  	
+	<form:hidden path="apiKey"/>
+
   <button type="submit" class="btn-primary btn-margin "><c:out value="<%= submitLabel %>" /></button>
   <button type="button" class="btn-secondary btn-margin " onclick='window.location.href="<%= cancelLink %>"'>Cancel</button>
 

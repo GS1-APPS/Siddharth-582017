@@ -68,6 +68,9 @@ public class JpaStandaloneUser extends StandaloneUser
     @Basic
     private int m_loginCount;
 
+    @Basic
+    private String m_apiKey;
+        
     public String getId()
     {
         return KEY_MAPPER.keyToId(m_id);
@@ -78,6 +81,16 @@ public class JpaStandaloneUser extends StandaloneUser
         m_id = KEY_MAPPER.idToKey(id);
     }
 
+    public String getApiKey()
+    {
+        return m_apiKey;
+    }
+
+    public void setApiKey(String apiKey)
+    {
+    	m_apiKey = apiKey;
+    }    
+    
     public String getUsername()
     {
         return m_username;

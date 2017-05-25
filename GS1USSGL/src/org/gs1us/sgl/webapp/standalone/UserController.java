@@ -8,8 +8,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,41 +74,41 @@ public class UserController extends GBAwareController
 {
     private static Logger s_logger = Logger.getLogger("org.gs1us.sgl.webapp.standalone.UserController");
     
-    private static final String INITIAL_USER_SUBJECT = "Welcome to the " + WebappUtil.shortProductName();
+    private static final String INITIAL_USER_SUBJECT = "Welcome to the GS1 Cloud";
     private static final String INITIAL_USER_EMAIL =
             "Congratulations, ${firstName}!\n\n"
-            + "The ${longProductName} account for ${companyName} is set up. To access it, you will first need to create a password. "
-            + "Select the link below to do this. Once completed, you will be brought to the login page for the ${shortProductName}. "
+            + "The GS1 Cloud account for ${companyName} is set up. To access it, you will first need to create a password. "
+            + "Select the link below to do this. Once completed, you will be brought to the login page for the GS1 Cloud. "
             + "This link is active for 24 hours, please set up your password within this timeframe. "
             + "Otherwise, select the Forgot Password link to have a new password link sent to you.\n\n"
             + "${passwordLink}\n\n"
-            + "From here you can enter your product information and enable them for DWCodes. "
+            + "From here you can enter your product information and enable them for GS1 Cloud. "
             + "Should you have any questions, contact us at ${supportEmail}.\n\n"
             + "Thank you for signing up ... and welcome!\n\n"
-            + "The DWCode Team\n";
+            + "The GS1 Cloud Team\n";
     
-    private static final String ADDITIONAL_USER_SUBJECT = "Welcome to the " + WebappUtil.shortProductName();
+    private static final String ADDITIONAL_USER_SUBJECT = "Welcome to the GS1 Cloud";
     private static final String ADDITIONAL_USER_EMAIL =
             "Welcome, ${firstName}!\n\n"
-            + "You have been added to the ${longProductName} account used by ${companyName}. To access it, you will first need to create a password. "
-            + "Select the link below to do this. Once completed, you will be brought to the login page for the ${shortProductName}. "
+            + "You have been added to the GS1 Cloud account used by ${companyName}. To access it, you will first need to create a password. "
+            + "Select the link below to do this. Once completed, you will be brought to the login page for the GS1 Cloud. "
             + "This link is active for 24 hours, please set up your password within this timeframe. "
             + "Otherwise, select the Forgot Password link to have a new password link sent to you.\n\n"
             + "${passwordLink}\n\n"
-            + "From here you can enter your product information and enable them for DWCodes. "
+            + "From here you can enter your product information and enable them for GS1 Cloud. "
             + "Should you have any questions, contact us at ${supportEmail}.\n\n"
-            + "Again, welcome to the ${shortProductName}.\n\n"
-            + "The DWCode Team\n";
+            + "Again, welcome to the GS1 Cloud.\n\n"
+            + "The GS1 Cloud Team\n";
     
-    private static final String RESET_PASSWORD_SUBJECT = WebappUtil.shortProductName() + " password reset";
+    private static final String RESET_PASSWORD_SUBJECT = "GS1 Cloud password reset";
     private static final String RESET_PASSWORD_EMAIL = 
             "Dear ${firstName},\n\n"
             + "This email has been sent because this user account requested a password reset.\n\n"
-            + "Select the link below to reset your password.  Once completed, you will be brought to the login page for the ${longProductName}. "
+            + "Select the link below to reset your password.  Once completed, you will be brought to the login page for the GS1 Cloud. "
             + "This link is active for 24 hours, please set up your password within this timeframe. "
             + "Otherwise, select the Forgot Password link again to have a new password link sent to you.\n\n"
             + "${passwordLink}\n\n"
-            + "The DWCode Team\n\n"
+            + "The GS1 Cloud Team\n\n"
             + "(Please do not reply to this email.)\n";
     
     @Resource
@@ -398,6 +400,8 @@ public class UserController extends GBAwareController
         
         editUserModelAttributes(model, user);
         
+        model.addAttribute("apiKey", user.getApiKey());
+        
         return "/WEB-INF/jsp/user/editUser.jsp";
     }
 
@@ -457,6 +461,31 @@ public class UserController extends GBAwareController
        
         
         return "redirect:/ui/user";
+    }
+    
+    //userAccount
+    @RequestMapping(value = "/userAccount", method = RequestMethod.GET)
+    public String userAccount(HttpServletRequest request, Model model) 
+    {    	
+		if (request.getUserPrincipal() != null) 
+		{ 
+		    StandaloneUser user = (StandaloneUser)((Authentication)request.getUserPrincipal()).getPrincipal();		    
+		    model.addAttribute("firstName", user.getFirstName());
+		    model.addAttribute("lastName", user.getLastName());
+		    model.addAttribute("email", user.getUsername());
+		    model.addAttribute("apiKey", user.getApiKey());
+		    model.addAttribute("timeZone", user.getTimezone());
+		}
+		else
+		{
+		    model.addAttribute("firstName", "");
+		    model.addAttribute("lastName", "");
+		    model.addAttribute("email", "");
+		    model.addAttribute("apiKey", "");
+		    model.addAttribute("timeZone", "");			
+		}
+		
+        return "/WEB-INF/jsp/user/showUserAccount.jsp";
     }
     
     @RequestMapping(value = "/user", method = RequestMethod.GET)
@@ -608,6 +637,16 @@ public class UserController extends GBAwareController
         private String m_timezone;
         private String m_userStateName;
         private String m_userTypeName;
+        private String m_apiKey;
+
+        public String getApiKey()
+        {
+            return m_apiKey;
+        }
+        public void setApiKey(String apiKey)
+        {
+        	m_apiKey = apiKey;
+        }
         
         public String getEmail()
         {
@@ -665,7 +704,9 @@ public class UserController extends GBAwareController
             setFirstName(user.getFirstName());
             setLastName(user.getLastName());
             setTimezone(user.getTimezone());
+            setApiKey(user.getApiKey());
         }
+        
         public void updateUserEditableFields(StandaloneUser user)
         {
             String firstName = UserInputUtil.trimToNull(getFirstName());
@@ -675,8 +716,18 @@ public class UserController extends GBAwareController
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setTimezone(timezone);
-
+            
+            if (getApiKey() == null || getApiKey().equals(""))
+            {
+            	final String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+            	user.setApiKey(uuid);
+            }
+            else
+            {
+            	user.setApiKey(getApiKey());	
+            }            
         }
+        
         public void setAdminEditableFields(StandaloneUser user)
         {
             setUserEditableFields(user);
@@ -906,6 +957,13 @@ public class UserController extends GBAwareController
         user.setState(UserState.CREATED);
         user.setPasswordReset(SecurityUtil.generatePasswordResetKey());
         user.setPasswordResetExpiration(new Date(created.getTime() + PASSWORD_RESET_EXPIRATION_INTERVAL_MILLIS));
+        
+        if (user.getApiKey() == null || user.getApiKey().equals(""))
+        {
+        	final String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        	user.setApiKey(uuid);
+        }
+        	        
         m_userDao.updateUser(user);
         return user;
     }
@@ -1087,13 +1145,26 @@ public class UserController extends GBAwareController
     @RequestMapping(value = "/member/{id}/delete", method = RequestMethod.GET)
     public String deleteMemberGet(Model model, @PathVariable String id) throws NoSuchResourceException
     {
-        StandaloneMember member = populateMember(model, id);
+        StandaloneMember member = populateMember(model, id);        
+        List<StandaloneUser> users = m_userDao.getAllUsers();
         
-        model.addAttribute("member", member);
+        for (Iterator<StandaloneUser> iterator = users.iterator(); iterator.hasNext();) 
+        {
+        	StandaloneUser user = (StandaloneUser) iterator.next();        	
+        	if (user.getMember().equals(member))
+        	{
+        		m_userDao.deleteUser(user);
+        	}
+        }        
         
-        return "/WEB-INF/jsp/user/deleteMember.jsp";
+        m_memberDao.deleteMember(member);
+        return "redirect:/ui/member";
+        
+        //model.addAttribute("member", member);
+        //return "/WEB-INF/jsp/user/deleteMember.jsp";
     }
 
+    /*
     @RequestMapping(value = "/member/{id}/delete", method = RequestMethod.POST)
     public String deleteMember(Model model, @PathVariable String id) throws NoSuchResourceException
     {
@@ -1106,6 +1177,7 @@ public class UserController extends GBAwareController
         
         return "redirect:/ui/member";
     }
+    */
     
     @RequestMapping(value = "/member/{id}/newUser", method = RequestMethod.GET)
     public String memberNewUserGet(Model model, @PathVariable String id) throws NoSuchResourceException

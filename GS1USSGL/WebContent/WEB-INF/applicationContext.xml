@@ -99,10 +99,9 @@
 	
 	<bean id="templateEmail" class="org.springframework.mail.SimpleMailMessage">
 		<!--  Depending on the email, either from or to will be changed to something else -->
-	    <property name="from" value="DWCodeSupport@gs1us.org" />
-	    <property name="to" value="DWCodeSupport@gs1us.org" />
-	</bean>
-		
+	    <property name="from" value="GS1CloudSupport@gs1.org" />
+	    <property name="to" value="GS1CloudSupport@gs1.org" />
+	</bean>		
 
 	<bean id="termsOfService" class="org.gs1us.sgl.serviceterms.TermsOfService">
 		<property name="version" value="1.0" />
@@ -298,10 +297,27 @@
 		</security:http>
 	</beans>
 	
-	
 	<!-- Dev profile is on KT's development machine -->
 	<beans profile="dev">
+	
+		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+			<property name="host" value="eu-smtp-outbound-1.mimecast.com"/>
+			<property name="port" value="587"/>
+			<property name="username" value="gs1cloudsupport@gs1.org"/>
+			<property name="password" value="!Eagle#777"/>
+			<property name="javaMailProperties">
+	           <props>
+	               <prop key="mail.transport.protocol">smtp</prop>
+	               <prop key="mail.smtp.auth">true</prop>
+	               <prop key="mail.smtp.starttls.enable">true</prop>
+	               <prop key="mail.debug">true</prop>
+	           </props>
+			</property> 
+		</bean>
+		
+	<!-- 
 	 	<bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
+	 --> 	
 		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
 	    	<constructor-arg index="0" value="http://localhost:8080/GS1USSGG"/>
 	    	<constructor-arg index="1" value="gs1us"/>
@@ -311,7 +327,7 @@
 	    
 	 	<security:http>	 	
 			<security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')" />
-			<security:intercept-url pattern="/ui/user*/**" access="hasRole('ADMIN')" />
+			<security:intercept-url pattern="/ui/user*/**" access="hasRole('USER')" />
 			<security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')" /> 
 			<security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')" />
 			<security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')" />
