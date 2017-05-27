@@ -45,6 +45,8 @@ import org.gs1us.sgg.gbservice.api.ProductStatus;
 import org.gs1us.sgg.gbservice.api.ProductValidationError;
 import org.gs1us.sgg.gbservice.api.PurchaseOrder;
 import org.gs1us.sgg.gbservice.api.SalesOrder;
+import org.gs1us.sgg.gbservice.api.UploadValidationProduct;
+import org.gs1us.sgg.gbservice.json.InboundProductAttribute;
 import org.gs1us.sgg.gbservice.api.AppDesc.Scope;
 import org.gs1us.sgg.gbservice.test.TestManager;
 import org.gs1us.sgg.gbservice.util.PutHandler;
@@ -366,7 +368,31 @@ public class GlobalBrokerServiceImpl
     }
 
     
-   
+    public List <? extends UploadValidationProduct>bulkUpload(AgentUser principal, List<? extends InboundProductAttribute> productAttributeList) throws GlobalBrokerException
+    {
+ 	   
+ 	   //TODO: find username, gln based on principal object.
+
+ 	   //TODO: Hardcoded username for now.
+        String validatedUsername = "donna.dipietro@gs1.org"; //findUsername(username);
+        
+        //TODO: get Account GLN from db using agentUser object.
+        //String gbAccountGln = getGBAccountGln(principal);
+        String gbAccountGln = "0000000000000";
+ 	   
+        //Collection<? extends AppSubscription> subs = getGbService().getAppSubscriptions(gbAccountGln, true);
+        //Collection<? extends AppSubscription> subs = getAppSubscriptions(agentUser, gbAccountGln, true);
+ 	   
+ 	   GBAppContext appContext = findGbAppContext(principal, validatedUsername, gbAccountGln);
+
+        //ProductStatus productStatus = m_gbServiceImpl.createProduct(agentUser, validatedUsername, gbAccountGln, productAttr, null);
+        	   
+ 	   
+ 	   return m_productOpsManager.bulkUploadProducts(appContext, productAttributeList);
+        	   
+ 	   
+    }
+  
 
 
     public Import importUpload(AgentUser principal, String username, String gln, String filename, String format, byte[] content) throws GlobalBrokerException

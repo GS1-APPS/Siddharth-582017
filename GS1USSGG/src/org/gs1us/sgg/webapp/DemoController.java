@@ -79,7 +79,7 @@ public class DemoController
                     m_productManager.deleteProduct(null, "demo", gbAccount, product, null);
             }
  
-            return "redirect:http://52.55.25.90/GS1USSGL/ui/product";
+            return "redirect:http://localhost/GS1USSGL/ui/product";
         }
         else
             throw new NotFoundException();

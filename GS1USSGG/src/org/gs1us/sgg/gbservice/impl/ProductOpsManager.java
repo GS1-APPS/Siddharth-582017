@@ -29,7 +29,11 @@ import org.gs1us.sgg.gbservice.api.ProductStatus;
 import org.gs1us.sgg.gbservice.api.ProductValidationError;
 import org.gs1us.sgg.gbservice.api.PurchaseOrder;
 import org.gs1us.sgg.gbservice.api.Quotation;
+import org.gs1us.sgg.gbservice.api.UploadValidationProduct;
+import org.gs1us.sgg.gbservice.json.InboundProductAttribute;
+import org.gs1us.sgg.gbservice.json.InboundUploadValidationProduct;
 import org.gs1us.sgg.product.ProductManager;
+import org.gs1us.sgg.util.UserInputUtil;
 import org.gs1us.sgg.validation.ProductValidationErrorImpl;
 import org.gs1us.sgg.validation.Validator;
 import org.springframework.transaction.annotation.Propagation;
@@ -221,8 +225,59 @@ public class ProductOpsManager
             return new ProductStatusImpl(ProductState.COMPLETED, null, null);
         }
     }
+    
+    
 
+    public List<UploadValidationProduct> bulkUploadProducts(final GBAppContext appContext, List<? extends InboundProductAttribute> productAttrList)
+            throws GlobalBrokerException
+    {
+    
+    	List<UploadValidationProduct> uploadProductResultList = new ArrayList<UploadValidationProduct>();
+    	
+	    for (InboundProductAttribute productAttr:productAttrList) {
+	       	
+	    	System.out.println("Calling product creation for :" + productAttr.getGtin());
+	
+	        String gtin = UserInputUtil.trimToNull((String) productAttr.getGtin() );
+	        // Hack to avoid error with null GTIN -- validation will flag this
+	        if (gtin == null)
+	            gtin = "0";
+	        
+	        System.out.println("Bulk Upload Step 2 :");
+	        Product unpaddedProduct = m_productManager.newProduct(gtin);
+	        
+	        unpaddedProduct.setDataAccuracyAckUser(appContext.getUsername());
+	        
+	        //This is not needed as there is no GTIN in path parameter.
+	        //checkGtinAgreement(product.getGtin(), product);
+	    	  
+	        AttributeSet attrSet = unpaddedProduct.getAttributes();
 
+	        //TODO: Prepare productObj....	        
+	        //TODO: Fix this method....
+
+	        convertProductAttributes(attrSet, productAttr);
+
+	        
+	        System.out.println("Bulk Upload Step 3 : Put prroduct status in transaction");
+	        ProductStatus productStatus =  putProductInTransaction(appContext, unpaddedProduct, false);
+	    	
+	        InboundUploadValidationProduct inboundUploadValidationProduct = new InboundUploadValidationProduct();
+	        inboundUploadValidationProduct.setGtin(gtin);
+	        inboundUploadValidationProduct.setStatus(productStatus);
+	        //TODO: Enhance this method
+	        inboundUploadValidationProduct.setStatusCode(productStatus.getState() != ProductState.INVALID ? "200":"400");
+	        
+	        uploadProductResultList.add(inboundUploadValidationProduct);
+	    	
+	    	
+	    }
+
+	    return uploadProductResultList;
+    }
+
+    
+    
     public Product getProductByGtin(GBAccount gbAccount, String gtin)
             throws GlobalBrokerException
     {
@@ -282,6 +337,31 @@ public class ProductOpsManager
         newAttributes.nullsToOldValues(oldAttributes);
     }
 
+    
+    private AttributeSet convertProductAttributes( AttributeSet attrSet, InboundProductAttribute productAttr){
+    	//TODO: Use ObjectMapper to convert from json to AttributeSet.
+ 
+    	System.out.println("Bulk Upload Step 4 : Put prroduct status in transaction");
+    	
+    	attrSet.setAttribute("itemDataLanguage", productAttr.getItemDataLanguage());
+    	attrSet.setAttribute("brandName", productAttr.getBrandName());
+    	attrSet.setAttribute("additionalTradeItemDescription", productAttr.getAdditionalTradeItemDescription());
+    	attrSet.setAttribute("targetMarket", productAttr.getTargetMarket());
+    	attrSet.setAttribute("gpcCategoryCode", productAttr.getGpcCategoryCode());
+    	attrSet.setAttribute("informationProviderGLN", productAttr.getInformationProviderGLN());
+    	attrSet.setAttribute("itemDataLanguage", productAttr.getItemDataLanguage());
+    	attrSet.setAttribute("companyName", productAttr.getCompanyName());
+    	attrSet.setAttribute("uriProductImage", productAttr.getUriProductImage());
+    	
+    	System.out.println("Bulk Upload Step 4 :" + attrSet.toString());
+    	
+    	//product.setGpcCategoryCode(productAttr.getGpcCategoryCode()); not needed being set in createProduct
+    	//product.setTargetCountryCode(productAttr.getTargetMarket()); not needed being set in createProduct
+    	//product.setAttributes(productAttr);
+    	//product.setDataAccuracyAckUser(null); //Hardcode to null for now
+    	    	
+    	return attrSet;
+    }
 
 
     private PurchaseOrder quotationToPurchaseOrder(Quotation quotation)

@@ -1,6 +1,7 @@
 package org.gs1us.sgg.gbservice.json;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 
 import org.gs1us.sgg.gbservice.api.Amount;
 import org.gs1us.sgg.gbservice.api.AppDesc;
@@ -27,6 +28,7 @@ import org.gs1us.sgg.gbservice.api.ProductValidationError;
 import org.gs1us.sgg.gbservice.api.PurchaseOrder;
 import org.gs1us.sgg.gbservice.api.Quotation;
 import org.gs1us.sgg.gbservice.api.SalesOrder;
+import org.gs1us.sgg.gbservice.api.UploadValidationProduct;
 import org.gs1us.sgg.gbservice.api.AttributeEnumValue;
 import org.gs1us.sgg.util.Util;
 import org.springframework.beans.factory.FactoryBean;
@@ -36,6 +38,7 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
@@ -98,6 +101,8 @@ public class ObjectMapperFactoryBean implements FactoryBean<ObjectMapper>
                           SimpleBeanPropertyFilter.filterOutAllExcept("lineItems"));
         filters.addFilter("SalesOrder",
                           SimpleBeanPropertyFilter.filterOutAllExcept("orderId", "gln", "date", "poId", "lineItems", "summary", "total", "invoiceId"));
+        filters.addFilter("UploadValidationProduct",
+                SimpleBeanPropertyFilter.filterOutAllExcept("gtin", "statusCode", "validationErrors"));
         filters.addFilter("Uom",
                           SimpleBeanPropertyFilter.filterOutAllExcept("code", "displayName"));
 
@@ -135,6 +140,8 @@ public class ObjectMapperFactoryBean implements FactoryBean<ObjectMapper>
         om.addMixIn(Quotation.class, QuotationMixin.class);
         om.addMixIn(SalesOrder.class, SalesOrderMixin.class);
         om.addMixIn(AttributeEnumValue.class, UomMixin.class);
+        om.addMixIn(UploadValidationProduct.class, UploadValidationProductMixin.class);
+
 
         om.setDateFormat(Util.ISO8601_DATE_FORMAT); 
 
@@ -308,6 +315,23 @@ public class ObjectMapperFactoryBean implements FactoryBean<ObjectMapper>
     {
     }
 
+    @JsonFilter("UploadValidationProduct")
+    @JsonPropertyOrder({ "gtin", "statusCode","validationErrors" })
+    public static abstract class UploadValidationProductMixin 
+    {
+        @JsonProperty("gtin")
+        public abstract String getGtin();
+
+        @JsonProperty("statusCode")
+        public abstract String getStatusCode();
+        
+        @JsonProperty("validationErrors")   
+        //@JsonIgnoreProperties({"quotation","state"})
+        @JsonInclude(Include.NON_NULL)
+        public abstract Collection<? extends ProductValidationError> getValidationErrors();
+        
+    }
+    
 
 
 }

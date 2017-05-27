@@ -41,6 +41,7 @@ import org.gs1us.sgg.gbservice.api.Product;
 import org.gs1us.sgg.gbservice.api.ProductState;
 import org.gs1us.sgg.gbservice.api.ProductStatus;
 import org.gs1us.sgg.gbservice.api.SalesOrder;
+import org.gs1us.sgg.gbservice.api.UploadValidationProduct;
 import org.gs1us.sgg.gbservice.api.ValidationException;
 import org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl;
 import org.gs1us.sgg.gbservice.json.ExceptionInfo;
@@ -54,6 +55,7 @@ import org.gs1us.sgg.gbservice.json.InboundOrderIdsAndExtras;
 import org.gs1us.sgg.gbservice.json.InboundPayInvoicesInfo;
 import org.gs1us.sgg.gbservice.json.InboundProduct;
 import org.gs1us.sgg.gbservice.json.InboundProductAndPo;
+import org.gs1us.sgg.gbservice.json.InboundProductAttribute;
 import org.gs1us.sgg.gbservice.json.InboundProductStatus;
 import org.gs1us.sgg.transport.HttpTransport.HttpMethod;
 import org.gs1us.sgg.util.UserInputUtil;
@@ -286,6 +288,30 @@ public class ApiController
 
         return productStatus;
     }
+    
+    
+    @RequestMapping(value = "/products/bulkUpload", method = RequestMethod.POST)
+    @ResponseBody
+    public List<? extends UploadValidationProduct> accountProductsCreatePost(Model model, Principal principal,
+                                             //@PathVariable String gtin,
+                                             //@RequestParam(required=false) String username,
+                                             //@RequestParam(value="gln", required=true) String gln,
+                                             @RequestBody(required = true) List<? extends InboundProductAttribute> productAttributeList) throws JsonProcessingException, GlobalBrokerException 
+    {
+        AgentUser agentUser = findAgentUser(principal);
+
+ 	   //TODO: Hardcoded username for now.
+        String validatedUsername = "donna.dipietro@gs1.org"; //findUsername(username);
+
+        logRequest(agentUser, validatedUsername, String.format("POST /product/bulkUpload"), productAttributeList);    
+        
+        System.out.println("Inside bulkUpload Step 1:");
+
+        List<?  extends UploadValidationProduct> productResultList = m_gbServiceImpl.bulkUpload(agentUser, productAttributeList);
+
+        return productResultList;
+    
+    }    
     
     @RequestMapping(value = "/product/{gtin}/create", method = RequestMethod.POST)
     @ResponseBody
