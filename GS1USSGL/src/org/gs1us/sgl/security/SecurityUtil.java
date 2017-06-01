@@ -18,8 +18,11 @@ public class SecurityUtil
     private static SecureRandom s_secureRng = null;
     public synchronized static String generateKey(int bytes)
     {
-        if (s_secureRng == null)
+        int i = 0;
+        while (s_secureRng == null && i < 1){
             s_secureRng = new SecureRandom();
+            i++;
+        }
         
         byte[] key = new byte[bytes];
         
