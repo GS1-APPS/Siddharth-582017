@@ -380,7 +380,7 @@
 	</beans>
 		
 	<!-- Dev profile is on KT's development machine -->
-	<beans profile="dev" >
+	<beans profile="dev">
 		<security:http>
 			<security:intercept-url pattern="/api/product*/**" access="hasAnyRole('PRODUCT','ADMIN')" />
 			<security:intercept-url pattern="/api/account*/**" access="hasAnyRole('ACCOUNT','ADMIN')" />
