@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation=Propagation.REQUIRES_NEW, isolation=Isolation.REPEATABLE_READ)
 public class JpaNextIdDao
 {
-    @PersistenceContext
+	@PersistenceContext(unitName="gs1ussggPersistenceUnit")
     private EntityManager m_entityManager;
     
     private NextIdManager m_salesOrderIdManager = new NextIdManager("salesOrder", 101);

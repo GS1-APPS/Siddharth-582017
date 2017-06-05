@@ -376,7 +376,7 @@ public class AppManager
         
         cpAttributes.add(m_productManager.newProductAttributeDesc("targetMarket", 
                 "Target Market", 
-                new String[]{"targetmarket", "Target Market", "Target Market", "targetMarket"},
+                new String[]{"targetMarket", "Target Market", "TargetMarket", "targetmarket"},
                 null,
                 AttributeType.ENUM,
                 m_countryCodes,
@@ -388,11 +388,11 @@ public class AppManager
         /*cpAttributes.add(m_productManager.newProductAttributeDesc("brandOwnerName", "Brand", new String[]{"brand owner name", "brandownername", "brandowner", "brand owner"}, "Basic product info", AttributeType.STRING, true, 
                                                                   "The name of the brand owner of the product, as printed on the package.",
                                                                   new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(70), new WhitelistedCharValidator()}));*/
-      cpAttributes.add(m_productManager.newProductAttributeDesc("brandName", "Brand", new String[]{
-    		  "brand name", "brandname", "brand"}, "Basic product info", AttributeType.STRING, true, 
+
+        cpAttributes.add(m_productManager.newProductAttributeDesc("brandName", "Brand", new String[]{
+    		  "brand name", "brandname", "brand"}, "Basic product info", AttributeType.STRING, false, 
                                                          "The brand of the product, as printed on the package.",
-                                                         new AttributeValidator[]{new RequiredAttributeValidator(), 
-                                                        		 new LengthAttributeValidator(70), new WhitelistedCharValidator()}));
+                                                         new AttributeValidator[]{new LengthAttributeValidator(70), new WhitelistedCharValidator()}));
         
        /* cpAttributes.add(m_productManager.newProductAttributeDesc("subBrand", "Sub-brand Name", new String[]{"subbrand", "sub-brand", "subbrand name", "sub-brand name"}, "Basic product info", AttributeType.STRING, false, 
                 "The sub-brand of the product, as printed on the package. Required when the product package includes both a brand name and a"
@@ -408,26 +408,33 @@ public class AppManager
                 "An understandable and useable description of a trade item using brand and other descriptors.",
                 new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(200), new WhitelistedCharValidator()}));*/
         
+/*      
 		cpAttributes.add(m_productManager.newProductAttributeDesc("additionalTradeItemDescription", "Label Description",
 				new String[]{"additionaltradeitemdescription","description"}, "Basic product info", 
 				AttributeType.STRING, true, "Description of the product as printed on the product label.",
 				new AttributeValidator[]{new RequiredAttributeValidator(),new LengthAttributeValidator(500),
 				new WhitelistedCharValidator()}));
-        
-        cpAttributes.add(m_productManager.newProductAttributeDesc("companyName", "Company Name", new String[]{"companyName", "company name"}, "Basic product info", AttributeType.STRING, true, 
+*/      
+		cpAttributes.add(m_productManager.newProductAttributeDesc("additionalTradeItemDescription", "Label Description",
+				new String[]{"additionalTradeItemDescription","description"}, "Basic product info", 
+				AttributeType.STRING, false, "Description of the product as printed on the product label.",
+				new AttributeValidator[]{new LengthAttributeValidator(500),
+				new WhitelistedCharValidator()}));		
+		
+        cpAttributes.add(m_productManager.newProductAttributeDesc("companyName", "Company Name", new String[]{"companyName", "company name"}, "Basic product info", AttributeType.STRING, false, 
                 "Additional description about the company name to communicate to industry will help define the product.",
-                new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(200), new WhitelistedCharValidator()}));
+                new AttributeValidator[]{new LengthAttributeValidator(200), new WhitelistedCharValidator()}));
         
-        cpAttributes.add(m_productManager.newProductAttributeDesc("gpcCategoryCode", "Product Classification", new String[]{"gpccategorycode", "gpc category code", "gpc category", "gpccategory", "gpc"}, "Basic product info", AttributeType.STRING, true, 
+        cpAttributes.add(m_productManager.newProductAttributeDesc("gpcCategoryCode", "Product Classification", new String[]{"gpcCategoryCode", "gpc category code", "gpc category", "gpccategory", "gpc"}, 
+        		"Basic product info", AttributeType.STRING, false, 
                 "The 8-digit GPC category code for the product",
-                new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(8, 8), new DigitOnlyAttributeValidator()}));
+                new AttributeValidator[]{new LengthAttributeValidator(8, 8), new DigitOnlyAttributeValidator()}));
         
-        cpAttributes.add(m_productManager.newProductAttributeDesc("uriProductImage", "Medium Resolution Image URL", new String[]{"uriproductimage", "uri product image", "product image url", "productimageurl"}, "Basic product info", AttributeType.WEBURL, true, 
+        cpAttributes.add(m_productManager.newProductAttributeDesc("uriProductImage", "Medium Resolution Image URL", new String[]{"uriProductImage", "uri product image", "product image url", "productimageurl"}, 
+        		"Basic product info", AttributeType.WEBURL, false, 
                 "A publicly-accessible Web URL of an image of the product. "
                 + "This URL should be for an image (jpg, png, etc), not for a web page (html).",
-                new AttributeValidator[]{new RequiredAttributeValidator(), new LengthAttributeValidator(2500), new UrlValidator(), new WhitelistedCharValidator()}));
-
-               
+                new AttributeValidator[]{new LengthAttributeValidator(2500), new UrlValidator(), new WhitelistedCharValidator()}));               
 
        /* AttributeDesc declaredQuantity1Desc = m_productManager.newProductAttributeDesc("netContent1", "Declared Quantity / Net Content 1", 
                                                                                        new String[]{"declaredquantity", "declared quantity", "netcontent", "net content", "declared quantity / net content", "declaredquantity1", "declared quantity 1", "netcontent 1", "net content 1", "declared quantity / net content 1",},

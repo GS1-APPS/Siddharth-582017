@@ -37,7 +37,11 @@
  	  	</c:if>
 	  	<div class='<%=errorMessages != null && errorMessages.size() > 0 ? "form-group has-error" : "form-group"%>'>
 	  		<c:if test="<%=attrDesc.getType() != AttributeType.AFFIRMATION && attrDesc.getType() != AttributeType.BOOLEAN %>">
-	    	  <label><c:out value="<%=attrDesc.getTitle()%>"/><c:if test="<%=attrDesc.isRequired()%>"> (required)</c:if></label>
+	    	  <label>
+	    	  	<c:out value="<%=attrDesc.getTitle()%>"/>
+	    	  	<c:if test="<%=attrDesc.isRequired()%>"> (required)</c:if>
+	    	  	<c:if test="<%=!attrDesc.isRequired()%>"> (recommended)</c:if>
+	    	  </label>
 	    	</c:if>
 	    	<c:set var="value" value='<%=value%>'/>
 	    	<c:choose>

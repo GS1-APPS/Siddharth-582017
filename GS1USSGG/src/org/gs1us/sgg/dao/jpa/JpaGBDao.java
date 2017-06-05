@@ -41,7 +41,7 @@ import org.gs1us.sgg.gbservice.api.OrderStatus;
 @Transactional
 public class JpaGBDao implements GBDao
 {
-    @PersistenceContext
+	@PersistenceContext(unitName="gs1ussggPersistenceUnit")
     private EntityManager m_entityManager;
     
     @Resource

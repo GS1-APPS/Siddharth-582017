@@ -40,7 +40,7 @@ public class WebappUtil
     private static String s_homeJsp = "gtinRegistryHome.jsp"; //"home.jsp";    
     private static String s_showProductsLine1AttributeName = "brandName";
     private static String s_showProductsLine2AttributeName = "productName";
-    private static boolean s_showExperimentalFeatures = true;
+    private static boolean s_showExperimentalFeatures = false;
     
     public static void setBranding(String operator, String homeLink, String productName, String productHtml, String logoFilename, 
             String valueAddedPhrase, String homeJsp, String showProductsLine1AttributeName, String showProductsLine2AttributeName,
@@ -219,10 +219,6 @@ public class WebappUtil
                                                 String nullValue, String timeZoneId)
     {
         String value = UserInputUtil.trimToNull((String)request.getParameter(attrName));
-        
-        //System.out.println("attrName == " + attrName);
-        //System.out.println("value == " + value);
-        
         if (isAppEnabled && value != null)
         {
             if (attrDesc != null && attrDesc.getType() == AttributeType.DATE)

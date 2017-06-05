@@ -14,7 +14,7 @@ public class DigimarcJsonClient extends GenericJsonHttpClient<DigimarcException>
 
     public DigimarcJsonClient(String urlPrefix, String username, String password, HttpTransport transport, ObjectMapper objectMapper)
     {
-        super(urlPrefix, username, password, transport, objectMapper);
+        super(urlPrefix, username, password, transport, null, null, null, true, objectMapper);
     }
 
     @Override

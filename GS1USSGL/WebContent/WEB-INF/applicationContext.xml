@@ -63,7 +63,7 @@
 	<!-- Set up driver for persistence -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.postgresql.Driver"/>
-    	<property name="url" value="jdbc:postgresql://54.210.247.186/gs1ussgl"/>
+    	<property name="url" value="jdbc:postgresql://107.22.7.19/gs1ussgl"/>
     	<property name="username" value="gs1ussgl"/>
     	<property name="password" value="emc2glocal"/>
 	</bean>
@@ -85,10 +85,25 @@
 	<bean id="billingService" class="org.gs1us.sgl.billingservice.mock.MockBillingService" />
 	<bean id="clockService" class="org.gs1us.sgg.clockservice.ClockService" />
 	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+	<!-- 
+		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    		<property name="host" value="A.1.1.X "/>
+		</bean>
+	-->
 	
 	<!-- 
 	<bean id="gbService" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceBridge" />
 	 -->
+
+     <!-- 
+		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
+	    	<constructor-arg index="0" value="http://54.210.247.186"/>
+	    	<constructor-arg index="1" value="gs1us"/>
+	    	<constructor-arg index="2" value="aaa"/>
+	    	<constructor-arg index="3" ref="httpTransport"/>
+	    </bean>
+      -->
 
 	<bean id="httpTransport" class="org.gs1us.sgg.transport.JavaHttpTransport" />
 	
@@ -101,7 +116,8 @@
 		<!--  Depending on the email, either from or to will be changed to something else -->
 	    <property name="from" value="GS1CloudSupport@gs1.org" />
 	    <property name="to" value="GS1CloudSupport@gs1.org" />
-	</bean>		
+	</bean>
+		
 
 	<bean id="termsOfService" class="org.gs1us.sgl.serviceterms.TermsOfService">
 		<property name="version" value="1.0" />
@@ -113,6 +129,8 @@
 	</mvc:annotation-driven>
 	<mvc:default-servlet-handler /> 
 	
+
+	
 	<!-- prod profile is production -->
 	<beans profile="prod">
 		<!-- 
@@ -123,7 +141,7 @@
 		</bean>
 		
 		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
-	    	<constructor-arg index="0" value="http://localhost:8080/GS1USSGG"/>
+	    	<constructor-arg index="0" value="http://192.168.11.126"/>
 	    	<constructor-arg index="1" value="gs1us"/>
 	    	<constructor-arg index="2" value="3RdL5gHIPPfbOhdlw-Oq8BARTh-5Rx7YUiwZtrm6CLU"/>
 	    	<constructor-arg index="3" ref="httpTransport"/>
@@ -160,7 +178,7 @@
 		</bean>
 		
 		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
-	    	<constructor-arg index="0" value="http://localhost:8080/GS1USSGG"/>
+	    	<constructor-arg index="0" value="http://192.168.11.128"/>
 	    	<constructor-arg index="1" value="gs1us"/>
 	    	<constructor-arg index="2" value="hobJLFJtxc7JDxTi-T8O8fe-N6z9p95BA0TmW9e_zwk"/>
 	    	<constructor-arg index="3" ref="httpTransport"/>
@@ -191,7 +209,7 @@
 	<beans profile="test1">
 	 	<bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
 		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
-	    	<constructor-arg index="0" value="http://localhost:8080/GS1USSGG"/>
+	    	<constructor-arg index="0" value="http://52.3.147.85"/>
 	    	<constructor-arg index="1" value="gs1us"/>
 	    	<constructor-arg index="2" value="MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo"/>
 	    	<constructor-arg index="3" ref="httpTransport"/>
@@ -221,7 +239,7 @@
 	<beans profile="test2">
 	 	<bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
 		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
-	    	<constructor-arg index="0" value="http://localhost:8080/GS1USSGG"/>
+	    	<constructor-arg index="0" value="http://52.70.229.92"/>
 	    	<constructor-arg index="1" value="gs1us"/>
 	    	<constructor-arg index="2" value="MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo"/>
 	    	<constructor-arg index="3" ref="httpTransport"/>
@@ -249,12 +267,36 @@
 	
 	<!-- gtinregistry profile is second set of test servers -->
 	<beans profile="gtinregistry">
-	 	<bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	<property name="host" value="eu-smtp-outbound-1.mimecast.com"/>
+	<property name="port" value="587"/>
+	<property name="username" value="gs1cloudsupport@gs1.org"/>
+	<property name="password" value="!Eagle#777"/>
+	<property name="javaMailProperties">
+           <props>
+               <prop key="mail.transport.protocol">smtp</prop>
+               <prop key="mail.smtp.auth">true</prop>
+               <prop key="mail.smtp.starttls.enable">true</prop>
+               <prop key="mail.debug">true</prop>
+           </props>
+	</property>
+	</bean>
+	<!-- 
+	<bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
+	--> 
+	 	
+	 	<!-- Arg0 org. value 'http://52.55.25.90/GS1USSGG' -->
 		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
-	    	<constructor-arg index="0" value="http://localhost:8080/GS1USSGG"/>
+	    	<!-- Original Value: 54.210.247.186. Dev Clone Value: 34.197.131.133 -->
+	    	<constructor-arg index="0" value="http://107.22.7.19/GS1USSGG"/>
 	    	<constructor-arg index="1" value="gs1"/>
 	    	<constructor-arg index="2" value="k0rbQPY9yADMnxUAmpA4kOnNaTHy8Ps5wuevV2GKsvU"/>
 	    	<constructor-arg index="3" ref="httpTransport"/>
+	    	<constructor-arg index="4" value="org.gs1us.sgl.memberservice.standalone.jpa.JpaStandaloneUser"/>
+	    	<constructor-arg index="5" value="getUsername"/>
+	    	<constructor-arg index="6" value="getApiKey"/>
+			<constructor-arg index="7" value="false"/>
 	    </bean>
 
 		<bean
@@ -268,7 +310,7 @@
 					<value>Cloud Phase 1</value>
 					<value>logo-global.png</value>
 					<value></value>  <!-- no value added phrase -->
-					<value>gtinRegistryHome.jsp</value>					
+					<value>gtinRegistryHome.jsp</value>
 					<value>brandName</value>
 					<value>tradeItemDescription</value>
 					<value>true</value>
@@ -278,7 +320,7 @@
 		
 	 	<security:http>
 			<security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')" />
-			<security:intercept-url pattern="/ui/user*/**" access="hasRole('ADMIN')" />
+			<security:intercept-url pattern="/ui/user*/**" access="hasRole('USER')" />
 			<security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')" />
 			<security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')" />
 			<security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')" />
@@ -297,38 +339,46 @@
 		</security:http>
 	</beans>
 	
+	
 	<!-- Dev profile is on KT's development machine -->
 	<beans profile="dev">
-	
-		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-			<property name="host" value="eu-smtp-outbound-1.mimecast.com"/>
-			<property name="port" value="587"/>
-			<property name="username" value="gs1cloudsupport@gs1.org"/>
-			<property name="password" value="!Eagle#777"/>
-			<property name="javaMailProperties">
-	           <props>
-	               <prop key="mail.transport.protocol">smtp</prop>
-	               <prop key="mail.smtp.auth">true</prop>
-	               <prop key="mail.smtp.starttls.enable">true</prop>
-	               <prop key="mail.debug">true</prop>
-	           </props>
-			</property> 
-		</bean>
-		
-	<!-- 
-	 	<bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
-	 --> 	
+	 	<bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />	 	
 		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
 	    	<constructor-arg index="0" value="http://localhost:8080/GS1USSGG"/>
+	    	<!--  index="1" value="gs1us" -->
+	    	<!--  constructor-arg index="2" value="MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo" -->
 	    	<constructor-arg index="1" value="gs1us"/>
 	    	<constructor-arg index="2" value="MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo"/>
 	    	<constructor-arg index="3" ref="httpTransport"/>
+	    	<constructor-arg index="4" value="org.gs1us.sgl.memberservice.standalone.jpa.JpaStandaloneUser"/>
+	    	<constructor-arg index="5" value="getUsername"/>
+	    	<constructor-arg index="6" value="getApiKey"/>
+			<constructor-arg index="7" value="false"/>
 	    </bean>
+
+	    <bean
+			class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+			<property name="staticMethod" value="org.gs1us.sgl.webapp.WebappUtil.setBranding" />
+			<property name="arguments">
+				<list>
+					<value>GS1</value>
+					<value>http://www.gs1.org</value>
+					<value>Cloud Phase 1</value>
+					<value>Cloud Phase 1</value>
+					<value>logo-global.png</value>
+					<value></value>  <!-- no value added phrase -->
+					<value>gtinRegistryHome.jsp</value>
+					<value>brandName</value>
+					<value>tradeItemDescription</value>
+					<value>true</value>
+				</list>
+			</property>
+		</bean>
 	    
-	 	<security:http>	 	
+	 	<security:http>
 			<security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')" />
 			<security:intercept-url pattern="/ui/user*/**" access="hasRole('USER')" />
-			<security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')" /> 
+			<security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')" />
 			<security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')" />
 			<security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')" />
 			<security:intercept-url pattern="/ui/feedbackSent*" access="hasRole('USER')" />

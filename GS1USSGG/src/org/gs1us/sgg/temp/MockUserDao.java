@@ -11,6 +11,9 @@ import javax.annotation.Resource;
 
 import org.gs1us.sgg.dao.AgentAccount;
 import org.gs1us.sgg.dao.AgentUser;
+import org.gs1us.sgg.dao.jpa.JpaNextIdDao;
+import org.gs1us.sgg.dao.memberservice.Member;
+import org.gs1us.sgg.dao.memberservice.standalone.jpa.JpaStandaloneUserDao;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +24,9 @@ public class MockUserDao implements UserDetailsService
 {
     @Resource
     private PasswordEncoder m_passwordEncoder;
+    
+    @Resource
+    private JpaStandaloneUserDao m_userDao;
     
     private List<String> m_specs;
     private Map<String, UserDetails> m_userMap = new HashMap<String, UserDetails>();
@@ -50,7 +56,8 @@ public class MockUserDao implements UserDetailsService
     public UserDetails loadUserByUsername(String username)
         throws UsernameNotFoundException
     {
-        return m_userMap.get(username);
+        //return m_userMap.get(username);
+    	return m_userDao.getUserByUsername(username);
     }
     
     private class MockUserDetails implements UserDetails, AgentUser
@@ -61,7 +68,7 @@ public class MockUserDao implements UserDetailsService
         private AgentAccount m_agentAccount;
         
         public MockUserDetails(String username, String password, String... authorities)
-        {
+        {        	
             m_username = username;
             m_password = m_passwordEncoder.encode(password);
             m_authorities = new ArrayList<>(authorities.length);
@@ -72,7 +79,7 @@ public class MockUserDao implements UserDetailsService
         
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities()
-        {
+        {        	
             return m_authorities;
         }
 
@@ -89,10 +96,16 @@ public class MockUserDao implements UserDetailsService
         }
         
         @Override
+        public Member getMember()
+        {
+            return null;
+        }
+        
+       /* @Override
         public AgentAccount getAgentAccount()
         {
             return m_agentAccount;
-        }
+        }*/
 
         @Override
         public boolean isAccountNonExpired()

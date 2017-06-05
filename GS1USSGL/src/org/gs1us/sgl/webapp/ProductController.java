@@ -182,9 +182,12 @@ public class ProductController extends GBAwareController
     {
         String gbAccountGln = getGBAccountGln(principal);
         User user = (User)((Authentication)principal).getPrincipal();
-        String timeZoneId = user.getTimezone();       
-        Member member = getMember(principal);        
-        Product product = lookupProduct(gbAccountGln, gtin);        
+        String timeZoneId = user.getTimezone();
+       
+        Member member = getMember(principal);
+        
+        Product product = lookupProduct(gbAccountGln, gtin);
+        
         Collection<? extends AppSubscription> subs = getGbService().getAppSubscriptions(gbAccountGln, true);
         
         parseAttributeSet(request, subs, product);
