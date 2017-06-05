@@ -10,8 +10,7 @@
 <%@page import="org.gs1us.sgg.gbservice.api.ImportPrevalidationSegment"%>
 <%@page import="org.gs1us.sgg.util.UserInputUtil"%>
 <%@page import="org.gs1us.sgg.gbservice.api.Import"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -114,7 +113,7 @@
      				<% for (AttributeDesc attrDesc : attrDescs) { 
     				    String title = (attrDesc.getType() == AttributeType.AFFIRMATION || attrDesc.getType() == AttributeType.BOOLEAN) ? attrDesc.getName() : attrDesc.getTitle();
      				%>
-      					<sgl:option test="<%= attrDesc.getName().equals(mapping) %>" value="<%= attrDesc.getName() %>" display="<%= title %>"/>
+      					<sgl:option test="<%= attrDesc.getTitle().equals(column.getName()) %>" value="<%= attrDesc.getName() %>" display="<%= title %>"/>
 						<c:if test="<%= attrDesc.getType() == AttributeType.MEASUREMENT %>">
       						<sgl:option test='<%= (attrDesc.getName() + "_uom").equals(mapping) %>' value='<%= attrDesc.getName() + "_uom" %>' display='<%= title + " (UOM)" %>'/>
 						</c:if>

@@ -18,8 +18,7 @@
 <%@page import="java.security.Principal"%>
 <%@page import="org.springframework.web.util.UriComponentsBuilder"%>
 <%@page import="org.gs1us.sgl.webapp.SearchController"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -41,9 +40,22 @@
 	if (product != null)
 	{
 		attributes = product.getAttributes();
-		companyName = attributes.getAttribute("companyName");
-		brandName = attributes.getAttribute("brandName");
-		labelDesc = attributes.getAttribute("additionalTradeItemDescription");
+		
+		if (attributes.getAttribute("companyName") != null)
+		{
+			companyName = attributes.getAttribute("companyName");	
+		}
+		
+		if (attributes.getAttribute("brandName") != null)
+		{
+			brandName = attributes.getAttribute("brandName");	
+		}
+		
+		if (attributes.getAttribute("additionalTradeItemDescription") != null)
+		{
+			labelDesc = attributes.getAttribute("additionalTradeItemDescription");
+		}
+				
 		if (attributes.getAttribute("targetMarket") != null)
 		{
 			targetMarket = attributes.getAttribute("targetMarket");	

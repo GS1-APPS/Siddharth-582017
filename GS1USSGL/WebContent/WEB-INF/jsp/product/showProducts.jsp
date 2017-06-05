@@ -15,7 +15,6 @@
 <%@page import="org.gs1us.sgg.util.UserInputUtil"%>
 <%@page import="org.gs1us.sgl.webapp.standalone.UserController"%>
 <%@page import="org.gs1us.sgg.gbservice.api.Product" %>
-
 <%@page import="org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder"%>
 
 <%@page import="java.util.List"%>
@@ -49,7 +48,7 @@
             .fromMethodName(ProductController.class, "newProductGet",
                             (Object) null, (Object) null).toUriString();
     String importLink = MvcUriComponentsBuilder
-            .fromMethodName(ImportController.class, "importUploadGet",
+            .fromMethodName(ImportController.class, "importShowAllGet",
                             (Object) null, (Object) null).toUriString();
     User user = (User) ((Authentication) request.getUserPrincipal()).getPrincipal();
     String timeZoneId = user.getTimezone();
@@ -316,7 +315,7 @@
 						<p>
 							<a class="btn-large btn-primary btn-margin" href="<%=newProductLink%>" role="button"><span class="icon-plus"></span> Register a new product</a>
 							<c:if test="<%= WebappUtil.showExperimentalFeatures() %>">
-		                    	<a class="btn-large btn-primary btn-margin" href="<%= importLink %>" role="button"><span class="icon-upload"></span> Upload a file of product data</a>
+		                    	<a class="btn-large btn-primary btn-margin" href="<%= importLink %>" role="button"><span class="icon-upload"></span> Upload Products</a>
 							</c:if>
 						</p>
 					</c:when>
@@ -336,7 +335,7 @@
 				<p>
                     <a class="btn-large btn-primary btn-margin" href="<%= newProductLink %>" role="button"><span class="icon-plus"></span> Register a new product</a>
 					<c:if test="<%= WebappUtil.showExperimentalFeatures() %>">
-                    	<a class="btn-large btn-primary btn-margin" href="<%= importLink %>" role="button"><span class="icon-upload"></span> Upload a file of product data</a>
+                    	<a class="btn-large btn-primary btn-margin" href="<%= importLink %>" role="button"><span class="icon-upload"></span> Upload Products</a>
 					</c:if>
 				</p>
 				</c:if>
@@ -349,6 +348,7 @@
 							<th>Brand</th>
 							<th>Label Description</th>
 							<th>Last Modified</th>
+							<th>Status</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
@@ -360,11 +360,21 @@
 						 	 String moreDetailsLink = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "detailProductGet", null, null, product.getGtin()).toUriString();
 						%>
 							<tr>
-								<td style="width:170px;"><a href="<%= moreDetailsLink %>" target="_new"><c:out value='<%= product.getGtin() %>' /></a></td>
+								<td style="width:190px;"><a href="<%= moreDetailsLink %>" target="_new"><c:out value='<%= product.getGtin() %>' /></a></td>
 								<td><c:out value='<%= countryCodes.get(product.getAttributes().getAttribute("targetMarket")) %>' /></td>								
 								<td><c:out value='<%= product.getAttributes().getAttribute("brandName") %>' /></td>
 								<td style="width:500px;"><c:out value='<%= product.getAttributes().getAttribute("additionalTradeItemDescription") %>' /></td>								
 								<td style="width:250px;"><c:out value='<%= UserInputUtil.dateToString(product.getModifiedDate(), timeZoneId) %>' /></td>								
+
+								<% if (product.getAttributes().getAttribute("targetMarket") != null && product.getAttributes().getAttribute("brandName") != null
+								  		&& product.getAttributes().getAttribute("itemDataLanguage") != null && product.getAttributes().getAttribute("additionalTradeItemDescription") != null
+								  		&& product.getAttributes().getAttribute("gpcCategoryCode") != null && product.getAttributes().getAttribute("companyName") != null 
+								  		&& product.getAttributes().getAttribute("informationProviderGLN") != null && product.getAttributes().getAttribute("uriProductImage") != null ) { %>
+									<td><span class="icon-check color-orange" data-toggle="tooltip" data-placement="top" title="Complete product record"></span></td>
+								<% } else { %>								
+									<td><span class="icon-exclamation_sign color-orange" data-toggle="tooltip" data-placement="top" title="Partial product record"></span></td>
+								<% } %>								
+
 								<td>
 								<c:if test="<%= forMember == null %>">
 								  <a href="<%= editLink %>" title="Edit this product's data"><span class="icon-pencil"></span></a>
