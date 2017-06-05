@@ -64,9 +64,9 @@
 	<!-- Set up driver for persistence -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.postgresql.Driver"/>
-    	<property name="url" value="jdbc:postgresql://54.210.247.186/sgg"/>
-    	<property name="username" value="sgg"/>
-    	<property name="password" value="gt1n++"/>
+    	<property name="url" value="jdbc:postgresql://54.227.212.245/sgg"/>
+    	<property name="username" value="postgres"/>
+    	<property name="password" value="rescuegs1!!"/>
 	</bean>
 	
 	<!-- Global Broker -->
@@ -380,7 +380,7 @@
 	</beans>
 		
 	<!-- Dev profile is on KT's development machine -->
-	<beans profile="dev">
+	<beans profile="dev" >
 		<security:http>
 			<security:intercept-url pattern="/api/product*/**" access="hasAnyRole('PRODUCT','ADMIN')" />
 			<security:intercept-url pattern="/api/account*/**" access="hasAnyRole('ACCOUNT','ADMIN')" />
