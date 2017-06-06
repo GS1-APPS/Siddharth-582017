@@ -474,7 +474,7 @@ public class ImportManager
                     validationProducts.add(validationProduct);
                 }
                 long end = System.currentTimeMillis();
-                System.out.format("%d: %d ms\n", i, end - start);
+//                System.out.format("%d: %d ms\n", i, end - start);
                 i++;
             }
         }

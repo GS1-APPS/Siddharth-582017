@@ -91,17 +91,17 @@
 	<!-- Set up driver for persistence -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.postgresql.Driver"/>
-    	<property name="url" value="jdbc:postgresql://54.227.212.245/sgg"/>
-    	<property name="username" value="postgres"/>
-    	<property name="password" value="rescuegs1!!"/>
+    	<property name="url" value="jdbc:postgresql://107.22.7.19/sgg"/>
+		<property name="username" value="sgg"/>
+		<property name="password" value="gt1n++"/>
 	</bean>
 
 	<!-- GS1USSGL Datasource -->
 	<bean id="gs1ussglDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.postgresql.Driver"/>
-    	<property name="url" value="jdbc:postgresql://107.22.7.19/gs1ussgl"/>
-    	<property name="username" value="postgres"/>
-    	<property name="password" value="rescuegs1!!"/>
+		<property name="url" value="jdbc:postgresql://107.22.7.19/gs1ussgl"/>
+		<property name="username" value="gs1ussgl"/>
+		<property name="password" value="emc2glocal"/>
 	</bean>
 
 	
