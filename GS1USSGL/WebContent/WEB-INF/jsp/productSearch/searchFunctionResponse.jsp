@@ -15,8 +15,7 @@
 <%@page import="org.springframework.web.util.UriComponentsBuilder"%>
 <%@page import="org.gs1us.sgl.webapp.SearchController"%>
 <%@page import="org.gs1us.sgg.gbservice.api.IsoCountryRef"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -341,10 +340,41 @@
 		    		<td valign="middle">		    		
 		    			GTIN: <b><%=product.getGtin() %></b><br/> 
 		    			Target Market:<b><%= countryCodes.get(product.getAttributes().getAttribute("targetMarket"))%></b><br/>
-		    			Company Name: <b><%= product.getAttributes().getAttribute("companyName") %></b><br/>
-		    			Brand Name: <b><%= product.getAttributes().getAttribute("brandName") %></b><br/>
-		    			Label Desc: <b><%= product.getAttributes().getAttribute("additionalTradeItemDescription") %></b><br/>
-		    			GPC: <b><%= product.getAttributes().getAttribute("gpcCategoryCode") %></b>
+		    			Company Name: 
+		    			<b>
+		    			<% if (product.getAttributes().getAttribute("companyName") != null) { %>
+		    				<%= product.getAttributes().getAttribute("companyName") %>
+		    			<% } else { %>
+		    				&nbsp;
+		    			<% } %>
+		    			</b>
+		    			<br/>
+		    			Brand Name: 
+		    			<b>
+		    			<% if (product.getAttributes().getAttribute("brandName") != null) { %>
+		    				<%= product.getAttributes().getAttribute("brandName") %>
+		    			<% } else { %>
+		    				&nbsp;
+		    			<% } %>
+		    			</b>
+		    			<br/>
+		    			Label Desc: 
+		    			<b>
+		    			<% if (product.getAttributes().getAttribute("additionalTradeItemDescription") != null) { %>
+		    				<%= product.getAttributes().getAttribute("additionalTradeItemDescription") %>
+		    			<% } else { %>
+		    				&nbsp;
+		    			<% } %>
+		    			</b>
+		    			<br/>
+		    			GPC: 
+		    			<b>
+		    			<% if (product.getAttributes().getAttribute("gpcCategoryCode") != null) { %>
+		    				<%= product.getAttributes().getAttribute("gpcCategoryCode") %>
+		    			<% } else { %>
+		    				&nbsp;
+		    			<% } %>
+		    			</b>
 		    		</td>
 		    	</tr>
 		    	<% } else { %>
@@ -352,10 +382,41 @@
 		    		<td colspan="2">
 		    			GTIN: <b><%=product.getGtin() %></b><br/> 
 		    			Target Market: <b><%= countryCodes.get(product.getAttributes().getAttribute("targetMarket"))%></b><br/>
-		    			Company Name: <b><%= product.getAttributes().getAttribute("companyName") %></b><br/>
-		    			Brand Name: <b><%= product.getAttributes().getAttribute("brandName") %></b><br/>
-		    			Label Desc: <b><%= product.getAttributes().getAttribute("additionalTradeItemDescription") %></b><br/>
-		    			GPC: <b><%= product.getAttributes().getAttribute("gpcCategoryCode") %></b>
+		    			Company Name: 
+		    			<b>
+		    			<% if (product.getAttributes().getAttribute("companyName") != null) { %>
+		    				<%= product.getAttributes().getAttribute("companyName") %>
+		    			<% } else { %>
+		    				&nbsp;
+		    			<% } %>
+		    			</b>		    			
+		    			<br/>
+		    			Brand Name: 
+		    			<b>
+		    			<% if (product.getAttributes().getAttribute("brandName") != null) { %>
+		    				<%= product.getAttributes().getAttribute("brandName") %>
+		    			<% } else { %>
+		    				&nbsp;
+		    			<% } %>
+		    			</b>
+		    			<br/>
+		    			Label Desc: 
+		    			<b>
+		    			<% if (product.getAttributes().getAttribute("additionalTradeItemDescription") != null) { %>
+		    				<%= product.getAttributes().getAttribute("additionalTradeItemDescription") %>
+		    			<% } else { %>
+		    				&nbsp;
+		    			<% } %>
+		    			</b>
+		    			<br/>
+		    			GPC: 
+		    			<b>
+		    			<% if (product.getAttributes().getAttribute("gpcCategoryCode") != null) { %>
+		    				<%= product.getAttributes().getAttribute("gpcCategoryCode") %>
+		    			<% } else { %>
+		    				&nbsp;
+		    			<% } %>
+		    			</b>
 		    		</td>
 		    	</tr>
 		    	<% } %>

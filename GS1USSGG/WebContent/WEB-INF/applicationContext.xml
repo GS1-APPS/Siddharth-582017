@@ -41,9 +41,27 @@
             <prop key="hibernate.show_sql">false</prop>
             <prop key="hibernate.ejb.naming_strategy">org.gs1us.sgg.daoutil.jpa.HibernateNamingStrategy</prop>
          </props>
-      </property>
-		
+      </property>		
 	</bean>
+
+		<!--  GS1USSGL Entity Factory -->
+		<bean id="gs1ussglEntityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="persistenceXmlLocation" value="classpath:persistence.xml" />
+			<property name="persistenceUnitName" value="gs1ussglPersistenceUnit" />
+			<property name="dataSource" ref="gs1ussglDataSource" />
+			<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+			<property name="jpaDialect" ref="jpaDialect" />
+			<property name="jpaProperties">
+	         <props>
+	            <prop key="hibernate.id.new_generator_mappings">true</prop>
+	            <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
+	            <prop key="hibernate.show_sql">false</prop>
+	            <prop key="hibernate.ejb.naming_strategy">org.gs1us.sgg.daoutil.jpa.HibernateNamingStrategy</prop>
+	         </props>
+	      </property>		
+		</bean>
+
 
 	<bean id="jpaVendorAdapter"
 		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -53,11 +71,20 @@
 
 	<bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
 
+	<!--   SGG transactionManager -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaDialect" ref="jpaDialect" />
 	</bean>
+
+	<!--   GS1USSGL transactionManager -->
+	<bean id="gs1ussglTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="gs1ussglEntityManagerFactory" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaDialect" ref="jpaDialect" />
+	</bean>
+
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
@@ -68,6 +95,15 @@
     	<property name="username" value="postgres"/>
     	<property name="password" value="rescuegs1!!"/>
 	</bean>
+
+	<!-- GS1USSGL Datasource -->
+	<bean id="gs1ussglDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="org.postgresql.Driver"/>
+    	<property name="url" value="jdbc:postgresql://107.22.7.19/gs1ussgl"/>
+    	<property name="username" value="postgres"/>
+    	<property name="password" value="rescuegs1!!"/>
+	</bean>
+
 	
 	<!-- Global Broker -->
 	<bean id="accountManager" class="org.gs1us.sgg.account.AccountManager" />
@@ -87,6 +123,10 @@
 		<property name="userDetailsService" ref="userDao"/>
 		<property name="passwordEncoder" ref="passwordEncoder"/>		
 	</bean>
+
+	<!-- Standalone User -->
+	<bean id="userDao" class="org.gs1us.sgg.dao.memberservice.standalone.jpa.JpaStandaloneUserDao" />
+	<bean id="memberDao" class="org.gs1us.sgg.dao.memberservice.standalone.jpa.JpaStandaloneMemberDao" />	
 
 	 
 	 <!-- 
@@ -242,7 +282,7 @@
 			<security:intercept-url pattern="/api/order*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/invoice*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
-			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('PRODUCT','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
 
 			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
@@ -291,7 +331,7 @@
 			<security:intercept-url pattern="/api/order*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/invoice*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
-			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('PRODUCT','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
 
 			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
@@ -331,13 +371,20 @@
 	
 	<!-- gtinregistry profile is for Mike Wehrs -->
 	<beans profile="gtinregistry">
-		<security:http>
-			<security:intercept-url pattern="/api/product*/**" access="hasAnyRole('PRODUCT','ADMIN')" />
-			<security:intercept-url pattern="/api/account*/**" access="hasAnyRole('ACCOUNT','ADMIN')" />
+		<security:http create-session="stateless" use-expressions="true">
+		   <!-- security:anonymous enabled="true" -->		   
+			<security:intercept-url pattern="/api/search/**" access="permitAll"/>
+			<!-- security:intercept-url pattern="/api/search/**" access="isAuthenticated() -->
+			<!-- security:intercept-url pattern="/api/search/**" access="isAnonymous() -->
+		
+			<security:intercept-url pattern="/api/product*/**" access="hasAnyRole('USER','PRODUCT','ADMIN')" />
+			<security:intercept-url pattern="/api/account*/**" access="hasAnyRole('USER','ACCOUNT','ADMIN')" />		
 			<security:intercept-url pattern="/api/order*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/invoice*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
-			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('USER','BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
+			
+			<security:intercept-url pattern="/api/import*/**" access="hasAnyRole('USER','ADMIN')" />
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
 
 			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
@@ -360,7 +407,8 @@
  		</bean> 		
 
 		<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
-			<property name="defaultExperienceUrlHost" value="52.55.25.90" />
+               <!-- Original Value: 52.55.25.90 -->
+            <property name="defaultExperienceUrlHost" value="107.22.7.19" />
 		</bean>
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.MockDigimarcClient" />
@@ -372,22 +420,29 @@
 			<constructor-arg index="3" ref="httpTransport" />
 		</bean>
 		 -->
-		<bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
+		<bean id="mockUserDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
 				<value>gs1:k0rbQPY9yADMnxUAmpA4kOnNaTHy8Ps5wuevV2GKsvU:ADMIN</value>
 			</list></constructor-arg>
 		</bean>
 	</beans>
-		
+	
+	
 	<!-- Dev profile is on KT's development machine -->
 	<beans profile="dev">
-		<security:http>
-			<security:intercept-url pattern="/api/product*/**" access="hasAnyRole('PRODUCT','ADMIN')" />
-			<security:intercept-url pattern="/api/account*/**" access="hasAnyRole('ACCOUNT','ADMIN')" />
-			<security:intercept-url pattern="/api/order*/**" access="hasAnyRole('BILLING','ADMIN')" />
+		<security:http create-session="stateless" use-expressions="true">
+		   <!-- security:anonymous enabled="true" -->		   
+			<security:intercept-url pattern="/api/search/**" access="permitAll"/>
+			<!-- security:intercept-url pattern="/api/search/**" access="isAuthenticated() -->
+			<!-- security:intercept-url pattern="/api/search/**" access="isAnonymous() -->
+		
+			<security:intercept-url pattern="/api/product*/**" access="hasAnyRole('USER','PRODUCT','ADMIN')" />
+			<security:intercept-url pattern="/api/account*/**" access="hasAnyRole('USER','ACCOUNT','ADMIN')" />		
+			<security:intercept-url pattern="/api/order*/**"   access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/invoice*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
-			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('USER','BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
+			<security:intercept-url pattern="/api/import*/**" access="hasAnyRole('USER','ADMIN')" />
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
 
 			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
@@ -401,6 +456,7 @@
  		<bean id="demoController" class="org.gs1us.sgg.webapp.DemoController">
  			<property name="enabled" value="true" />
  		</bean>
+
 		 
  		<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
  			<constructor-arg index="0" value="cp"/>
@@ -426,10 +482,9 @@
 			<constructor-arg index="2" value="5YaQIJKJRnF9kfMJ/erX0m1jv7gq/t8n" />
 			<constructor-arg index="3" ref="httpTransport" />
 		</bean>
-		 -->		 
-			
+		 -->		 			
 			 
-		<bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
+		<bean id="mockUserDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
 				<value>gs1us:MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo:ADMIN</value>
 				<value>digimarc:265SS17FHbZV6uqz18Lf7kwW6mzQDZ4A1X1iI94mGiU:PRODUCT</value>			

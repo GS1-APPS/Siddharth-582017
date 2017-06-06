@@ -48,6 +48,7 @@ import org.gs1us.sgl.webapp.AppController;
 import org.gs1us.sgl.webapp.GBAwareController;
 import org.gs1us.sgl.webapp.HomeController;
 import org.gs1us.sgl.webapp.NoSuchResourceException;
+import org.gs1us.sgl.webapp.ProductController;
 import org.gs1us.sgl.webapp.SortOrder;
 import org.gs1us.sgl.webapp.SortPageManager;
 import org.gs1us.sgl.webapp.WebappUtil;
@@ -1146,6 +1147,16 @@ public class UserController extends GBAwareController
     public String deleteMemberGet(Model model, @PathVariable String id) throws NoSuchResourceException
     {
         StandaloneMember member = populateMember(model, id);        
+        model.addAttribute("cancelUrl", MvcUriComponentsBuilder.fromMethodName(UserController.class, "showMembers", (Object)null, (Object)null).toUriString());
+        model.addAttribute("member", member);
+        return "/WEB-INF/jsp/user/deleteMember.jsp";
+    }
+
+    
+    @RequestMapping(value = "/member/{id}/delete", method = RequestMethod.POST)
+    public String deleteMember(Model model, @PathVariable String id) throws NoSuchResourceException
+    {
+        StandaloneMember member = populateMember(model, id);
         List<StandaloneUser> users = m_userDao.getAllUsers();
         
         for (Iterator<StandaloneUser> iterator = users.iterator(); iterator.hasNext();) 
@@ -1159,26 +1170,8 @@ public class UserController extends GBAwareController
         
         m_memberDao.deleteMember(member);
         return "redirect:/ui/member";
-        
-        //model.addAttribute("member", member);
-        //return "/WEB-INF/jsp/user/deleteMember.jsp";
     }
-
-    /*
-    @RequestMapping(value = "/member/{id}/delete", method = RequestMethod.POST)
-    public String deleteMember(Model model, @PathVariable String id) throws NoSuchResourceException
-    {
-        StandaloneMember member = populateMember(model, id);
-
-        m_memberDao.deleteMember(member);
         
-        // TODO: cascade? to standalone user and also GB
-       
-        
-        return "redirect:/ui/member";
-    }
-    */
-    
     @RequestMapping(value = "/member/{id}/newUser", method = RequestMethod.GET)
     public String memberNewUserGet(Model model, @PathVariable String id) throws NoSuchResourceException
     {

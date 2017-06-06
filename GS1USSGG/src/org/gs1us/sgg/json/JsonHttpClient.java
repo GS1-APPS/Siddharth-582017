@@ -16,9 +16,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonHttpClient extends GenericJsonHttpClient<GlobalBrokerException>
 {
-    public JsonHttpClient(String urlPrefix, String username, String password, HttpTransport transport, ObjectMapper objectMapper)
+    public JsonHttpClient(String urlPrefix, String username, String password, HttpTransport transport,
+    						String authObjectClassName, String authUseridMethodName, String authApikeyMethodName,
+    						boolean configurationBasedAuthEnabled, ObjectMapper objectMapper)
     {
-        super(urlPrefix, username, password, transport, objectMapper);
+        super(urlPrefix, username, password, transport, authObjectClassName, authUseridMethodName, authApikeyMethodName, configurationBasedAuthEnabled, objectMapper);
     }
 
     protected <T> T throwServiceException(Exception e)

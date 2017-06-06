@@ -3,6 +3,7 @@ package org.gs1us.sgg.webapi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.gs1us.sgg.gbservice.api.GBIllegalStateException;
 import org.gs1us.sgg.gbservice.api.GlobalBrokerException;
 import org.gs1us.sgg.gbservice.api.GlobalBrokerServiceException;
 import org.gs1us.sgg.gbservice.api.Import;
+import org.gs1us.sgg.gbservice.api.ImportValidationProduct;
 import org.gs1us.sgg.gbservice.api.Invoice;
 import org.gs1us.sgg.gbservice.api.InvoiceException;
 import org.gs1us.sgg.gbservice.api.IsoCountryRef;
@@ -60,10 +62,13 @@ import org.gs1us.sgg.gbservice.json.InboundProductStatus;
 import org.gs1us.sgg.transport.HttpTransport.HttpMethod;
 import org.gs1us.sgg.util.UserInputUtil;
 import org.gs1us.sgg.util.Util;
+import org.gs1us.sgg.dao.memberservice.Member;
+import org.gs1us.sgg.dao.memberservice.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -120,6 +125,7 @@ public class ApiController
         return appDescs;
     }
     
+    
     private AgentUser findAgentUser(Principal principal)
     {
         if (principal == null)
@@ -127,6 +133,46 @@ public class ApiController
         else
             return (AgentUser)((Authentication)principal).getPrincipal();
     }
+
+    private Member getMember(Principal principal)
+    {
+        if (principal == null)
+            return null;
+        else
+        {
+            AgentUser user = getUser(principal);
+            Member member = user.getMember();
+            if (member == null)
+                return null;
+            else
+                return member;
+        }
+    }    
+     
+    
+    private AgentUser getUser(Principal principal)
+    {
+        if (principal == null)
+            return null;
+        else
+            return (AgentUser)((Authentication)principal).getPrincipal();
+    }    
+    
+    /**
+     * Returns the GLN of a user for user-level GB actions. Null if the brand owner agreement has not yet been signed.
+     * @param principal
+     * @return
+     * @throws GlobalBrokerException
+     */
+    private String getGBAccountGln(Principal principal) throws GlobalBrokerException
+    {
+        Member member = getMember(principal);
+        if (member == null || member.getBrandOwnerAgreementSignedByUser() == null)
+            return null;
+        else
+            return member.getGln();
+    }    
+
     
     @RequestMapping(value = "/account/{gln}", method = RequestMethod.GET)
     @ResponseBody
@@ -232,7 +278,7 @@ public class ApiController
         return products;
     }
         
-    @RequestMapping(value = "/isoCountryList", method = RequestMethod.GET)
+    @RequestMapping(value = "/search/isoCountryList", method = RequestMethod.GET)
     @ResponseBody
     public Collection<? extends IsoCountryRef> isoCountryListGet(Model model) throws JsonProcessingException, GlobalBrokerException 
     {        
@@ -253,7 +299,7 @@ public class ApiController
         return product;
     }
     
-    @RequestMapping(value = "/productBasedOnGpcAndTargetMarket/{gpc}", method = RequestMethod.GET)
+    @RequestMapping(value = "/search/productBasedOnGpcAndTargetMarket/{gpc}", method = RequestMethod.GET)
     @ResponseBody
     public Collection<? extends Product> productBasedOnGpcAndTargetMarketGet(Model model,
                                          @PathVariable String gpc,
@@ -263,7 +309,7 @@ public class ApiController
         return products;
     }    
     
-    @RequestMapping(value = "/productById/{gtin}", method = RequestMethod.GET)
+    @RequestMapping(value = "/search/productById/{gtin}", method = RequestMethod.GET)
     @ResponseBody
     public Product accountProductGtinOnlyGet(Model model, @PathVariable String gtin) throws JsonProcessingException, GlobalBrokerException 
     {        
@@ -296,22 +342,20 @@ public class ApiController
                                              //@PathVariable String gtin,
                                              //@RequestParam(required=false) String username,
                                              //@RequestParam(value="gln", required=true) String gln,
-                                             @RequestBody(required = true) List<? extends InboundProductAttribute> productAttributeList) throws JsonProcessingException, GlobalBrokerException 
-    {
-        AgentUser agentUser = findAgentUser(principal);
-
- 	   //TODO: Hardcoded username for now.
-        String validatedUsername = "donna.dipietro@gs1.org"; //findUsername(username);
+                                             @RequestBody(required = true) List<? extends InboundProductAttribute> productAttributeList) throws JsonProcessingException, GlobalBrokerException ,UsernameNotFoundException
+    {    
+        AgentUser agentUser = findAgentUser(principal);        
+        String username = agentUser.getUsername();
+        String validatedUsername = findUsername(username);        
+        String gbAccountGln = getGBAccountGln(principal);
 
         logRequest(agentUser, validatedUsername, String.format("POST /product/bulkUpload"), productAttributeList);    
         
-        System.out.println("Inside bulkUpload Step 1:");
-
-        List<?  extends UploadValidationProduct> productResultList = m_gbServiceImpl.bulkUpload(agentUser, productAttributeList);
-
-        return productResultList;
+        List<? extends UploadValidationProduct> productResultList = m_gbServiceImpl.bulkUpload(agentUser, validatedUsername, gbAccountGln, productAttributeList);
+        return productResultList;    
+    }
     
-    }    
+    
     
     @RequestMapping(value = "/product/{gtin}/create", method = RequestMethod.POST)
     @ResponseBody
@@ -426,8 +470,7 @@ public class ApiController
                                          @RequestParam(value="gln", required=true) String gln) throws GlobalBrokerException
     {
         AgentUser agentUser = findAgentUser(principal);
-        String validatedUsername = findUsername(username);
-
+        String validatedUsername = findUsername(username);        
         return m_gbServiceImpl.deleteProduct(agentUser, validatedUsername, gln, gtin, null);
     }
 
@@ -511,6 +554,7 @@ public class ApiController
         AgentUser agentUser = findAgentUser(principal);
         m_gbServiceImpl.deleteImport(agentUser, gln, importId);
     }
+
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     @ResponseBody

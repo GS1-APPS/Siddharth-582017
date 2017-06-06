@@ -22,6 +22,7 @@ import org.gs1us.sgg.gbservice.api.AttributeSchema;
 import org.gs1us.sgg.gbservice.api.AttributeSet;
 import org.gs1us.sgg.gbservice.api.GBAccount;
 import org.gs1us.sgg.gbservice.api.GlobalBrokerException;
+import org.gs1us.sgg.gbservice.api.ImportValidationProduct;
 import org.gs1us.sgg.gbservice.api.OrderLineItem;
 import org.gs1us.sgg.gbservice.api.Product;
 import org.gs1us.sgg.gbservice.api.ProductState;
@@ -30,6 +31,7 @@ import org.gs1us.sgg.gbservice.api.ProductValidationError;
 import org.gs1us.sgg.gbservice.api.PurchaseOrder;
 import org.gs1us.sgg.gbservice.api.Quotation;
 import org.gs1us.sgg.gbservice.api.UploadValidationProduct;
+import org.gs1us.sgg.gbservice.json.InboundProduct;
 import org.gs1us.sgg.gbservice.json.InboundProductAttribute;
 import org.gs1us.sgg.gbservice.json.InboundUploadValidationProduct;
 import org.gs1us.sgg.product.ProductManager;
@@ -186,6 +188,7 @@ public class ProductOpsManager
                                                         Action.CREATE :
                                                             Action.UPDATE);
         nullsToOldValues(oldProduct, product);
+
         ProductStatus status = validateProductInternal(appContext, oldProduct, product, action);
         //printProduct(product, "update");
         if (status.getState() == ProductState.INVALID)
@@ -200,10 +203,11 @@ public class ProductOpsManager
                 }
             };
             // Important to do the commerce *after* the product is created, so that commerce handlers will see the updated product
-            if (action == Action.CREATE)
+            if (action == Action.CREATE) {            	
                 m_productManager.createProduct(appContext.getAgentUser(), appContext.getUsername(), appContext.getGbAccount(), product, callback);
-            else
+            }else{
                 m_productManager.updateProduct(appContext.getAgentUser(), appContext.getUsername(), appContext.getGbAccount(), product, callback);
+            }
             long end = System.currentTimeMillis();
             //printProduct(getProductByGtin(gbAccount, product.getGtin()), "updated db");
             return new ProductStatusImpl(ProductState.COMPLETED, null, status.getQuotation());
@@ -225,8 +229,7 @@ public class ProductOpsManager
             return new ProductStatusImpl(ProductState.COMPLETED, null, null);
         }
     }
-    
-    
+
 
     public List<UploadValidationProduct> bulkUploadProducts(final GBAppContext appContext, List<? extends InboundProductAttribute> productAttrList)
             throws GlobalBrokerException
@@ -235,15 +238,12 @@ public class ProductOpsManager
     	List<UploadValidationProduct> uploadProductResultList = new ArrayList<UploadValidationProduct>();
     	
 	    for (InboundProductAttribute productAttr:productAttrList) {
-	       	
-	    	System.out.println("Calling product creation for :" + productAttr.getGtin());
-	
+	       		
 	        String gtin = UserInputUtil.trimToNull((String) productAttr.getGtin() );
 	        // Hack to avoid error with null GTIN -- validation will flag this
 	        if (gtin == null)
 	            gtin = "0";
 	        
-	        System.out.println("Bulk Upload Step 2 :");
 	        Product unpaddedProduct = m_productManager.newProduct(gtin);
 	        
 	        unpaddedProduct.setDataAccuracyAckUser(appContext.getUsername());
@@ -253,13 +253,11 @@ public class ProductOpsManager
 	    	  
 	        AttributeSet attrSet = unpaddedProduct.getAttributes();
 
-	        //TODO: Prepare productObj....	        
+	        // Prepare productObj....	        
 	        //TODO: Fix this method....
 
 	        convertProductAttributes(attrSet, productAttr);
-
 	        
-	        System.out.println("Bulk Upload Step 3 : Put prroduct status in transaction");
 	        ProductStatus productStatus =  putProductInTransaction(appContext, unpaddedProduct, false);
 	    	
 	        InboundUploadValidationProduct inboundUploadValidationProduct = new InboundUploadValidationProduct();
@@ -275,7 +273,6 @@ public class ProductOpsManager
 
 	    return uploadProductResultList;
     }
-
     
     
     public Product getProductByGtin(GBAccount gbAccount, String gtin)
@@ -337,11 +334,8 @@ public class ProductOpsManager
         newAttributes.nullsToOldValues(oldAttributes);
     }
 
-    
     private AttributeSet convertProductAttributes( AttributeSet attrSet, InboundProductAttribute productAttr){
     	//TODO: Use ObjectMapper to convert from json to AttributeSet.
- 
-    	System.out.println("Bulk Upload Step 4 : Put prroduct status in transaction");
     	
     	attrSet.setAttribute("itemDataLanguage", productAttr.getItemDataLanguage());
     	attrSet.setAttribute("brandName", productAttr.getBrandName());
@@ -353,16 +347,8 @@ public class ProductOpsManager
     	attrSet.setAttribute("companyName", productAttr.getCompanyName());
     	attrSet.setAttribute("uriProductImage", productAttr.getUriProductImage());
     	
-    	System.out.println("Bulk Upload Step 4 :" + attrSet.toString());
-    	
-    	//product.setGpcCategoryCode(productAttr.getGpcCategoryCode()); not needed being set in createProduct
-    	//product.setTargetCountryCode(productAttr.getTargetMarket()); not needed being set in createProduct
-    	//product.setAttributes(productAttr);
-    	//product.setDataAccuracyAckUser(null); //Hardcode to null for now
-    	    	
     	return attrSet;
     }
-
 
     private PurchaseOrder quotationToPurchaseOrder(Quotation quotation)
     {

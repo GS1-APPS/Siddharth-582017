@@ -1,7 +1,9 @@
 package org.gs1us.sgg.json;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +13,9 @@ import org.gs1us.sgg.transport.HttpRequest;
 import org.gs1us.sgg.transport.HttpResponse;
 import org.gs1us.sgg.transport.HttpTransport;
 import org.gs1us.sgg.transport.HttpTransport.HttpMethod;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,21 +30,36 @@ public abstract class GenericJsonHttpClient<E extends Exception>
     private String m_urlPrefix;
     private String m_username;
     private String m_password;
-    private HttpHeader m_authorizationHeader;
+    //private HttpHeader m_authorizationHeader;
+    private String m_authObjectClassName;
+    private String m_authUseridMethodName;
+    private String m_authApikeyMethodName;
+    private boolean m_configurationBasedAuthEnabled;
 
-    public GenericJsonHttpClient(String urlPrefix, String username, String password, HttpTransport transport, ObjectMapper objectMapper)
+    public GenericJsonHttpClient(String urlPrefix, String username, String password, HttpTransport transport,
+    								String authObjectClassName, String authUseridMethodName, String authApikeyMethodName, 
+    								boolean configurationBasedAuthEnabled, ObjectMapper objectMapper)
     {
         m_urlPrefix = urlPrefix;
         m_objectMapper = objectMapper;
         m_transport = transport;
         m_username = username;
         m_password = password;
+        m_authObjectClassName = authObjectClassName;
+        m_authUseridMethodName = authUseridMethodName;
+        m_authApikeyMethodName  = authApikeyMethodName;
+        m_configurationBasedAuthEnabled = configurationBasedAuthEnabled;
         
-        if (m_username != null && m_password != null)
-        {
-            String encodedUserPass = Base64.BASE64.encode(username + ":" + password);
-            m_authorizationHeader = new HttpHeader("Authorization", "Basic " + encodedUserPass);
-        }
+        /*
+         * Commented to use actual Users identity - Username, API Key instead of config values.
+         *  
+         *  
+ 	        if (m_username != null && m_password != null)
+	        {
+	            String encodedUserPass = Base64.BASE64.encode(username + ":" + password);
+	            m_authorizationHeader = new HttpHeader("Authorization", "Basic " + encodedUserPass);
+	        }
+        */
     }
     
     protected ObjectMapper getObjectMapper()
@@ -113,6 +133,9 @@ public abstract class GenericJsonHttpClient<E extends Exception>
     
             HttpRequest request = new HttpRequest(url, method);
             request.addHeader(new HttpHeader("Accept", "application/json"));
+            
+            // getAuthHeader determines if config based authorization is enabled.
+           	HttpHeader m_authorizationHeader = getAuthHeader();
             if (m_authorizationHeader != null)
                 request.addHeader(m_authorizationHeader);
             if (requestContent != null)
@@ -149,13 +172,65 @@ public abstract class GenericJsonHttpClient<E extends Exception>
                 return processErrorResponse(response);
         }
         catch (JsonProcessingException e)
-        {
+        {        	
             return throwServiceException(e);
         }
         catch (IOException e)
-        {
+        {        	
             return throwServiceException(e);
         }
+    }
+    
+    /*
+     * Fetch the Logged in Users Authentication object and build Authorization Header for HTTP Restful API call to GG module
+     * 
+     */
+    protected HttpHeader getAuthHeader() {
+    	String authenticatedUsername = null;
+    	String authenticatedApiKey= null;
+    	HttpHeader m_authorizationHeader = null;
+    	
+        if (m_configurationBasedAuthEnabled) {
+	        if (m_username != null && m_password != null)
+	        {
+	            String encodedUserPass = Base64.BASE64.encode(m_username + ":" + m_password);
+	            m_authorizationHeader = new HttpHeader("Authorization", "Basic " + encodedUserPass);
+	            return m_authorizationHeader;
+	        }
+        }
+    	
+        /*
+         * Proceed only if configuration based Auth is disabled
+         */
+    	try {
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    	 
+	    	Class<?> c = Class.forName(m_authObjectClassName);
+
+	    	Object principal = authentication.getPrincipal();
+	    	
+	    	if (principal.getClass().getName().equals(m_authObjectClassName) ) {
+	    		// Get the Authenticated username for HttpHeader from principal
+	    		Method  method = c.getDeclaredMethod(m_authUseridMethodName);
+	    		authenticatedUsername = (String) method.invoke(principal);	    		
+	    		// Get the Authenticated Users API Key for HttpHeader from principal
+	    		Method  methodApiKey = c.getDeclaredMethod(m_authApikeyMethodName);
+	    		authenticatedApiKey = (String) methodApiKey.invoke(principal);
+	    	}
+	    	if (!(authentication instanceof AnonymousAuthenticationToken)) {
+	    	    if (authenticatedUsername != null && authenticatedApiKey != null)
+	            {
+	                String encodedUserPass = Base64.BASE64.encode(authenticatedUsername + ":" + authenticatedApiKey);
+	                m_authorizationHeader = new HttpHeader("Authorization", "Basic " + encodedUserPass);
+	                return m_authorizationHeader;
+	            }    	    
+	    	}
+    	} catch(Exception e) {
+    		System.out.println(e);
+    		e.printStackTrace(System.out);
+    		return null;
+    	}
+    	return null;
     }
     
     protected abstract <T> T processErrorResponse(HttpResponse response) throws E, JsonProcessingException, IOException;

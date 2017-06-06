@@ -73,8 +73,12 @@ public class GlobalBrokerServiceClient implements GlobalBrokerService
     
     private String m_username;
     private String m_password;
-    
-    public GlobalBrokerServiceClient(String prefix, String username, String password, HttpTransport transport)
+    private String m_authObjectClassName;
+    private String m_authUseridMethodName;
+    private String m_authApikeyMethodName;
+    private boolean m_configurationBasedAuthEnabled; // Keep disabled to use Logged in Users identity
+   
+    public GlobalBrokerServiceClient(String prefix, String username, String password, HttpTransport transport, String authObjectClassName, String authUseridMethodName, String authApikeyMethodName, boolean configurationBasedAuthEnabled)
     {
         super();
         m_prefix = prefix;
@@ -82,10 +86,15 @@ public class GlobalBrokerServiceClient implements GlobalBrokerService
         m_transport = transport;
         m_username = username;
         m_password = password;
+        m_authObjectClassName = authObjectClassName;
+        m_authUseridMethodName = authUseridMethodName;
+        m_authApikeyMethodName  = authApikeyMethodName;
+        m_configurationBasedAuthEnabled = configurationBasedAuthEnabled;
         
-        m_jsonHttpClient = new JsonHttpClient(m_prefix, m_username, m_password, m_transport, m_objectMapper);
+        m_jsonHttpClient = new JsonHttpClient(m_prefix, m_username, m_password, m_transport, m_authObjectClassName, m_authUseridMethodName, m_authApikeyMethodName, m_configurationBasedAuthEnabled,  m_objectMapper);
 
     }
+    
     
     public String getVersion() throws GlobalBrokerException
     {
@@ -418,7 +427,7 @@ public class GlobalBrokerServiceClient implements GlobalBrokerService
     public Product getProductByGtinOnly(String gtin)
             throws GlobalBrokerException
     {        	        
-    	return m_jsonHttpClient.doRequest(InboundProduct.class, HttpMethod.GET, null, "/api/productById/%s", gtin);    	
+    	return m_jsonHttpClient.doRequest(InboundProduct.class, HttpMethod.GET, null, "/api/search/productById/%s", gtin);    	
     }
     
 /*    
@@ -440,12 +449,12 @@ public class GlobalBrokerServiceClient implements GlobalBrokerService
     
     public Collection<? extends IsoCountryRef> getAllIsoCountryRef() throws GlobalBrokerException
     {
-    	return m_jsonHttpClient.doRequest(Collection.class, InboundIsoCountryRef.class, HttpMethod.GET, null, "/api/isoCountryList");
+    	return m_jsonHttpClient.doRequest(Collection.class, InboundIsoCountryRef.class, HttpMethod.GET, null, "/api/search/isoCountryList");
     }
         
     public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
     {
-        return m_jsonHttpClient.doRequest(Collection.class, InboundProduct.class, HttpMethod.GET, null, "/api/productBasedOnGpcAndTargetMarket/%s?param=%s", gpc, marketCode);
+        return m_jsonHttpClient.doRequest(Collection.class, InboundProduct.class, HttpMethod.GET, null, "/api/search/productBasedOnGpcAndTargetMarket/%s?param=%s", gpc, marketCode);
     }
     
 }
