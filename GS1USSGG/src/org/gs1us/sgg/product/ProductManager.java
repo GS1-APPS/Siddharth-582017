@@ -93,10 +93,10 @@ public class ProductManager
         return m_gbDao.getProductsForReportByDate();
     }
     
-    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode)
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode, String startIndex, String maxSize)
             throws GlobalBrokerException
     {
-        return m_gbDao.getProductsBasedOnGpcAndTargetMarket(gpc, marketCode);
+        return m_gbDao.getProductsBasedOnGpcAndTargetMarket(gpc, marketCode, startIndex, maxSize);
     }
     
     public Collection<? extends IsoCountryRefRecord> getAllIsoCountryRef()
@@ -291,4 +291,20 @@ public class ProductManager
             m_gbDao.deleteProduct(productRecord);
         }
     }
+    
+    public Collection<? extends Product> getProductsForPagination(String gln, String startIndex, String maxSize) throws GlobalBrokerException
+    {
+    	return m_gbDao.getProductsForPagination(gln, startIndex, maxSize);
+    }        
+    
+    public Long getProductsCountBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
+    {
+        return m_gbDao.getProductsCountBasedOnGpcAndTargetMarket(gpc, marketCode);
+    }
+
+    public Long getRegisteredProductsCount(String gln) throws GlobalBrokerException
+    {
+        return m_gbDao.getRegisteredProductsCount(gln);
+    }
+    
 }

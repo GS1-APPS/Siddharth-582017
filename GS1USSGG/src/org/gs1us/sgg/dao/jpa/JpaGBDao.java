@@ -37,6 +37,7 @@ import org.gs1us.sgg.gbservice.api.GBAccount;
 import org.gs1us.sgg.gbservice.api.InvoiceExtra;
 import org.gs1us.sgg.gbservice.api.OrderLineItem;
 import org.gs1us.sgg.gbservice.api.OrderStatus;
+import org.gs1us.sgg.gbservice.api.Product;
 
 @Transactional
 public class JpaGBDao implements GBDao
@@ -205,15 +206,34 @@ public class JpaGBDao implements GBDao
     }
 
     @Override
+    public Collection<? extends ProductRecord> getProductsForPagination(String gln, String startIndex, String maxSize)
+    {    	
+        String queryString = "From JpaProductRecord where m_gbAccountGln = '" + gln + "' order by m_modifiedDate desc";        
+    	Query query = m_entityManager.createQuery(queryString);
+        query.setFirstResult(Integer.parseInt(startIndex));
+        query.setMaxResults(Integer.parseInt(maxSize));
+        List<JpaProductRecord> products = (List<JpaProductRecord>) query.getResultList();    	
+    	return products;    	
+    }
+    
+    @Override
     public Collection<? extends ProductRecord> getProductsByGln(String gln)
     {
+    	System.out.println("i am coming here and i need to be fixed.");
         QueryBuilder<JpaProductRecord> qb = new QueryBuilder<>(JpaProductRecord.class);
         qb.whereEq("m_gbAccountGln", gln);
         qb.orderByDesc("m_modifiedDate");
         return qb.queryAll();
-    }
-
+    }    
     
+    @Override
+    public Long getRegisteredProductsCount(String gln)
+    {    	
+    	Query query = m_entityManager.createNativeQuery("select count(*) from product where gb_account_gln = '" + gln + "'");
+    	java.math.BigInteger obj = (java.math.BigInteger) query.getSingleResult();
+    	return (Long) obj.longValue();
+    }
+        
     @Override
     public Long getProductsForReportByDate()
     {    	    	
@@ -262,15 +282,24 @@ public class JpaGBDao implements GBDao
     }
         
     @Override
-    public Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode)
+    public Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode, String startIndex, String maxSize)
     {
-        QueryBuilder<JpaProductRecord> qb = new QueryBuilder<>(JpaProductRecord.class);
-        qb.whereEq("m_GpcCategoryCode", gpc);
-        qb.whereEq("m_TargetCountryCodeId", Integer.parseInt(marketCode));
-        qb.orderByDesc("m_modifiedDate");
-        return qb.queryAll();
+        String queryString = "From JpaProductRecord where m_GpcCategoryCode = '" + gpc + "' and m_TargetCountryCodeId = " +  Integer.parseInt(marketCode) + " order by m_modifiedDate desc";        
+    	Query query = m_entityManager.createQuery(queryString);
+        query.setFirstResult(Integer.parseInt(startIndex));
+        query.setMaxResults(Integer.parseInt(maxSize));
+        List<JpaProductRecord> products = (List<JpaProductRecord>) query.getResultList();    	
+    	return products;    	
     }
-    
+
+    @Override
+    public Long getProductsCountBasedOnGpcAndTargetMarket(String gpc, String marketCode)
+    {    	
+    	Query query = m_entityManager.createNativeQuery("select count(*) from product where gpc_category_code = '" + gpc + "' and target_country_code_id = " + marketCode);
+    	java.math.BigInteger obj = (java.math.BigInteger) query.getSingleResult();
+    	return (Long) obj.longValue();
+    }
+        
     @Override
     public ProductRecord getProductByGtin(String gtin)
     {

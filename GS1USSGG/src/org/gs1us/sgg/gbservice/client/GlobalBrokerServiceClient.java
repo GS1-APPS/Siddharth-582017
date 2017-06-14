@@ -452,9 +452,24 @@ public class GlobalBrokerServiceClient implements GlobalBrokerService
     	return m_jsonHttpClient.doRequest(Collection.class, InboundIsoCountryRef.class, HttpMethod.GET, null, "/api/search/isoCountryList");
     }
         
-    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode, String startIndex, String maxSize) throws GlobalBrokerException
     {
-        return m_jsonHttpClient.doRequest(Collection.class, InboundProduct.class, HttpMethod.GET, null, "/api/search/productBasedOnGpcAndTargetMarket/%s?param=%s", gpc, marketCode);
+        return m_jsonHttpClient.doRequest(Collection.class, InboundProduct.class, HttpMethod.GET, null, "/api/search/productBasedOnGpcAndTargetMarket/%s?param=%s&startIndex=%s&size=%s", gpc, marketCode, startIndex, maxSize);
+    }
+    
+    public Collection<? extends Product> getProductsForPagination(String gln, String startIndex, String maxSize) throws GlobalBrokerException
+    {
+    	return m_jsonHttpClient.doRequest(Collection.class, InboundProduct.class, HttpMethod.GET, null, "/api/search/productsForPagination/%s?startIndex=%s&size=%s", gln, startIndex, maxSize);
+    }
+    
+    public Long getProductsCountBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
+    {
+        return m_jsonHttpClient.doRequest(Long.class, HttpMethod.GET, null, "/api/search/productGpcTmList/%s?param=%s", gpc, marketCode);
+    }
+
+    public Long getRegisteredProductsCount(String gln) throws GlobalBrokerException
+    {
+    	return m_jsonHttpClient.doRequest(Long.class, HttpMethod.GET, null, "/api/registeredProductsCount/%s", gln);
     }
     
 }

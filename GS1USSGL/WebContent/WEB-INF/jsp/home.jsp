@@ -20,15 +20,21 @@
 <%
 	Principal user = request.getUserPrincipal();
 	String gbAccountGln = (String)request.getAttribute("gbAccountGln");
-	Collection<Product> products = (Collection<Product>)request.getAttribute("products");
-	int productCount = products == null ? 0 : products.size();
-	String signupUrl = MvcUriComponentsBuilder.fromMethodName(SignupController.class, "agreementsGet", (Object)null, (Object)null).toUriString();
-	
-	String showProductsUrl = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "showProducts", (Object)null, (Object)null).toUriString();
-	String newProductUrl = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "newProductGet", (Object)null, (Object)null).toUriString();
-	
-	String accountUrl = MvcUriComponentsBuilder.fromMethodName(AccountController.class, "showAccount", (Object)null, (Object)null).toUriString();
+	//Collection<Product> products = (Collection<Product>)request.getAttribute("products");
+	//int productCount = products == null ? 0 : products.size();
+	Integer productCount = (Integer) request.getAttribute("noOfRecords");
 		
+	int pCount = 0;
+	
+	if (productCount != null)
+	{
+		pCount = productCount.intValue(); 
+	}	
+	
+	String signupUrl = MvcUriComponentsBuilder.fromMethodName(SignupController.class, "agreementsGet", (Object)null, (Object)null).toUriString();	
+	String showProductsUrl = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "showProducts", (Object)null, (Object)null).toUriString();
+	String newProductUrl = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "newProductGet", (Object)null, (Object)null).toUriString();	
+	String accountUrl = MvcUriComponentsBuilder.fromMethodName(AccountController.class, "showAccount", (Object)null, (Object)null).toUriString();		
 	String loginUrl = MvcUriComponentsBuilder.fromMethodName(LoginController.class, "login", (Object)null).toUriString();
 	String forgotPasswordUrl = MvcUriComponentsBuilder.fromMethodName(UserController.class, "forgotPasswordGet", (Object)null).toUriString();
 %>
@@ -37,8 +43,6 @@
   <jsp:param name="pageTitle" value="Home" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
-
-
 
 <c:choose>
 <c:when test="<%= user == null %>">
@@ -106,7 +110,7 @@
                                     <div class="content-module-wrapper top-border-orange">
                                         <div class="content-module content-module-padding">
                                             <h4 class="color-blue">Products</h4>
-                                            <p>You have <%= productCount %> <%= productCount == 1 ? "product" : "products" %> registered with the <%= WebappUtil.shortProductHtml() %>:</p>
+                                            <p>You have <%= pCount %> <%= pCount == 1 ? "product" : "products" %> registered with the <%= WebappUtil.shortProductHtml() %>:</p>
                                             <!-- 
                                             <ul class="standard">
                                                 <li>You have <span class="color-orange">2</span> products with upcoming registration renewal dates.</li>
@@ -138,7 +142,7 @@
                 </div>
 <div>
 </c:when>
-<c:when test="<%= productCount == 0 %>">
+<c:when test="<%= pCount == 0 %>">
 <h3>Welcome to the <%= WebappUtil.longProductHtml() %>!</h3>
 
 <p>
@@ -157,7 +161,7 @@ The <%= WebappUtil.longProductHtml() %> lets you register your products and data
 value-added services including Digimarc bar codes.
 </p>
 
-<p>You have <%= productCount %> <%= productCount == 1 ? "product" : "products" %> registered with the <%= WebappUtil.shortProductHtml() %>.</p>
+<p>You have <%= pCount %> <%= pCount == 1 ? "product" : "products" %> registered with the <%= WebappUtil.shortProductHtml() %>.</p>
 <p>&gt;&nbsp;&nbsp;<a href="<%= showProductsUrl %>">Show all registered products</a></p>
 </c:otherwise>
 </c:choose>

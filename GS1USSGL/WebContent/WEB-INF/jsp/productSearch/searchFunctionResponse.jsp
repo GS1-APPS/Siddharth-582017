@@ -16,6 +16,7 @@
 <%@page import="org.gs1us.sgl.webapp.SearchController"%>
 <%@page import="org.gs1us.sgg.gbservice.api.IsoCountryRef"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
     
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -23,10 +24,20 @@
 	Collection<? extends IsoCountryRef> countryList = (Collection<? extends IsoCountryRef>) request.getAttribute("countryList");
 	String productSearchUri = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "search", (Object)null).toUriString();
 	String errorMessage = (String)request.getAttribute("errorMessage");	
-	Collection<Product> products = (Collection<Product>) request.getAttribute("Product");
+	//Collection<Product> products = (Collection<Product>) request.getAttribute("Product");
 		
-	String gpcNumber = (String) request.getAttribute("gpcNumber");
-	String targetMarket = (String) request.getAttribute("targetMarket");
+	String gpcNumber = (String) request.getSession().getAttribute("gpcNumber");
+	String targetMarket = (String) request.getSession().getAttribute("targetMarket");
+	
+    Integer productCount = (Integer) request.getAttribute("productCount");
+    
+    if (productCount == null)
+    {
+    	productCount = 0;
+    }
+    
+    Integer noOfPages = (Integer) request.getAttribute("noOfPages");
+    Integer currentPage = (Integer) request.getAttribute("currentPage");	
 	
 	HashMap<String, String>  countryCodes = new HashMap<String, String>();
 	countryCodes.put("1","AFGHANISTAN");
@@ -276,6 +287,8 @@
   <jsp:param name="selectedItem" value="productSearch" />
 </jsp:include>
 
+<spring:url value="/ui/searchByProductPagination" var="pageurl" />
+
 <h1><a href="<%= productSearchUri %>">Search:</a> Search Function</h1>
 
 <c:if test="<%= errorMessage != null %>">
@@ -292,7 +305,7 @@
  Choose the Global Product Classification (GPC) and Target Market to see a list of available products                	
 </i>               
 <br/><br/>
-<form method="post">
+<form method="post" action="/GS1USSGL/ui/searchByProduct">
 <table>
 <tr>
 <td>
@@ -324,106 +337,166 @@
 </div>
 </div>
 
-<c:if test="<%= products != null %>">
-<section>
-    <div class="row">
-    	<h3>SEARCH RESULTS</h3>
-    	<table>
-    	<% for (Product product : products) {  %>
-		    	<% if (product.getAttributes().getAttribute("uriProductImage") != null) { %>
-		    	<tr>
-		    		<td>
-						<div style="height: 300px; width: 300px;">
-						    <img src="<%=product.getAttributes().getAttribute("uriProductImage") %>" style="max-width:100%; max-height:100%;">
-						</div>	    				    		
-		    		</td>
-		    		<td valign="middle">		    		
-		    			GTIN: <b><%=product.getGtin() %></b><br/> 
-		    			Target Market:<b><%= countryCodes.get(product.getAttributes().getAttribute("targetMarket"))%></b><br/>
-		    			Company Name: 
-		    			<b>
-		    			<% if (product.getAttributes().getAttribute("companyName") != null) { %>
-		    				<%= product.getAttributes().getAttribute("companyName") %>
-		    			<% } else { %>
-		    				&nbsp;
-		    			<% } %>
-		    			</b>
-		    			<br/>
-		    			Brand Name: 
-		    			<b>
-		    			<% if (product.getAttributes().getAttribute("brandName") != null) { %>
-		    				<%= product.getAttributes().getAttribute("brandName") %>
-		    			<% } else { %>
-		    				&nbsp;
-		    			<% } %>
-		    			</b>
-		    			<br/>
-		    			Label Desc: 
-		    			<b>
-		    			<% if (product.getAttributes().getAttribute("additionalTradeItemDescription") != null) { %>
-		    				<%= product.getAttributes().getAttribute("additionalTradeItemDescription") %>
-		    			<% } else { %>
-		    				&nbsp;
-		    			<% } %>
-		    			</b>
-		    			<br/>
-		    			GPC: 
-		    			<b>
-		    			<% if (product.getAttributes().getAttribute("gpcCategoryCode") != null) { %>
-		    				<%= product.getAttributes().getAttribute("gpcCategoryCode") %>
-		    			<% } else { %>
-		    				&nbsp;
-		    			<% } %>
-		    			</b>
-		    		</td>
-		    	</tr>
-		    	<% } else { %>
-		    	<tr>
-		    		<td colspan="2">
-		    			GTIN: <b><%=product.getGtin() %></b><br/> 
-		    			Target Market: <b><%= countryCodes.get(product.getAttributes().getAttribute("targetMarket"))%></b><br/>
-		    			Company Name: 
-		    			<b>
-		    			<% if (product.getAttributes().getAttribute("companyName") != null) { %>
-		    				<%= product.getAttributes().getAttribute("companyName") %>
-		    			<% } else { %>
-		    				&nbsp;
-		    			<% } %>
-		    			</b>		    			
-		    			<br/>
-		    			Brand Name: 
-		    			<b>
-		    			<% if (product.getAttributes().getAttribute("brandName") != null) { %>
-		    				<%= product.getAttributes().getAttribute("brandName") %>
-		    			<% } else { %>
-		    				&nbsp;
-		    			<% } %>
-		    			</b>
-		    			<br/>
-		    			Label Desc: 
-		    			<b>
-		    			<% if (product.getAttributes().getAttribute("additionalTradeItemDescription") != null) { %>
-		    				<%= product.getAttributes().getAttribute("additionalTradeItemDescription") %>
-		    			<% } else { %>
-		    				&nbsp;
-		    			<% } %>
-		    			</b>
-		    			<br/>
-		    			GPC: 
-		    			<b>
-		    			<% if (product.getAttributes().getAttribute("gpcCategoryCode") != null) { %>
-		    				<%= product.getAttributes().getAttribute("gpcCategoryCode") %>
-		    			<% } else { %>
-		    				&nbsp;
-		    			<% } %>
-		    			</b>
-		    		</td>
-		    	</tr>
-		    	<% } %>
-    	<% } %>
-    	</table>
-    </div>
-</section>
-</c:if>
+<c:choose>
+<c:when test='<%= productCount == 0 %>'>
+<p>No records found.</p>
+</c:when>
+<c:otherwise>
+<c:set var="productListHolder" value="${productPagedList}" scope="request" />
+
+<div class="row">
+   	<h3>SEARCH RESULTS</h3>
+	<table>
+	<c:forEach var="ph" items="${productListHolder.pageList}">
+     <% 
+	    Product pp = (Product) (pageContext.getAttribute("ph")); 
+     %>
+	 <% if (pp.getAttributes().getAttribute("uriProductImage") != null) { %>
+	 	<tr>
+	   		<td>
+				<div style="height: 300px; width: 300px;">
+				    <img src="<%=pp.getAttributes().getAttribute("uriProductImage") %>" style="max-width:100%; max-height:100%;">
+				</div>	    				    		
+	   		</td>
+    		<td valign="middle">		    		
+    			GTIN: <b><%=pp.getGtin() %></b><br/> 
+    			Target Market:<b><%= countryCodes.get(pp.getAttributes().getAttribute("targetMarket"))%></b><br/>
+    			Company Name: 
+    			<b>
+    			<% if (pp.getAttributes().getAttribute("companyName") != null) { %>
+    				<%= pp.getAttributes().getAttribute("companyName") %>
+    			<% } else { %>
+    				&nbsp;
+    			<% } %>
+    			</b>
+    			<br/>
+    			Brand Name: 
+    			<b>
+    			<% if (pp.getAttributes().getAttribute("brandName") != null) { %>
+    				<%= pp.getAttributes().getAttribute("brandName") %>
+    			<% } else { %>
+    				&nbsp;
+    			<% } %>
+    			</b>
+    			<br/>
+    			Label Desc: 
+    			<b>
+    			<% if (pp.getAttributes().getAttribute("additionalTradeItemDescription") != null) { %>
+    				<%= pp.getAttributes().getAttribute("additionalTradeItemDescription") %>
+    			<% } else { %>
+    				&nbsp;
+    			<% } %>
+    			</b>
+    			<br/>
+    			GPC: 
+    			<b>
+    			<% if (pp.getAttributes().getAttribute("gpcCategoryCode") != null) { %>
+    				<%= pp.getAttributes().getAttribute("gpcCategoryCode") %>
+    			<% } else { %>
+    				&nbsp;
+    			<% } %>
+    			</b>
+    		</td>	 	
+	 	</tr>	 
+	 <% } else { %>
+    	<tr>
+    		<td colspan="2">
+    			GTIN: <b><%=pp.getGtin() %></b><br/> 
+    			Target Market: <b><%= countryCodes.get(pp.getAttributes().getAttribute("targetMarket"))%></b><br/>
+    			Company Name: 
+    			<b>
+    			<% if (pp.getAttributes().getAttribute("companyName") != null) { %>
+    				<%= pp.getAttributes().getAttribute("companyName") %>
+    			<% } else { %>
+    				&nbsp;
+    			<% } %>
+    			</b>		    			
+    			<br/>
+    			Brand Name: 
+    			<b>
+    			<% if (pp.getAttributes().getAttribute("brandName") != null) { %>
+    				<%= pp.getAttributes().getAttribute("brandName") %>
+    			<% } else { %>
+    				&nbsp;
+    			<% } %>
+    			</b>
+    			<br/>
+    			Label Desc: 
+    			<b>
+    			<% if (pp.getAttributes().getAttribute("additionalTradeItemDescription") != null) { %>
+    				<%= pp.getAttributes().getAttribute("additionalTradeItemDescription") %>
+    			<% } else { %>
+    				&nbsp;
+    			<% } %>
+    			</b>
+    			<br/>
+    			GPC: 
+    			<b>
+    			<% if (pp.getAttributes().getAttribute("gpcCategoryCode") != null) { %>
+    				<%= pp.getAttributes().getAttribute("gpcCategoryCode") %>
+    			<% } else { %>
+    				&nbsp;
+    			<% } %>
+    			</b>
+    		</td>
+    	</tr>	
+	<% } %>	
+	</c:forEach>	
+	</table>
+</div>
+
+<div style="width: 1150px; white-space:wrap; text-align:center">
+	<%--For displaying Previous link except for the 1st page --%>
+    <c:if test="${currentPage != 1}">
+        <a href="${pageurl}/${currentPage - 1}">Previous</a>
+    </c:if>
+    
+    <% if (currentPage == 1) { %>
+    <c:forEach begin="${currentPage}" end="${currentPage + 19}" varStatus="i">
+		<c:choose>
+           <c:when test="${currentPage eq i.index}">
+               ${i.index}
+           </c:when>
+           <c:otherwise>
+               <a href="${pageurl}/${i.index}">${i.index}</a>
+           </c:otherwise>
+       	</c:choose>
+       	&nbsp;
+    </c:forEach>				    
+    <% } else if ( (currentPage + 20) < noOfPages ) { %>
+    <c:forEach begin="${currentPage}" end="${currentPage + 20}" varStatus="i">
+		<c:choose>
+           <c:when test="${currentPage eq i.index}">
+               ${i.index}
+           </c:when>
+           <c:otherwise>
+               <a href="${pageurl}/${i.index}">${i.index}</a>
+           </c:otherwise>
+       	</c:choose>
+       	&nbsp;
+    </c:forEach>
+    <% } else { %>
+    <% int handle = (noOfPages - currentPage); int handle1 = (20 - handle); int handle2 = (currentPage - handle1); if (handle2 == 0) { handle2 ++ ;} %>
+    <c:forEach begin="<%=handle2 %>" end="${noOfPages}" varStatus="i">
+		<c:choose>
+           <c:when test="${currentPage eq i.index}">
+               ${i.index}
+           </c:when>
+           <c:otherwise>
+               <a href="${pageurl}/${i.index}">${i.index}</a>
+           </c:otherwise>
+       	</c:choose>
+       	&nbsp;
+    </c:forEach>				   				    
+    <% } %>
+    
+	<%--For displaying Next link --%>
+    <c:if test="${currentPage lt noOfPages}">
+        <a href="${pageurl}/${currentPage + 1}">Next</a>
+    </c:if>
+</div>								
+
+</c:otherwise>
+</c:choose>
 
 <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />

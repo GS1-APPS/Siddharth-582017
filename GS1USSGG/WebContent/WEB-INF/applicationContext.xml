@@ -38,7 +38,7 @@
          <props>
             <prop key="hibernate.id.new_generator_mappings">true</prop>
             <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
-            <prop key="hibernate.show_sql">false</prop>
+            <prop key="hibernate.show_sql">true</prop>
             <prop key="hibernate.ejb.naming_strategy">org.gs1us.sgg.daoutil.jpa.HibernateNamingStrategy</prop>
          </props>
       </property>		
@@ -56,7 +56,7 @@
 	         <props>
 	            <prop key="hibernate.id.new_generator_mappings">true</prop>
 	            <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
-	            <prop key="hibernate.show_sql">false</prop>
+	            <prop key="hibernate.show_sql">true</prop>
 	            <prop key="hibernate.ejb.naming_strategy">org.gs1us.sgg.daoutil.jpa.HibernateNamingStrategy</prop>
 	         </props>
 	      </property>		
@@ -91,15 +91,28 @@
 	<!-- Set up driver for persistence -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.postgresql.Driver"/>
-    	<property name="url" value="jdbc:postgresql://107.22.7.19/sgg"/>
+<!--     	
+<property name="url" value="jdbc:postgresql://54.227.212.245/sgg"/>
+<property name="username" value="postgres"/>
+<property name="password" value="rescuegs1!!"/>
+-->
+     	
+    	<property name="url" value="jdbc:postgresql://34.207.229.65/sgg"/>
     	<property name="username" value="sgg"/>
     	<property name="password" value="gt1n++"/>
+    	
 	</bean>
 
 	<!-- GS1USSGL Datasource -->
 	<bean id="gs1ussglDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.postgresql.Driver"/>
-    	<property name="url" value="jdbc:postgresql://107.22.7.19/gs1ussgl"/>
+<!-- 
+<property name="url" value="jdbc:postgresql://54.227.212.245/gs1ussgl"/>
+<property name="username" value="postgres"/>
+<property name="password" value="rescuegs1!!"/>
+-->
+ 
+    	<property name="url" value="jdbc:postgresql://34.207.229.65/gs1ussgl"/>
     	<property name="username" value="sgg"/>
     	<property name="password" value="gt1n++"/>
 	</bean>
@@ -408,7 +421,7 @@
 
 		<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
                <!-- Original Value: 52.55.25.90 -->
-            <property name="defaultExperienceUrlHost" value="107.22.7.19" />
+            <property name="defaultExperienceUrlHost" value="34.207.229.65" />
 		</bean>
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.MockDigimarcClient" />

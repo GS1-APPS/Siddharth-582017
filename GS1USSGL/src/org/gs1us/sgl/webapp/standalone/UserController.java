@@ -1253,20 +1253,15 @@ public class UserController extends GBAwareController
         StandaloneMember member = populateMember(model, id);
         String gln = member.getGln();
         
-        Collection<? extends AppSubscription> subs = getGbService().getAppSubscriptions(gln, true);
-        
+        Collection<? extends AppSubscription> subs = getGbService().getAppSubscriptions(gln, true);        
         Collection<? extends Product> products = getGbService().getProducts(gln);
         model.addAttribute("subs", subs);
         model.addAttribute("products", products);
         model.addAttribute("productLine1AttrName", "brandName");
-        model.addAttribute("productLine2AttrName", "productName");
-        
+        model.addAttribute("productLine2AttrName", "productName");        
         model.addAttribute("forMember", member);
-
         return "/WEB-INF/jsp/product/showProducts.jsp";
     }
-
-
     
     public static class MemberAndUserCommand
     {

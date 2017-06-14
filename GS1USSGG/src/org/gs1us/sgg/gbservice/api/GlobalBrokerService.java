@@ -267,5 +267,11 @@ public interface GlobalBrokerService
     
     public Collection<? extends IsoCountryRef> getAllIsoCountryRef() throws GlobalBrokerException;
     
-    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException;
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode, String startIndex, String maxSize) throws GlobalBrokerException;
+    
+    public Collection<? extends Product> getProductsForPagination(String gln, String startIndex, String maxSize) throws GlobalBrokerException;
+    
+    public Long getProductsCountBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException;
+    
+    public Long getRegisteredProductsCount(String gln) throws GlobalBrokerException;
 }

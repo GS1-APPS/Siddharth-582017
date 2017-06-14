@@ -29,6 +29,8 @@ import org.gs1us.sgg.gbservice.api.Product;
 import org.gs1us.sgg.gbservice.api.ProductStatus;
 import org.gs1us.sgg.gbservice.api.PurchaseOrder;
 import org.gs1us.sgg.gbservice.api.SalesOrder;
+import org.gs1us.sgg.gbservice.json.InboundProduct;
+import org.gs1us.sgg.transport.HttpTransport.HttpMethod;
 import org.gs1us.sgg.gbservice.api.AttributeEnumValue;
 
 public class GlobalBrokerServiceBridge implements GlobalBrokerService
@@ -333,9 +335,24 @@ public class GlobalBrokerServiceBridge implements GlobalBrokerService
         return m_globalBrokerServiceImpl.getAllIsoCountryRef();
     }
 
-    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
+    public Collection<? extends Product> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode, String startIndex, String maxSize) throws GlobalBrokerException
     {
-        return m_globalBrokerServiceImpl.getProductsBasedOnGpcAndTargetMarket(gpc, marketCode);
+        return m_globalBrokerServiceImpl.getProductsBasedOnGpcAndTargetMarket(gpc, marketCode, startIndex, maxSize);
+    }
+ 
+    public Collection<? extends Product> getProductsForPagination(String gln, String startIndex, String maxSize) throws GlobalBrokerException
+    {
+    	return m_globalBrokerServiceImpl.getProductsForPagination(gln, startIndex, maxSize);
+    }
+    
+    public Long getProductsCountBasedOnGpcAndTargetMarket(String gpc, String marketCode) throws GlobalBrokerException
+    {
+        return m_globalBrokerServiceImpl.getProductsCountBasedOnGpcAndTargetMarket(gpc, marketCode);
+    }
+
+    public Long getRegisteredProductsCount(String gln) throws GlobalBrokerException
+    {
+        return m_globalBrokerServiceImpl.getRegisteredProductsCount(gln);
     }
     
 }

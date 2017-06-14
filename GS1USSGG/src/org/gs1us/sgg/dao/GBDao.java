@@ -99,7 +99,13 @@ public interface GBDao
     
     Collection<? extends IsoCountryRefRecord> getAllIsoCountryRef();
 
-    Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode);   
+    Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode, String startIndex, String maxSize);   
     
-    Integer getTargetMarketNotBasedOnId(String value);       
+    Integer getTargetMarketNotBasedOnId(String value);     
+    
+    Collection<? extends ProductRecord> getProductsForPagination(String gln, String startIndex, String maxSize);
+    
+    Long getProductsCountBasedOnGpcAndTargetMarket(String gpc, String marketCode);
+    
+    Long getRegisteredProductsCount(String gln);
 }

@@ -18,11 +18,10 @@
 <%@page import="org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder"%>
 
 <%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sgl" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <%
     Collection<? extends AppSubscription> subs = (Collection<? extends AppSubscription>)request.getAttribute("subs");
@@ -37,13 +36,18 @@
     }
     ClockService clockService = (ClockService) request.getAttribute("clockService");
     Date now = clockService == null ? null : clockService.now();
-    Collection<Product> products = (Collection<Product>) request.getAttribute("products");
-    String productLine1AttrName = (String) request.getAttribute("productLine1AttrName");
-    String productLine2AttrName = (String) request.getAttribute("productLine2AttrName");
     Member forMember = (Member) request.getAttribute("forMember");
+    
+    //Collection<Product> products = (Collection<Product>) request.getAttribute("products");
+    //String productLine1AttrName = (String) request.getAttribute("productLine1AttrName");
+    //String productLine2AttrName = (String) request.getAttribute("productLine2AttrName");    
     //AttributeDesc productLine1AttrDesc = (AttributeDesc)request.getAttribute("productLine1AttrDesc");
     //AttributeDesc productLine2AttrDesc = (AttributeDesc)request.getAttribute("productLine2AttrDesc");
 
+    Integer productCount = (Integer) request.getAttribute("productCount");
+    Integer noOfPages = (Integer) request.getAttribute("noOfPages");
+    Integer currentPage = (Integer) request.getAttribute("currentPage");
+        
     String newProductLink = MvcUriComponentsBuilder
             .fromMethodName(ProductController.class, "newProductGet",
                             (Object) null, (Object) null).toUriString();
@@ -293,22 +297,21 @@
 	countryCodes.put("237","ZR");
 	countryCodes.put("238","ZM");
 	countryCodes.put("239","ZW");
-
-	
-	
 %>
 
-   
 <jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Products" />
   <jsp:param name="selectedItem" value="products" />
 </jsp:include>
 
+<spring:url value="/ui/product" var="pageurl" />
+
 <div class="row">
 	<div class="col-md-12">
-		<h1>Products<span style="padding-left:600px;">Total: <%= products.size() %></span></h1>				
+	<h1>Products<span style="padding-left:600px;">Total: <%= productCount %></span></h1>	
+				
 		<c:choose>
-			<c:when test='<%= products.size() == 0 %>'>
+			<c:when test='<%= productCount == 0 %>'>
 				<c:choose>
 					<c:when test="<%= forMember == null %>">
 						<p>You have not yet registered any products.  To register a new product, click the button below.</p>
@@ -340,57 +343,109 @@
 				</p>
 				</c:if>
 				
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>GTIN</th>
-							<th>TM</th>
-							<th>Brand</th>
-							<th>Label Description</th>
-							<th>Last Modified</th>
-							<th>Status</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						<% for (Product product : products) { 
-						 	 String editLink = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "editProductGet", null, null, product.getGtin()).toUriString();
-						 	 String renewLink = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "renewProductGet", null, null, product.getGtin()).toUriString();
-						 	 String deleteLink = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "deleteProductGet", null, null, product.getGtin()).toUriString();
-						 	 String moreDetailsLink = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "detailProductGet", null, null, product.getGtin()).toUriString();
-						%>
+				<div>
+					<c:set var="productListHolder" value="${productPagedList}" scope="request" />
+					<table class="table table-striped">
+						<thead>
 							<tr>
-								<td style="width:190px;"><a href="<%= moreDetailsLink %>" target="_new"><c:out value='<%= product.getGtin() %>' /></a></td>
-								<td><c:out value='<%= countryCodes.get(product.getAttributes().getAttribute("targetMarket")) %>' /></td>								
-								<td><c:out value='<%= product.getAttributes().getAttribute("brandName") %>' /></td>
-								<td style="width:500px;"><c:out value='<%= product.getAttributes().getAttribute("additionalTradeItemDescription") %>' /></td>								
-								<td style="width:250px;"><c:out value='<%= UserInputUtil.dateToString(product.getModifiedDate(), timeZoneId) %>' /></td>								
-
-								<% if (product.getAttributes().getAttribute("targetMarket") != null && product.getAttributes().getAttribute("brandName") != null
-								  		&& product.getAttributes().getAttribute("itemDataLanguage") != null && product.getAttributes().getAttribute("additionalTradeItemDescription") != null
-								  		&& product.getAttributes().getAttribute("gpcCategoryCode") != null && product.getAttributes().getAttribute("companyName") != null 
-								  		&& product.getAttributes().getAttribute("informationProviderGLN") != null && product.getAttributes().getAttribute("uriProductImage") != null ) { %>
-									<td><span class="icon-check color-orange" data-toggle="tooltip" data-placement="top" title="Complete product record"></span></td>
-								<% } else { %>								
-									<td><span class="icon-exclamation_sign color-orange" data-toggle="tooltip" data-placement="top" title="Partial product record"></span></td>
-								<% } %>								
-
-								<td>
-								<c:if test="<%= forMember == null %>">
-								  <a href="<%= editLink %>" title="Edit this product's data"><span class="icon-pencil"></span></a>
-								  <a href="<%= deleteLink %>" title="Delete this product's data" onclick="return confirm('Are you sure you want to delete this product?');"><span class="icon-trashcan"></span></a>								
-								</c:if>
-								</td>
+								<th>GTIN</th>
+								<th>TM</th>
+								<th>Brand</th>
+								<th>Label Description</th>
+								<th>Last Modified</th>
+								<th>Status</th>
+								<th>Actions</th>
 							</tr>
-						<% } %>
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							<c:forEach var="ph" items="${productListHolder.pageList}">
+					            <% 
+					            	Product pp = (Product) (pageContext.getAttribute("ph")); 
+								 	String editLink = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "editProductGet", null, null, pp.getGtin()).toUriString();
+								 	String deleteLink = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "deleteProductGet", null, null, pp.getGtin()).toUriString();
+								 	String moreDetailsLink = MvcUriComponentsBuilder.fromMethodName(ProductController.class, "detailProductGet", null, null, pp.getGtin()).toUriString();	            
+					            %>
+				            	<tr>
+				            		<td style="width:190px;"><a href="<%= moreDetailsLink %>" target="_new">${ph.gtin}</a></td>
+				            		<td><c:out value='<%= countryCodes.get(pp.getAttributes().getAttribute("targetMarket")) %>' /></td>	            		
+				            		<td>${ph.attributes.getAttribute("brandName")}</td>
+				            		<td style="width:500px;">${ph.attributes.getAttribute("additionalTradeItemDescription")}</td>
+				            		<td style="width:250px;"><c:out value='<%= UserInputUtil.dateToString(pp.getModifiedDate(), timeZoneId) %>' /></td>
+				            		
+									<% if (pp.getAttributes().getAttribute("targetMarket") != null && pp.getAttributes().getAttribute("brandName") != null
+									  		&& pp.getAttributes().getAttribute("itemDataLanguage") != null && pp.getAttributes().getAttribute("additionalTradeItemDescription") != null
+									  		&& pp.getAttributes().getAttribute("gpcCategoryCode") != null && pp.getAttributes().getAttribute("companyName") != null 
+									  		&& pp.getAttributes().getAttribute("informationProviderGLN") != null && pp.getAttributes().getAttribute("uriProductImage") != null ) { %>
+										<td><span class="icon-check color-orange" data-toggle="tooltip" data-placement="top" title="Complete product record"></span></td>
+									<% } else { %>								
+										<td><span class="icon-exclamation_sign color-orange" data-toggle="tooltip" data-placement="top" title="Partial product record"></span></td>
+									<% } %>								
+				            		
+				            		<td>
+										<c:if test="<%= forMember == null %>">
+										  <a href="<%= editLink %>" title="Edit this product's data"><span class="icon-pencil"></span></a>
+										  <a href="<%= deleteLink %>" title="Delete this product's data" onclick="return confirm('Are you sure you want to delete this product?');"><span class="icon-trashcan"></span></a>								
+										</c:if>	            			            		
+				            		</td>	   
+				            	</tr>							
+							</c:forEach>												
+						</tbody>
+					</table>				
+				</div>
+				
+				<div style="width: 1150px; white-space:wrap; text-align:center">
+					<%--For displaying Previous link except for the 1st page --%>
+				    <c:if test="${currentPage != 1}">
+				        <a href="${pageurl}/${currentPage - 1}">Previous</a>
+				    </c:if>
+				    
+				    <% if (currentPage == 1) { %>
+				    <c:forEach begin="${currentPage}" end="${currentPage + 19}" varStatus="i">
+						<c:choose>
+				           <c:when test="${currentPage eq i.index}">
+				               ${i.index}
+				           </c:when>
+				           <c:otherwise>
+				               <a href="${pageurl}/${i.index}">${i.index}</a>
+				           </c:otherwise>
+				       	</c:choose>
+				       	&nbsp;
+				    </c:forEach>				    
+				    <% } else if ( (currentPage + 20) < noOfPages ) { %>
+				    <c:forEach begin="${currentPage}" end="${currentPage + 20}" varStatus="i">
+						<c:choose>
+				           <c:when test="${currentPage eq i.index}">
+				               ${i.index}
+				           </c:when>
+				           <c:otherwise>
+				               <a href="${pageurl}/${i.index}">${i.index}</a>
+				           </c:otherwise>
+				       	</c:choose>
+				       	&nbsp;
+				    </c:forEach>
+				    <% } else { %>
+				    <% int handle = (noOfPages - currentPage); int handle1 = (20 - handle); int handle2 = (currentPage - handle1); if (handle2 == 0) { handle2 ++ ;}  %>
+				    <c:forEach begin="<%=handle2 %>" end="${noOfPages}" varStatus="i">
+						<c:choose>
+				           <c:when test="${currentPage eq i.index}">
+				               ${i.index}
+				           </c:when>
+				           <c:otherwise>
+				               <a href="${pageurl}/${i.index}">${i.index}</a>
+				           </c:otherwise>
+				       	</c:choose>
+				       	&nbsp;
+				    </c:forEach>				   				    
+				    <% } %>
+				    
+					<%--For displaying Next link --%>
+				    <c:if test="${currentPage lt noOfPages}">
+				        <a href="${pageurl}/${currentPage + 1}">Next</a>
+				    </c:if>
+				</div>								
 			</c:otherwise>
 		</c:choose>
 	</div>
-
-
-    
 </div>
 
 <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />

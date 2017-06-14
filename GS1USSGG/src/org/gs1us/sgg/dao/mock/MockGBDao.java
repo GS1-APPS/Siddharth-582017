@@ -233,9 +233,9 @@ public class MockGBDao implements GBDao
     }
     
     @Override
-    public Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode)
+    public Collection<? extends ProductRecord> getProductsBasedOnGpcAndTargetMarket(String gpc, String marketCode, String startIndex, String maxSize)
     {
-        return m_productRecordDao.getAll();
+        return null;
     }
     
     @Override
@@ -650,4 +650,22 @@ public class MockGBDao implements GBDao
     	return null;
     }
 
+    @Override
+    public Collection<? extends ProductRecord> getProductsForPagination(String gln, String startIndex, String maxSize)
+    {
+        return null;
+    }    
+    
+    @Override
+    public Long getProductsCountBasedOnGpcAndTargetMarket(String gpc, String marketCode)
+    {
+        return null;
+    }
+    
+    @Override
+    public Long getRegisteredProductsCount(String gln)
+    {
+        return null;
+    }            
+    
 }

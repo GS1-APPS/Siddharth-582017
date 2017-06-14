@@ -251,17 +251,7 @@ public class ApiController
 
         return products;
     }
-    
-/*    
-    @RequestMapping(value = "/productList", method = RequestMethod.GET)
-    @ResponseBody
-    public Collection<? extends Product> productListGet(Model model) throws JsonProcessingException, GlobalBrokerException 
-    {        
-        Collection<? extends Product> products = m_gbServiceImpl.getProductsForReport();
-        return products;
-    }
-  */
-    
+        
     @RequestMapping(value = "/productList", method = RequestMethod.GET)
     @ResponseBody
     public Long productListGet(Model model) throws JsonProcessingException, GlobalBrokerException 
@@ -269,6 +259,25 @@ public class ApiController
         Long products = m_gbServiceImpl.getProductsForReport();
         return products;
     }
+    
+    @RequestMapping(value = "/registeredProductsCount/{gln}", method = RequestMethod.GET)
+    @ResponseBody
+    public Long registeredProductsCountGet(Model model,
+                                         @PathVariable String gln) throws JsonProcessingException, GlobalBrokerException 
+    {
+        Long products = m_gbServiceImpl.getRegisteredProductsCount(gln);
+        return products;
+    }    
+        
+    @RequestMapping(value = "/search/productGpcTmList/{gpc}", method = RequestMethod.GET)
+    @ResponseBody
+    public Long productGpcTmListGet(Model model,
+                                         @PathVariable String gpc,
+                                         @RequestParam(value="param", required=true) String param) throws JsonProcessingException, GlobalBrokerException 
+    {
+        Long products = m_gbServiceImpl.getProductsCountBasedOnGpcAndTargetMarket(gpc, param);
+        return products;
+    }    
     
     @RequestMapping(value = "/productListByDate", method = RequestMethod.GET)
     @ResponseBody
@@ -303,9 +312,22 @@ public class ApiController
     @ResponseBody
     public Collection<? extends Product> productBasedOnGpcAndTargetMarketGet(Model model,
                                          @PathVariable String gpc,
-                                         @RequestParam(value="param", required=true) String param) throws JsonProcessingException, GlobalBrokerException 
+                                         @RequestParam(value="param", required=true) String param,
+                                         @RequestParam(value="startIndex", required=true) String startIndex,
+                                         @RequestParam(value="size", required=true) String maxSize) throws JsonProcessingException, GlobalBrokerException 
     {
-    	Collection<? extends Product> products = m_gbServiceImpl.getProductsBasedOnGpcAndTargetMarket(gpc, param);
+    	Collection<? extends Product> products = m_gbServiceImpl.getProductsBasedOnGpcAndTargetMarket(gpc, param, startIndex, maxSize);
+        return products;
+    }    
+
+    @RequestMapping(value = "/search/productsForPagination/{gln}", method = RequestMethod.GET)
+    @ResponseBody
+    public Collection<? extends Product> productsForPagination(Model model,
+                                         @PathVariable String gln,
+                                         @RequestParam(value="startIndex", required=true) String startIndex,
+                                         @RequestParam(value="size", required=true) String maxSize) throws JsonProcessingException, GlobalBrokerException 
+    {
+    	Collection<? extends Product> products = m_gbServiceImpl.getProductsForPagination(gln, startIndex, maxSize);
         return products;
     }    
     

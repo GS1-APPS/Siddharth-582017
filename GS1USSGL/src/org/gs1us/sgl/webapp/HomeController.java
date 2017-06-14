@@ -41,13 +41,12 @@ public class HomeController
             if (member.getBrandOwnerAgreementSignedByUser() != null)
             {
                 String gln = member.getGln();
-                Collection<? extends Product> products = m_gbService.getProducts(gln);
+                int noOfRecords = m_gbService.getRegisteredProductsCount(gln).intValue();
                 model.addAttribute("gbAccountGln", gln);
-                model.addAttribute("products", products);
-
+                model.addAttribute("noOfRecords", noOfRecords);
             }
-            // Otherwise, leave gbAccountGln unset, causing the home page to display the signup prompt.
         }
+        
         return "/WEB-INF/jsp/" + WebappUtil.homeJsp();
     }
 

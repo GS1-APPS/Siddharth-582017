@@ -26,6 +26,7 @@ import org.gs1us.sgl.billingservice.BillingService;
 import org.gs1us.sgl.billingservice.Order;
 import org.gs1us.sgl.memberservice.Member;
 import org.gs1us.sgl.memberservice.User;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,20 +48,54 @@ public class ProductController extends GBAwareController
     @RequestMapping(value = "/product", method = RequestMethod.GET)
     public String showProducts(Model model, Principal principal) throws GlobalBrokerException 
     {
-        String gbAccountGln = getGBAccountGln(principal);
-        
+        String gbAccountGln = getGBAccountGln(principal);                
+    	int recordsPerPage = 100;        
+    	int noOfRecords = getGbService().getRegisteredProductsCount(gbAccountGln).intValue();
+        int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
         Collection<? extends AppSubscription> subs = getGbService().getAppSubscriptions(gbAccountGln, true);
-
-        
-        Collection<? extends Product> products = getGbService().getProducts(gbAccountGln);
-        model.addAttribute("subs", subs);
-        model.addAttribute("products", products);
-        model.addAttribute("productLine1AttrName", WebappUtil.showProductsLine1AttributeName());
-        model.addAttribute("productLine2AttrName", WebappUtil.showProductsLine2AttributeName());
-        
+        Collection<? extends Product> products = getGbService().getProductsForPagination(gbAccountGln, "0", String.valueOf(recordsPerPage));
+        List<Product> productsList = new ArrayList<Product>(products);        
+        PagedListHolder<Product> productPagedList = new PagedListHolder<Product>();
+        productPagedList.setSource(productsList);
+        productPagedList.setPageSize(recordsPerPage);
+        model.addAttribute("productPagedList", productPagedList);               
+        model.addAttribute("subs", subs);        
+        model.addAttribute("productCount", noOfRecords);
+        model.addAttribute("noOfPages", noOfPages);
+        model.addAttribute("currentPage", 1);
         return "/WEB-INF/jsp/product/showProducts.jsp";
+        
     }
     
+    @RequestMapping(value = "/product/{type}", method = RequestMethod.GET)
+    public String productGet(Model model, Principal principal, @PathVariable String type) throws GlobalBrokerException, NoSuchResourceException 
+    {
+        String gbAccountGln = getGBAccountGln(principal);       
+        Collection<? extends AppSubscription> subs = getGbService().getAppSubscriptions(gbAccountGln, true);    	
+    	int recordsPerPage = 100;
+    	int noOfRecords = getGbService().getRegisteredProductsCount(gbAccountGln).intValue();
+    	int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+    	int pageNumPassed = Integer.parseInt(type);    	
+    	int offset = (pageNumPassed * recordsPerPage) - 99;
+    	
+    	if (pageNumPassed == 1)
+    	{
+    		offset = 0;
+    	}
+    	
+    	Collection<? extends Product> products = getGbService().getProductsForPagination(gbAccountGln, String.valueOf(offset), String.valueOf(recordsPerPage));
+    	List<Product> productsList = new ArrayList<Product>(products);    	
+        PagedListHolder<Product> productPagedList = new PagedListHolder<Product>();        
+        productPagedList.setSource(productsList);
+        productPagedList.setPageSize(recordsPerPage);
+        model.addAttribute("productPagedList", productPagedList);        
+        model.addAttribute("subs", subs);
+        model.addAttribute("productCount", noOfRecords);
+        model.addAttribute("noOfPages", noOfPages);
+        model.addAttribute("currentPage", pageNumPassed);
+                        
+        return "/WEB-INF/jsp/product/showProducts.jsp";
+    }
  
     @RequestMapping(value = "/product/new", method = RequestMethod.GET)
     public String newProductGet(Model model, Principal principal) throws GlobalBrokerException 
