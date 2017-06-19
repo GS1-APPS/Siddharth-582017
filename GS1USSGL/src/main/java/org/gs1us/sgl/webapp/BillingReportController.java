@@ -90,7 +90,7 @@ public class BillingReportController extends GBAwareController
             model.addAttribute("pendingReport", pendingReport);
         }
         
-        return "/jsp/billing/report.jsp";
+        return "/WEB-INF/jsp/billing/report.jsp";
     }
     
     @RequestMapping(value = "/billing/report/paid", method = RequestMethod.GET)

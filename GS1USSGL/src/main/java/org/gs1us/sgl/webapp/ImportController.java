@@ -41,7 +41,7 @@ public class ImportController extends GBAwareController
     {
         String gbAccountGln = getGBAccountGln(principal);
         
-        return "/jsp/import/importUpload.jsp";
+        return "/WEB-INF/jsp/import/importUpload.jsp";
     }
     
     @RequestMapping(value = "/import/upload", method = RequestMethod.POST)
@@ -58,7 +58,7 @@ public class ImportController extends GBAwareController
             if (content == null || content.length == 0)
             {
                 model.addAttribute("reason", "Either no file was selected or the file you selected is empty.");
-                return "/jsp/import/importUploadFailed.jsp";
+                return "/WEB-INF/jsp/import/importUploadFailed.jsp";
             }
 
             Import importRecord = getGbService().importUpload(creator, gbAccountGln, originalFilename, file.getContentType(), content);
@@ -70,7 +70,7 @@ public class ImportController extends GBAwareController
             else
             {
                 model.addAttribute("reason", "Your file could not be uploaded.");
-                return "/jsp/import/importUploadFailed.jsp";
+                return "/WEB-INF/jsp/import/importUploadFailed.jsp";
             }
             
         }                   
@@ -93,7 +93,7 @@ public class ImportController extends GBAwareController
         model.addAttribute("laterUrl", MvcUriComponentsBuilder.fromMethodName(ImportController.class, "importShowAllGet", null, null).toUriString());
         
         
-        return "/jsp/import/importSettings.jsp";
+        return "/WEB-INF/jsp/import/importSettings.jsp";
         
     }
     
@@ -253,7 +253,7 @@ public class ImportController extends GBAwareController
         
         importConfirmModel(model, id, gbAccountGln, importRecord);
         
-        return "/jsp/import/importConfirm.jsp";
+        return "/WEB-INF/jsp/import/importConfirm.jsp";
         
     }
 
@@ -295,7 +295,7 @@ public class ImportController extends GBAwareController
         if (error)
         {
             importConfirmModel(model, id, gbAccountGln, importRecord);
-            return "/jsp/import/importConfirm.jsp";
+            return "/WEB-INF/jsp/import/importConfirm.jsp";
         }
 
         getGbService().importConfirm(principal.getName(), gbAccountGln, importRecord.getId());
@@ -320,7 +320,7 @@ public class ImportController extends GBAwareController
         
         model.addAttribute("imports", importRecords);
         
-        return "/jsp/import/importShowAll.jsp";
+        return "/WEB-INF/jsp/import/importShowAll.jsp";
         
     }
     
@@ -334,7 +334,7 @@ public class ImportController extends GBAwareController
         model.addAttribute("actionUrl", MvcUriComponentsBuilder.fromMethodName(ImportController.class, "importDeletePost", null, null, id).toUriString());
         model.addAttribute("cancelUrl", MvcUriComponentsBuilder.fromMethodName(ImportController.class, "importShowAllGet", null, null).toUriString());
         
-        return "/jsp/import/importDelete.jsp";
+        return "/WEB-INF/jsp/import/importDelete.jsp";
         
     }
     

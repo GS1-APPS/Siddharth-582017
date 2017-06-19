@@ -43,7 +43,7 @@ public class TestController extends GBAwareController
         
         model.addAttribute("setTimeCommand", setTimeCommand);
         
-        return "/jsp/test/setTime.jsp";
+        return "/WEB-INF/jsp/test/setTime.jsp";
     }
     
     @RequestMapping(value = "/test/settime", method = RequestMethod.POST)
@@ -68,7 +68,7 @@ public class TestController extends GBAwareController
             }
             catch (ParseException e)
             {
-                return "/jsp/test/setTime.jsp";
+                return "/WEB-INF/jsp/test/setTime.jsp";
             }
         }
     }
@@ -133,7 +133,7 @@ public class TestController extends GBAwareController
         model.addAttribute("title", testName + " results");
         model.addAttribute("result", result);
         
-        return "/jsp/test/genericTest.jsp";
+        return "/WEB-INF/jsp/test/genericTest.jsp";
     }
 
 

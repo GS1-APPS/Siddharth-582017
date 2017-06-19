@@ -42,7 +42,7 @@ public class AppController extends GBAwareController
         model.addAttribute("unsubscribedApps", unsubscribedApps);
         model.addAttribute("subscriptions", subscriptions);
         
-        return "/jsp/app/showApps.jsp";
+        return "/WEB-INF/jsp/app/showApps.jsp";
     }
 
     static boolean containsApp(Collection<? extends AppSubscription> subscriptions, AppDesc appDesc)
@@ -77,7 +77,7 @@ public class AppController extends GBAwareController
         model.addAttribute("submitLabel", "Subscribe");
         model.addAttribute("cancelUrl", MvcUriComponentsBuilder.fromMethodName(AppController.class, "showApps", (Object)null, (Object)null).toUriString());
         model.addAttribute("subscribeCommand", new SubscribeCommand());
-        return "/jsp/app/subscribe.jsp";
+        return "/WEB-INF/jsp/app/subscribe.jsp";
     }
 
     static AppDesc findApp(Collection<? extends AppDesc> appDescs, String appName)

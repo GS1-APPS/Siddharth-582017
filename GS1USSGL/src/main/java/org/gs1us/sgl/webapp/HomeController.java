@@ -47,7 +47,7 @@ public class HomeController
             }
         }
         
-        return "/jsp/" + WebappUtil.homeJsp();
+        return "/WEB-INF/jsp/" + WebappUtil.homeJsp();
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -65,23 +65,23 @@ public class HomeController
     @RequestMapping(value = "/ui/resources", method = RequestMethod.GET)
     public String resources()
     {
-        return "/jsp/resources.jsp";
+        return "/WEB-INF/jsp/resources.jsp";
     }
 
     @RequestMapping(value = "/ui/accessDenied", method = RequestMethod.GET)
     public String accessDeniedGet()
     {
-        return "/jsp/accessDenied.jsp";
+        return "/WEB-INF/jsp/accessDenied.jsp";
     }
     @RequestMapping(value = "/ui/notFound", method = RequestMethod.GET)
     public String notFoundGet()
     {
-        return "/jsp/notFound.jsp";
+        return "/WEB-INF/jsp/notFound.jsp";
     }
     @RequestMapping(value = "/ui/accessDenied", method = RequestMethod.POST)
     public String accessDeniedPost()
     {
-        return "/jsp/accessDenied.jsp";
+        return "/WEB-INF/jsp/accessDenied.jsp";
     }
     
     @RequestMapping(value = "/ui/about", method = RequestMethod.GET)
@@ -100,12 +100,12 @@ public class HomeController
         properties.put("Profile", System.getProperty("spring.profiles.active", "[none]"));
         
         model.addAttribute("properties", properties);
-        return "/jsp/about.jsp";
+        return "/WEB-INF/jsp/about.jsp";
     }
 
     @RequestMapping(value = "/ui/upce", method = RequestMethod.GET)
     public String upceGet(Model model)
     {
-        return "/jsp/upce.jsp";
+        return "/WEB-INF/jsp/upce.jsp";
     }
 }

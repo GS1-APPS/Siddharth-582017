@@ -49,6 +49,6 @@ public class ReportController  extends GBAwareController
     	Long productsByDate = getGbService().getProductsForReportByDate();
     	model.addAttribute("TotalCount", products.toString());
     	model.addAttribute("OldDataCount", productsByDate.toString());    	
-        return "/jsp/report/index.jsp";
+        return "/WEB-INF/jsp/report/index.jsp";
     }
 }
