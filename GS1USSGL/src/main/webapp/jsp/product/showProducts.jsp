@@ -299,7 +299,7 @@
 	countryCodes.put("239","ZW");
 %>
 
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Products" />
   <jsp:param name="selectedItem" value="products" />
 </jsp:include>
@@ -448,4 +448,4 @@
 	</div>
 </div>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

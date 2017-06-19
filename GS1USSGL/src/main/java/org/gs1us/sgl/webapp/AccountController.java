@@ -41,7 +41,7 @@ public class AccountController extends GBAwareController
         
         model.addAttribute("member", member);
         
-        return "/WEB-INF/jsp/account/myAccount.jsp";
+        return "/jsp/account/myAccount.jsp";
     }
     
     @RequestMapping(value = "/account", method = RequestMethod.GET)
@@ -54,7 +54,7 @@ public class AccountController extends GBAwareController
         Collection<? extends BillingTransaction> xactions = getGbService().getAllBillingTransactions(gln);
         model.addAttribute("xactions", xactions);
         
-        return "/WEB-INF/jsp/account/showAccount.jsp";
+        return "/jsp/account/showAccount.jsp";
     }
     
     @RequestMapping(value = "/account/transaction", method = RequestMethod.GET)
@@ -65,7 +65,7 @@ public class AccountController extends GBAwareController
         Collection<? extends BillingTransaction> xactions = getGbService().getAllBillingTransactions(gln);
         model.addAttribute("xactions", xactions);
         
-        return "/WEB-INF/jsp/account/showTransactions.jsp";
+        return "/jsp/account/showTransactions.jsp";
     }
     
     @RequestMapping(value = "/account/order", method = RequestMethod.GET)
@@ -79,7 +79,7 @@ public class AccountController extends GBAwareController
         model.addAttribute("uninvoiced", uninvoiced);
         model.addAttribute("invoices", invoices);
         
-        return "/WEB-INF/jsp/account/showOrders.jsp";
+        return "/jsp/account/showOrders.jsp";
     }
     
     @RequestMapping(value = "/account/invoice/{invoiceId}", method = RequestMethod.GET)
@@ -113,7 +113,7 @@ public class AccountController extends GBAwareController
         model.addAttribute("invoice", invoice);
         model.addAttribute("orders", orders);
         
-        return "/WEB-INF/jsp/account/showInvoice.jsp";
+        return "/jsp/account/showInvoice.jsp";
     }
 
 }

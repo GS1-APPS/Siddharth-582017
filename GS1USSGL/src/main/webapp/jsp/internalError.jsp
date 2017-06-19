@@ -6,7 +6,7 @@
 <%
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="No Such Resource" />
   <jsp:param name="selectedItem" value="none" />
 </jsp:include>
@@ -18,4 +18,4 @@ An error has prevented the <%= WebappUtil.shortProductHtml() %> from fulfilling 
 </p>
 
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

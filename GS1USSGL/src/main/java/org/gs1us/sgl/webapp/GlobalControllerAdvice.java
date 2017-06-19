@@ -37,7 +37,7 @@ public class GlobalControllerAdvice
     @ExceptionHandler(NoSuchResourceException.class)
     public String handleNoSuchResourceException(NoSuchResourceException e)
     {
-        return "/WEB-INF/jsp/noSuchResource.jsp";
+        return "/jsp/noSuchResource.jsp";
     }
     
     @ExceptionHandler(NoSuchAccountException.class)
@@ -46,7 +46,7 @@ public class GlobalControllerAdvice
         // This happens if we think the user is signed up (based on local information)
         // but there the global broker doesn't recognize the account.
         request.setAttribute("errorMessage", "There is a problem with your account. Please seek assistance from customer service.");
-        return "/WEB-INF/jsp/genericError.jsp";
+        return "/jsp/genericError.jsp";
     }
     
     @ExceptionHandler(NotSignedUpException.class)
@@ -66,21 +66,21 @@ public class GlobalControllerAdvice
             request.setAttribute("sizeLimit", ee.getPermittedSize());
             request.setAttribute("uploadedSize", ee.getActualSize());
         }
-        return "/WEB-INF/jsp/fileTooLarge.jsp";
+        return "/jsp/fileTooLarge.jsp";
     }
     
     // doesn't seem to have an effect; instead see <error-page> in web.xml
     @ExceptionHandler(NoHandlerFoundException.class)
     public String handleNoHandlerFoundException(Exception e)
     {
-        return "/WEB-INF/jsp/notFound.jsp";
+        return "/jsp/notFound.jsp";
     }
     
     // doesn't seem to have an effect; instead see <error-page> in web.xml
     @ExceptionHandler(NoSuchRequestHandlingMethodException.class)
     public String handleNoSuchRequestHandlingMethodException(Exception e)
     {
-        return "/WEB-INF/jsp/notFound.jsp";
+        return "/jsp/notFound.jsp";
     }
     
     @ExceptionHandler(GlobalBrokerException.class)
@@ -88,13 +88,13 @@ public class GlobalControllerAdvice
     {
         s_logger.log(Level.SEVERE, "Global broker exception", e);
         request.setAttribute("errorMessage", "We're sorry, we cannot process your request at this time. Please try again later.");
-        return "/WEB-INF/jsp/genericError.jsp";
+        return "/jsp/genericError.jsp";
     }
 
     @ExceptionHandler(Exception.class)
     public String handleAnyException(Exception e)
     {
         s_logger.log(Level.SEVERE, "Internal error", e);
-        return "/WEB-INF/jsp/internalError.jsp";
+        return "/jsp/internalError.jsp";
     }
 }

@@ -12,7 +12,7 @@
 <%
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Forgot Password Sent" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -30,4 +30,4 @@ After you reset your password, you may log in and use the <%= WebappUtil.shortPr
 
 </div>
 </div>
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

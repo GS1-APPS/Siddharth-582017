@@ -29,7 +29,7 @@
 	String timeZoneId = user.getTimezone();
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value='<%= "Pay all invoices for " + member.getCompanyName() %>'/>
   <jsp:param name="selectedItem" value="billing" />
 </jsp:include>
@@ -104,4 +104,4 @@
 	</c:otherwise>
 </c:choose>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

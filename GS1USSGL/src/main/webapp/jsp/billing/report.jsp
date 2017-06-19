@@ -42,7 +42,7 @@
     String exportPendingUrl = pendingReport == null ? null : MvcUriComponentsBuilder.fromMethodName(BillingReportController.class, "exportPendingReport", null, null, null, fromDateString, toDateString).toUriString();
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value='<%= "Billing reports" %>'/>
   <jsp:param name="selectedItem" value="billing" />
 </jsp:include>
@@ -96,4 +96,4 @@ $(document).ready(function(){
 });
 </script>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

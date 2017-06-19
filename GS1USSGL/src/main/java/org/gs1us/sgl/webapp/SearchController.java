@@ -45,19 +45,19 @@ public class SearchController  extends GBAwareController
     @RequestMapping(value = "/ui/search", method = RequestMethod.GET)
     public String search(Model model) throws GlobalBrokerException
     {        
-        return "/WEB-INF/jsp/productSearch/index.jsp";
+        return "/jsp/productSearch/index.jsp";
     }
 
     @RequestMapping(value = "/ui/searchByAuthentication", method = RequestMethod.GET)
     public String searchByAuthentication(Model model)
     {
-        return "/WEB-INF/jsp/productSearch/keyAuthentication.jsp";
+        return "/jsp/productSearch/keyAuthentication.jsp";
     }
     
     @RequestMapping(value = "/ui/searchByValidation", method = RequestMethod.GET)
     public String searchByValidation(Model model)
     {
-        return "/WEB-INF/jsp/productSearch/productValidation.jsp";
+        return "/jsp/productSearch/productValidation.jsp";
     }
 
     @RequestMapping(value = "/ui/searchByProduct", method = RequestMethod.GET)
@@ -65,7 +65,7 @@ public class SearchController  extends GBAwareController
     {
     	Collection<? extends IsoCountryRef> countryList = getGbService().getAllIsoCountryRef();
     	model.addAttribute("countryList", countryList);    	    	
-        return "/WEB-INF/jsp/productSearch/searchFunction.jsp";
+        return "/jsp/productSearch/searchFunction.jsp";
     }
     
     @RequestMapping(value = "/ui/searchByProduct", method = RequestMethod.POST)
@@ -120,7 +120,7 @@ public class SearchController  extends GBAwareController
     	//model.addAttribute("targetMarket", targetMarket);
     	req.getSession().setAttribute("gpcNumber",  gpcNumber);
     	req.getSession().setAttribute("targetMarket",  targetMarket);
-    	return "/WEB-INF/jsp/productSearch/searchFunctionResponse.jsp";
+    	return "/jsp/productSearch/searchFunctionResponse.jsp";
     }
     
     @RequestMapping(value = "/ui/searchByProductPagination/{type}", method = RequestMethod.GET) 
@@ -153,7 +153,7 @@ public class SearchController  extends GBAwareController
         model.addAttribute("noOfPages", noOfPages);
         model.addAttribute("currentPage", pageNumPassed);
         
-        return "/WEB-INF/jsp/productSearch/searchFunctionResponse.jsp";        
+        return "/jsp/productSearch/searchFunctionResponse.jsp";
     }
     
     @RequestMapping(value = "/ui/searchByAuthentication", method = RequestMethod.POST)
@@ -187,7 +187,7 @@ public class SearchController  extends GBAwareController
     		model.addAttribute("errorMessage", "Global Trade Item Number is required.");
     	} 	
    	
-    	return "/WEB-INF/jsp/productSearch/keyAuthenticationResponse.jsp";
+    	return "/jsp/productSearch/keyAuthenticationResponse.jsp";
     }
 
     @RequestMapping(value = "/ui/searchByValidation", method = RequestMethod.POST)
@@ -221,7 +221,7 @@ public class SearchController  extends GBAwareController
     		model.addAttribute("errorMessage", "Global Trade Item Number is required.");
     	} 	
    	
-    	return "/WEB-INF/jsp/productSearch/productValidationResponse.jsp";
+    	return "/jsp/productSearch/productValidationResponse.jsp";
     }
         
     private Product lookupProduct(String itemNumber) throws GlobalBrokerException, NoSuchResourceException

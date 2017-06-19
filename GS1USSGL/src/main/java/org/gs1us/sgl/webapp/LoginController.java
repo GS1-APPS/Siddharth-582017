@@ -31,7 +31,7 @@ public class LoginController
     public String login(Model model)
     {
         model.addAttribute("termsOfService", m_termsOfService);
-        return "/WEB-INF/jsp/login.jsp";
+        return "/jsp/login.jsp";
     }
     
     @RequestMapping(method = RequestMethod.POST)
@@ -55,7 +55,7 @@ public class LoginController
         catch (ServletException e)
         {
             request.setAttribute("errorMessage", e.getMessage());
-            return "/WEB-INF/jsp/login.jsp";
+            return "/jsp/login.jsp";
         }
 
     }

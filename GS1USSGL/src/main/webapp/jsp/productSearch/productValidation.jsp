@@ -22,7 +22,7 @@
 	String productSearchUri = MvcUriComponentsBuilder.fromMethodName(SearchController.class, "search", (Object)null).toUriString();
 %>
             
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Product Search" />
   <jsp:param name="selectedItem" value="productSearch" />
 </jsp:include>
@@ -49,4 +49,4 @@
 </div>
 </div>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

@@ -28,7 +28,7 @@
 	String timeZone = (String) request.getAttribute("timeZone");	
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="User Account Details" />
   <jsp:param name="selectedItem" value="userAccount" />
 </jsp:include>
@@ -76,4 +76,4 @@
 
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>	
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

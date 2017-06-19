@@ -304,7 +304,7 @@
 	countryCodes.put("239","ZIMBABWE");
 %>
 
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Product Details" />
   <jsp:param name="selectedItem" value="products" />
 </jsp:include>
@@ -349,4 +349,4 @@
     	</table>
 </c:if>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

@@ -22,7 +22,7 @@
 	Map<String,String> properties = (Map<String,String>)request.getAttribute("properties");
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="About" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -39,4 +39,4 @@
 
 
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

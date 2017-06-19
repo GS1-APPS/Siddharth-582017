@@ -23,7 +23,7 @@
 	AppDesc appDesc = (AppDesc)request.getAttribute("appDesc");
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Apps" />
   <jsp:param name="selectedItem" value="apps" />
 </jsp:include>
@@ -52,4 +52,4 @@
 
 
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

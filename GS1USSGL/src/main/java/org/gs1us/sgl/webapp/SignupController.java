@@ -80,7 +80,7 @@ public class SignupController extends GBAwareController
  /*
         model.addAttribute("brandOwnerAgreementActionUrl", "./agreements/brandOwner");
         model.addAttribute("digimarcActionUrl", "./agreements/digimarc");
- */       return "/WEB-INF/jsp/signup/agreements.jsp";
+ */       return "/jsp/signup/agreements.jsp";
     }
     
     @RequestMapping(value = "/agreements/brandOwner", method = RequestMethod.POST)
@@ -98,7 +98,7 @@ public class SignupController extends GBAwareController
         if (bindingResult.hasErrors())
         {
             signupModelAttributes(model);
-            return "/WEB-INF/jsp/signup/signup.jsp";
+            return "/jsp/signup/signup.jsp";
         }
         */
 
@@ -158,7 +158,7 @@ public class SignupController extends GBAwareController
         signupCommand.setTosVersion(m_termsOfService.getVersion());
         model.addAttribute("signupCommand", signupCommand);
         signupModelAttributes(model);
-        return "/WEB-INF/jsp/signup/signup.jsp";
+        return "/jsp/signup/signup.jsp";
     } 
     
     /**
@@ -197,7 +197,7 @@ public class SignupController extends GBAwareController
         if (bindingResult.hasErrors())
         {
             signupModelAttributes(model);
-            return "/WEB-INF/jsp/signup/signup.jsp";
+            return "/jsp/signup/signup.jsp";
         }
 
         Member member = user.getMember();

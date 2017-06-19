@@ -13,7 +13,7 @@
 	String cancelLink = (String)request.getAttribute("cancelLink");
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Forgot Password" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -43,4 +43,4 @@ with instructions to reset your password. After you reset your password, you may
 
 </div>
 </div>
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

@@ -23,7 +23,7 @@
 	String membersUrl = MvcUriComponentsBuilder.fromMethodName(UserController.class, "showMembers", null, null).toUriString();
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Users" />
   <jsp:param name="selectedItem" value="users" />
   <jsp:param name="fluid" value="false" />
@@ -95,4 +95,4 @@
 	</c:otherwise>
 </c:choose>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

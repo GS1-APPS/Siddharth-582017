@@ -25,7 +25,7 @@
 	String upceUrl  = request.getContextPath() + "/images/barcode-upce.png";
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="About" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -119,4 +119,4 @@ To determine whether your product is marked with a UPC-E, look at the barcode on
 
 
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

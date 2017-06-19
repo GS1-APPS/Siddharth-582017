@@ -21,7 +21,7 @@
 	String cancelUrl = MvcUriComponentsBuilder.fromMethodName(HomeController.class, "home", null, null).toUriString();
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Set date/time" />
   <jsp:param name="selectedItem" value="test" />
 </jsp:include>
@@ -44,4 +44,4 @@ Set a fixed date and time for testing purposes, or leave blank to revert to norm
 	</form:form>
 </div>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

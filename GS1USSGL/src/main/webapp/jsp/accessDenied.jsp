@@ -5,7 +5,7 @@
 <%
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Access Denied" />
   <jsp:param name="selectedItem" value="none" />
 </jsp:include>
@@ -28,4 +28,4 @@ Sorry, your previous session expired. Please <a href="/ui/login">log in</a> agai
 
 <% } %>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

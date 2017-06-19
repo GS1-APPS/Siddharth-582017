@@ -13,7 +13,7 @@
 	String importUrl = MvcUriComponentsBuilder.fromMethodName(ImportController.class, "importShowAllGet", null, null).toUriString();
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Import upload failed" />
   <jsp:param name="selectedItem" value="products" />
 </jsp:include>
@@ -28,4 +28,4 @@
     <button class="btn-secondary btn-margin" type="button" onclick='window.location.href="<%= importUrl %>"'>Cancel</button>
 </p>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

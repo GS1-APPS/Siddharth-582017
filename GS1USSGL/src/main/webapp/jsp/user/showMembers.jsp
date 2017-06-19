@@ -20,7 +20,7 @@
 
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Members" />
   <jsp:param name="selectedItem" value="members" />
 </jsp:include>
@@ -79,4 +79,4 @@
 	</c:otherwise>
 </c:choose>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

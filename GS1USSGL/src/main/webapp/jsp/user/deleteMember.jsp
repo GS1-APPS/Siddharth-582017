@@ -12,7 +12,7 @@
 	String cancelUrl = (String) request.getAttribute("cancelUrl");
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Delete Member" />
   <jsp:param name="selectedItem" value="members" />
 </jsp:include>
@@ -27,4 +27,4 @@
 	value="${_csrf.token}"/>
 </form>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

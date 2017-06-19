@@ -37,7 +37,7 @@
 	Map<String,List<String>> validationErrors = (Map<String,List<String>>)request.getAttribute("validationErrors");
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Edit Product" />
   <jsp:param name="selectedItem" value="products" />
 </jsp:include>
@@ -115,4 +115,4 @@
 
 </div>
 </div>
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

@@ -39,7 +39,7 @@
 	String forgotPasswordUrl = MvcUriComponentsBuilder.fromMethodName(UserController.class, "forgotPasswordGet", (Object)null).toUriString();
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Home" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -166,4 +166,4 @@ value-added services including Digimarc bar codes.
 </c:otherwise>
 </c:choose>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

@@ -59,7 +59,7 @@ public class BillingController extends GBAwareController
         model.addAttribute("billedCount", billedCount);
         model.addAttribute("unpaidCount", unpaidCount);
         
-        return "/WEB-INF/jsp/billing/billingSummary.jsp";
+        return "/jsp/billing/billingSummary.jsp";
     }
     
     @RequestMapping(value = "/billing/invoiceAndBill", method = RequestMethod.GET)
@@ -70,7 +70,7 @@ public class BillingController extends GBAwareController
         uninvoicedOrderGroups.addAll(uninvoiced);
         model.addAttribute("uninvoicedOrderGroups", uninvoicedOrderGroups);
         
-        return "/WEB-INF/jsp/billing/invoiceAndBill.jsp";
+        return "/jsp/billing/invoiceAndBill.jsp";
     }
     
     @RequestMapping(value = "/billing/invoiceAndBill/{gln}", method = RequestMethod.GET)
@@ -85,7 +85,7 @@ public class BillingController extends GBAwareController
         model.addAttribute("paymentMethod", paymentMethod);
         model.addAttribute("uninvoiced", uninvoiced);
         
-        return "/WEB-INF/jsp/billing/invoiceAndBillMember.jsp";
+        return "/jsp/billing/invoiceAndBillMember.jsp";
     }
 
     private String paymentMethod(GBAccount gbAccount)
@@ -205,7 +205,7 @@ public class BillingController extends GBAwareController
         model.addAttribute("invoiced", invoiced);
         model.addAttribute("memberMap", memberMap);
         
-        return "/WEB-INF/jsp/billing/invoiced.jsp";
+        return "/jsp/billing/invoiced.jsp";
     }
 
 
@@ -234,7 +234,7 @@ public class BillingController extends GBAwareController
         model.addAttribute("invoice", invoice);
         model.addAttribute("orders", getGbService().getInvoiceOrders(invoiceId));
         
-        return "/WEB-INF/jsp/billing/billInvoice.jsp";
+        return "/jsp/billing/billInvoice.jsp";
     }
     
     @RequestMapping(value = "/billing/invoice/{invoiceId}/bill", method = RequestMethod.POST)
@@ -258,7 +258,7 @@ public class BillingController extends GBAwareController
         model.addAttribute("billed", billed);
         model.addAttribute("memberMap", memberMap);
         
-        return "/WEB-INF/jsp/billing/billed.jsp";
+        return "/jsp/billing/billed.jsp";
     }
 
     
@@ -286,7 +286,7 @@ public class BillingController extends GBAwareController
         model.addAttribute("actionUrl", MvcUriComponentsBuilder.fromMethodName(BillingController.class, "payInvoicePost", null, null, invoiceId, null).toUriString());
         model.addAttribute("cancelUrl", MvcUriComponentsBuilder.fromMethodName(BillingController.class, "billingBilled", null, null).toUriString());
         
-        return "/WEB-INF/jsp/billing/payAll.jsp";    
+        return "/jsp/billing/payAll.jsp";
     }
     
     @RequestMapping(value = "/billing/invoice/{invoiceId}/pay", method = RequestMethod.POST)
@@ -330,7 +330,7 @@ public class BillingController extends GBAwareController
         model.addAttribute("unpaid", unpaid);
         model.addAttribute("memberMap", memberMap);
         
-        return "/WEB-INF/jsp/billing/unpaid.jsp";
+        return "/jsp/billing/unpaid.jsp";
     }
 
     
@@ -341,7 +341,7 @@ public class BillingController extends GBAwareController
         
         model.addAttribute("payment", payment);
         
-        return "/WEB-INF/jsp/billing/payPayment.jsp";
+        return "/jsp/billing/payPayment.jsp";
     }
     
     @RequestMapping(value = "/billing/invoice/{paymentId}/paid", method = RequestMethod.POST)

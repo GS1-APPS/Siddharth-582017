@@ -12,7 +12,7 @@
 	StandaloneUser user = (StandaloneUser)request.getAttribute("user");
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Forgot Password Sent" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -29,4 +29,4 @@ An e-mail with instructions to reset the password for user <c:out value="<%= use
 
 </div>
 </div>
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

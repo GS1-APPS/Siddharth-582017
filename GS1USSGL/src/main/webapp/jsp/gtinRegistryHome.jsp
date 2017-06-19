@@ -1,3 +1,4 @@
+
 <%@page import="org.gs1us.sgl.webapp.AccountController"%>
 <%@page import="org.gs1us.sgl.webapp.standalone.UserController"%>
 <%@page import="org.gs1us.sgl.webapp.LoginController"%>
@@ -38,7 +39,7 @@
 	String forgotPasswordUrl = MvcUriComponentsBuilder.fromMethodName(UserController.class, "forgotPasswordGet", (Object)null).toUriString();
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Home" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -154,4 +155,4 @@ The <%= WebappUtil.longProductHtml() %> lets you register your products and data
 </c:otherwise>
 </c:choose>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

@@ -13,7 +13,7 @@
 	StandaloneUser user = (StandaloneUser)request.getAttribute("user");
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Register" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -29,4 +29,4 @@ An e-mail has been sent to <%= user.getUsername() %> with instructions to set th
 
 </div>
 </div>
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

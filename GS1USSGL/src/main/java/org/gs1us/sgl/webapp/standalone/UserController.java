@@ -142,7 +142,7 @@ public class UserController extends GBAwareController
         registerModelAttributes(model);
         model.addAttribute("cancelLink", "home");
         
-        return "/WEB-INF/jsp/user/editUser.jsp";
+        return "/jsp/user/editUser.jsp";
     }
 
     private void registerModelAttributes(Model model)
@@ -172,7 +172,7 @@ public class UserController extends GBAwareController
         {
             registerModelAttributes(model);
             model.addAttribute("cancelLink", "home");
-            return "/WEB-INF/jsp/user/editUser.jsp";
+            return "/jsp/user/editUser.jsp";
         }
 
         // We'll update the existing user if we got this far with one
@@ -196,7 +196,7 @@ public class UserController extends GBAwareController
     public String forgotPasswordGet(Model model)
     {
         model.addAttribute("cancelLink", MvcUriComponentsBuilder.fromMethodName(HomeController.class, "home", null, null).toUriString());
-        return "/WEB-INF/jsp/user/forgotPassword.jsp";
+        return "/jsp/user/forgotPassword.jsp";
     }
 
     
@@ -226,7 +226,7 @@ public class UserController extends GBAwareController
     public String forgotPasswordSentGet(Model model)
     {
        
-        return "/WEB-INF/jsp/user/forgotPasswordSent.jsp";
+        return "/jsp/user/forgotPasswordSent.jsp";
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.GET)
@@ -236,7 +236,7 @@ public class UserController extends GBAwareController
 
         model.addAttribute("user", user);
        
-        return "/WEB-INF/jsp/user/changePassword.jsp";
+        return "/jsp/user/changePassword.jsp";
     }
 
     
@@ -266,7 +266,7 @@ public class UserController extends GBAwareController
 
         model.addAttribute("user", user);
        
-        return "/WEB-INF/jsp/user/changePasswordSent.jsp";
+        return "/jsp/user/changePasswordSent.jsp";
     }
 
     @RequestMapping(value = "/user/{id}/changePassword", method = RequestMethod.GET)
@@ -276,7 +276,7 @@ public class UserController extends GBAwareController
 
         model.addAttribute("user", user);
        
-        return "/WEB-INF/jsp/user/changePassword.jsp";
+        return "/jsp/user/changePassword.jsp";
     }
 
     
@@ -304,7 +304,7 @@ public class UserController extends GBAwareController
 
         model.addAttribute("user", user);
        
-        return "/WEB-INF/jsp/user/changePasswordSent.jsp";
+        return "/jsp/user/changePasswordSent.jsp";
     }
 
     private void sendResetPasswordEmail(StandaloneUser user, String subject, String messageBodyTemplate)
@@ -348,7 +348,7 @@ public class UserController extends GBAwareController
         
         myAccountModelAttributes(model, user.getUsername());
         
-        return "/WEB-INF/jsp/user/editUser.jsp";
+        return "/jsp/user/editUser.jsp";
     }
 
     private void myAccountModelAttributes(Model model, String username)
@@ -373,7 +373,7 @@ public class UserController extends GBAwareController
         if (bindingResult.hasErrors())
         {
             myAccountModelAttributes(model, user.getUsername());
-            return "/WEB-INF/jsp/user/editUser.jsp";
+            return "/jsp/user/editUser.jsp";
         }
 
         // Need to fetch the user within the transaction in order to get it to update;
@@ -403,7 +403,7 @@ public class UserController extends GBAwareController
         
         model.addAttribute("apiKey", user.getApiKey());
         
-        return "/WEB-INF/jsp/user/editUser.jsp";
+        return "/jsp/user/editUser.jsp";
     }
 
     private void editUserModelAttributes(Model model, StandaloneUser user)
@@ -433,7 +433,7 @@ public class UserController extends GBAwareController
         if (bindingResult.hasErrors())
         {
             editUserModelAttributes(model, user);
-            return "/WEB-INF/jsp/user/editUser.jsp";
+            return "/jsp/user/editUser.jsp";
         }
 
         userCommand.updateAdminEditableFields(user);
@@ -450,7 +450,7 @@ public class UserController extends GBAwareController
         
         model.addAttribute("user", user);
         
-        return "/WEB-INF/jsp/user/deleteUser.jsp";
+        return "/jsp/user/deleteUser.jsp";
     }
 
     @RequestMapping(value = "/user/{id}/delete", method = RequestMethod.POST)
@@ -486,7 +486,7 @@ public class UserController extends GBAwareController
 		    model.addAttribute("timeZone", "");			
 		}
 		
-        return "/WEB-INF/jsp/user/showUserAccount.jsp";
+        return "/jsp/user/showUserAccount.jsp";
     }
     
     @RequestMapping(value = "/user", method = RequestMethod.GET)
@@ -500,7 +500,7 @@ public class UserController extends GBAwareController
             model.addAttribute("users", m_userDao.getAllUsers(spm.getSortKey(), spm.getSortDirection() == SortOrder.Direction.ASC ? +1 : -1));
         model.addAttribute("spm", spm);
         
-        return "/WEB-INF/jsp/user/showUsers.jsp";
+        return "/jsp/user/showUsers.jsp";
     }
 
     
@@ -523,7 +523,7 @@ public class UserController extends GBAwareController
     {
         StandaloneUser user = populateUser(model, id);
         
-        return "/WEB-INF/jsp/user/registered.jsp";
+        return "/jsp/user/registered.jsp";
     }
 
     @RequestMapping(value = "/pwreset/{pwresetkey}", method = RequestMethod.GET)
@@ -539,12 +539,12 @@ public class UserController extends GBAwareController
                 model.addAttribute("errorMessage", "Your password reset link has expired. Please re-register your account to get a new link.");
             else
                 model.addAttribute("errorMessage", "Your password reset link has expired. If you still want to reset your password, go back to \"My Account\"  or the \"Forgot Password\" link and try again.");
-            return "/WEB-INF/jsp/genericError.jsp";
+            return "/jsp/genericError.jsp";
         }
         
         model.addAttribute("user", user);
         
-        return "/WEB-INF/jsp/user/resetPassword.jsp";
+        return "/jsp/user/resetPassword.jsp";
     }
     
     @RequestMapping(value = "/pwreset/{pwresetkey}", method = RequestMethod.POST)
@@ -560,7 +560,7 @@ public class UserController extends GBAwareController
                 model.addAttribute("errorMessage", "Your password reset link has expired. Please re-register your account to get a new link.");
             else
                 model.addAttribute("errorMessage", "Your password reset link has expired. If you still want to reset your password, go back to \"My Account\"  or the \"Forgot Password\" link and try again.");
-            return "/WEB-INF/jsp/genericError.jsp";
+            return "/jsp/genericError.jsp";
         }
         
         String pw1trimmed = UserInputUtil.trimToNull(pw1);
@@ -570,12 +570,12 @@ public class UserController extends GBAwareController
         if (!isAcceptablePassword(pw1trimmed) || !isAcceptablePassword(pw2trimmed))
         {
             model.addAttribute("errorMessage", "Your password must be at least 7 characters, and contain at least three of (a) a digit; (b) an uppercase letter; (c) a lowercase letter; and (d) a special character");
-            return "/WEB-INF/jsp/user/resetPassword.jsp";            
+            return "/jsp/user/resetPassword.jsp";
         }
         else if (!pw1trimmed.equals(pw2trimmed))
         {
             model.addAttribute("errorMessage", "Passwords do not match");
-            return "/WEB-INF/jsp/user/resetPassword.jsp";            
+            return "/jsp/user/resetPassword.jsp";
         }
         else
         {
@@ -588,7 +588,7 @@ public class UserController extends GBAwareController
             m_userDao.updateUser(user);
             
             model.addAttribute("errorMessage", "Your password has been reset. Please log in below.");
-            return "/WEB-INF/jsp/login.jsp";
+            return "/jsp/login.jsp";
         }
             
     }
@@ -822,7 +822,7 @@ public class UserController extends GBAwareController
             return view;
         }
         else
-            return "/WEB-INF/jsp/notFound.jsp";
+            return "/jsp/notFound.jsp";
     }
     
     // The bootstrap mechanism allows for the creation of an initial user when there are no users in the DB
@@ -837,7 +837,7 @@ public class UserController extends GBAwareController
             return newMemberPost(request, model, principal, memberAndUserCommand, bindingResult);
         }
         else
-            return "/WEB-INF/jsp/notFound.jsp";
+            return "/jsp/notFound.jsp";
     }
     
     @RequestMapping(value = "/member/new", method = RequestMethod.GET)
@@ -850,7 +850,7 @@ public class UserController extends GBAwareController
         newMemberModelAttributes(model, null, null, null);
         model.addAttribute("cancelLink", MvcUriComponentsBuilder.fromMethodName(UserController.class, "showMembers", null, null).toUriString());
         
-        return "/WEB-INF/jsp/user/newMember.jsp";
+        return "/jsp/user/newMember.jsp";
     }
 
     private void newMemberModelAttributes(Model model, AttributeSet attributes, List<ProductValidationError> errorList, String timeZoneId) throws GlobalBrokerException
@@ -895,7 +895,7 @@ public class UserController extends GBAwareController
         {
             newMemberModelAttributes(model, attributes, null, timeZoneId);
             model.addAttribute("cancelLink", MvcUriComponentsBuilder.fromMethodName(UserController.class, "showMembers", null, null).toUriString());
-            return "/WEB-INF/jsp/user/newMember.jsp";
+            return "/jsp/user/newMember.jsp";
         }
         
         try
@@ -912,7 +912,7 @@ public class UserController extends GBAwareController
             updateBindingResultFromValidationException(bindingResult, "member.", e);
             newMemberModelAttributes(model, attributes, e.getErrors(), timeZoneId);
             model.addAttribute("cancelLink", MvcUriComponentsBuilder.fromMethodName(UserController.class, "showMembers", null, null).toUriString());
-            return "/WEB-INF/jsp/user/newMember.jsp";
+            return "/jsp/user/newMember.jsp";
         }
 
         StandaloneMember member = m_memberDao.createMember();
@@ -1034,7 +1034,7 @@ public class UserController extends GBAwareController
         
         editMemberModelAttributes(model, member, attributes, null, timeZoneId);
         
-        return "/WEB-INF/jsp/user/editMember.jsp";
+        return "/jsp/user/editMember.jsp";
     }
 
     private void editMemberModelAttributes(Model model, StandaloneMember member, AttributeSet attributes, List<ProductValidationError> errorList, String timeZoneId) throws GlobalBrokerException
@@ -1092,7 +1092,7 @@ public class UserController extends GBAwareController
         if (bindingResult.hasErrors())
         {
             editMemberModelAttributes(model, member, attributes, null, timeZoneId);
-            return "/WEB-INF/jsp/user/editMember.jsp";
+            return "/jsp/user/editMember.jsp";
         }
 
         try
@@ -1117,7 +1117,7 @@ public class UserController extends GBAwareController
         {
             updateBindingResultFromValidationException(bindingResult, "", e);
             editMemberModelAttributes(model, member, attributes, e.getErrors(), timeZoneId);
-            return "/WEB-INF/jsp/user/editMember.jsp";
+            return "/jsp/user/editMember.jsp";
         }
         catch (GlobalBrokerException e)
         {
@@ -1149,7 +1149,7 @@ public class UserController extends GBAwareController
         StandaloneMember member = populateMember(model, id);        
         model.addAttribute("cancelUrl", MvcUriComponentsBuilder.fromMethodName(UserController.class, "showMembers", (Object)null, (Object)null).toUriString());
         model.addAttribute("member", member);
-        return "/WEB-INF/jsp/user/deleteMember.jsp";
+        return "/jsp/user/deleteMember.jsp";
     }
 
     
@@ -1183,7 +1183,7 @@ public class UserController extends GBAwareController
         
         memberNewUserModelAttributes(model, member);
         
-        return "/WEB-INF/jsp/user/editUser.jsp";
+        return "/jsp/user/editUser.jsp";
     }
 
     private void memberNewUserModelAttributes(Model model, StandaloneMember member)
@@ -1208,7 +1208,7 @@ public class UserController extends GBAwareController
         if (bindingResult.hasErrors())
         {
             memberNewUserModelAttributes(model, member);
-            return "/WEB-INF/jsp/user/editUser.jsp";
+            return "/jsp/user/editUser.jsp";
         }
 
         StandaloneUser user = createOrUpdateUser(existingUser, member, username, userCommand);
@@ -1229,7 +1229,7 @@ public class UserController extends GBAwareController
             model.addAttribute("members", m_memberDao.getAllMembers(spm.getSortKey(), spm.getSortDirection() == SortOrder.Direction.ASC ? +1 : -1));
         model.addAttribute("spm", spm);
        
-        return "/WEB-INF/jsp/user/showMembers.jsp";
+        return "/jsp/user/showMembers.jsp";
     }
     
     @RequestMapping(value = "/member/{id}/account", method = RequestMethod.GET)
@@ -1244,7 +1244,7 @@ public class UserController extends GBAwareController
         model.addAttribute("xactions", xactions);
         model.addAttribute("forMember", member);
         
-        return "/WEB-INF/jsp/account/showAccount.jsp";
+        return "/jsp/account/showAccount.jsp";
     }
     
     @RequestMapping(value = "/member/{id}/product", method = RequestMethod.GET)
@@ -1260,7 +1260,7 @@ public class UserController extends GBAwareController
         model.addAttribute("productLine1AttrName", "brandName");
         model.addAttribute("productLine2AttrName", "productName");        
         model.addAttribute("forMember", member);
-        return "/WEB-INF/jsp/product/showProducts.jsp";
+        return "/jsp/product/showProducts.jsp";
     }
     
     public static class MemberAndUserCommand

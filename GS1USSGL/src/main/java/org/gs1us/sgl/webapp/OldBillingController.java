@@ -53,7 +53,7 @@ public class OldBillingController extends GBAwareController
         Collection<? extends Order> orders = m_billingService.getAllOrders();
         model.addAttribute("orders", orders);
         
-        return "/WEB-INF/jsp/billing/showOrders.jsp";
+        return "/jsp/billing/showOrders.jsp";
     }
     
     //@RequestMapping(value = "/billing/unpaid", method = RequestMethod.GET)
@@ -103,7 +103,7 @@ public class OldBillingController extends GBAwareController
         
         model.addAttribute("orderGroups", sortedOrderGroups);
         
-        return "/WEB-INF/jsp/billing/showUnpaidOrders.jsp";
+        return "/jsp/billing/showUnpaidOrders.jsp";
     }
     
     //@RequestMapping(value = "/billing/payall/{gln}", method = RequestMethod.GET)
@@ -128,7 +128,7 @@ public class OldBillingController extends GBAwareController
         model.addAttribute("total", total);
         model.addAttribute("paymentCommand", paymentCommand);
         
-        return "/WEB-INF/jsp/billing/payAll.jsp";        
+        return "/jsp/billing/payAll.jsp";
     }
 
     //@RequestMapping(value = "/billing/payall/{gln}", method = RequestMethod.POST)

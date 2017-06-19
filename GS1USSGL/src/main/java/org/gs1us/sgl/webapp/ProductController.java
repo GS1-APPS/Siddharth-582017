@@ -63,7 +63,7 @@ public class ProductController extends GBAwareController
         model.addAttribute("productCount", noOfRecords);
         model.addAttribute("noOfPages", noOfPages);
         model.addAttribute("currentPage", 1);
-        return "/WEB-INF/jsp/product/showProducts.jsp";
+        return "/jsp/product/showProducts.jsp";
         
     }
     
@@ -94,7 +94,7 @@ public class ProductController extends GBAwareController
         model.addAttribute("noOfPages", noOfPages);
         model.addAttribute("currentPage", pageNumPassed);
                         
-        return "/WEB-INF/jsp/product/showProducts.jsp";
+        return "/jsp/product/showProducts.jsp";
     }
  
     @RequestMapping(value = "/product/new", method = RequestMethod.GET)
@@ -104,7 +104,7 @@ public class ProductController extends GBAwareController
         
         modelForNewProduct(model, gbAccountGln, null, null);
         
-        return "/WEB-INF/jsp/product/editProduct.jsp";
+        return "/jsp/product/editProduct.jsp";
     }
 
     @RequestMapping(value = "/product/new", method = RequestMethod.POST)
@@ -147,7 +147,7 @@ public class ProductController extends GBAwareController
         {
             modelForNewProduct(model, gbAccountGln, gtin, status);
             model.addAttribute("parameters", request.getParameterMap());
-            return "/WEB-INF/jsp/product/editProduct.jsp";
+            return "/jsp/product/editProduct.jsp";
         }
     }
 
@@ -177,7 +177,7 @@ public class ProductController extends GBAwareController
     	{
     		model.addAttribute("Product", product);
     	}
-    	return "/WEB-INF/jsp/product/productDetail.jsp";
+    	return "/jsp/product/productDetail.jsp";
     }
 
     @RequestMapping(value = "/product/{gtin}/renew", method = RequestMethod.GET)
@@ -197,7 +197,7 @@ public class ProductController extends GBAwareController
         
         modelForEditProduct(model, gbAccountGln, product, null, renew, timeZoneId);
         
-        return "/WEB-INF/jsp/product/editProduct.jsp";
+        return "/jsp/product/editProduct.jsp";
     
     }
 
@@ -250,7 +250,7 @@ public class ProductController extends GBAwareController
         // Fall through to here if validate or update fails
         modelForEditProduct(model, gbAccountGln, product, status, renew, timeZoneId);
         model.addAttribute("parameters", request.getParameterMap());
-        return "/WEB-INF/jsp/product/editProduct.jsp";
+        return "/jsp/product/editProduct.jsp";
     }
 
     private List<String> previouslySelectedApps(Product product, Collection<? extends AppDesc> appDescs)

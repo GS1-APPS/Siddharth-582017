@@ -10,7 +10,7 @@
 	StandaloneUser user = (StandaloneUser)request.getAttribute("user");
 %>
 
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Login" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -46,4 +46,4 @@
 </form>
 </div>
 </div>
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

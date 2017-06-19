@@ -24,7 +24,7 @@
 	String dmaUrl  = request.getContextPath() + "/files/DMA-20160430.pdf";
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Agreements" />
   <jsp:param name="selectedItem" value="agreements" />
 </jsp:include>
@@ -123,4 +123,4 @@ $("#digimarc").submit(function(event){
 });
 </script>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

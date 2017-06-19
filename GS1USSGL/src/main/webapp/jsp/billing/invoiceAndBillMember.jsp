@@ -34,7 +34,7 @@
 	String timeZoneId = user.getTimezone();
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Pending Orders" />
   <jsp:param name="selectedItem" value="billing" />
 </jsp:include>
@@ -206,4 +206,4 @@ $(".calc-subtotal").change(function(){
 });
 </script>
 
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />

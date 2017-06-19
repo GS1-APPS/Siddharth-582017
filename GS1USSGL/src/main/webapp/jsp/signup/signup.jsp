@@ -19,7 +19,7 @@
 	String cancelLink = (String)request.getAttribute("cancelLink");
 %>
     
-<jsp:include page="/WEB-INF/jsp/includes/header.jsp" flush="true">
+<jsp:include page="/jsp/includes/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Sign up" />
   <jsp:param name="selectedItem" value="home" />
 </jsp:include>
@@ -57,4 +57,4 @@
 
 </div>
 </div>
-<jsp:include page="/WEB-INF/jsp/includes/footer.jsp" flush="true" />
+<jsp:include page="/jsp/includes/footer.jsp" flush="true" />
