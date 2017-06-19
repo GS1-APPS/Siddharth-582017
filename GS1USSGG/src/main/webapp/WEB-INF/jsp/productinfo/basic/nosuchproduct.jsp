@@ -13,17 +13,17 @@
 	
 %>
     
-<jsp:include page="/jspinfo/basic/header.jsp" flush="true">
+<jsp:include page="/WEB-INF/jsp/productinfo/basic/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Product" />
 </jsp:include>
 
 
 
 <section>
-    <h1>No info available</h1>
+    <h1>No such product</h1>
 
  
 </section>
 
 
-<jsp:include page="/jspinfo/basic/footer.jsp" flush="true" />
+<jsp:include page="/WEB-INF/jsp/productinfo/basic/footer.jsp" flush="true" />
