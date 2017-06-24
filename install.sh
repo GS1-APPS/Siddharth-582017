@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+#
+# Script to automate building ALL modules, parent-pom, substrate and GL/GG maven projects
+#
+# example: deploy all artifacts to tomcat:
+# ./install.sh  -s /Users/chrismaki/dev/rcs/gs1/Siddharth-582017 -b -v
+#
+# example: build all maven projects
+# ./install.sh  -s /Users/chrismaki/dev/rcs/gs1/Siddharth-582017 -a -v
+#
+
 generic_copy() {
     app_name=$1
     webapp=$2
@@ -21,10 +31,25 @@ deploy_gg() {
     tomcat_files="${tomcat_web}/${app_name}*"
 }
 
+generic_build() {
+    dir=$1
+    [[ "$verbose" -gt 0 ]] && echo "cd to dir $dir"
+    cd $dir
+
+    [[ "$verbose" -gt 0 ]] && echo "mvn clean install"
+    mvn -B -q clean install
+}
+
+build_all() {
+    generic_build $src_root/gs1-parent-pom
+    generic_build $src_root/gs1-substrate
+    generic_build $src_root/GS1USSGG
+    generic_build $src_root/GS1USSGL
+}
 
 show_help() {
 cat << EOF
-Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] 
+Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a]
   Tools for analyzing data created by inventory.sh
       -h   display this help and exit
       -d   debug
@@ -33,9 +58,10 @@ Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT]
       -s SRC_ROOT    where to find your src root
       -t TOMCAT_ROOT where to find tomcat, default is $tomcat_root
 
-      -g   	     deploy GS1USSGG 
-      -l   	     deploy GS1USSGL
-      -b	     deploy both GS1USSGG and GS1USSGL
+      -a   build ALL modules
+      -g   deploy GS1USSGG
+      -l   deploy GS1USSGL
+      -b   deploy both GS1USSGG and GS1USSGL
 EOF
 }
 
@@ -48,6 +74,7 @@ gg=0
 gl=0
 src_root=
 tomcat_root=/usr/local/apache-tomcat-8.0.44
+build=0
 # Reset is necessary if getopts was used previously in the script.
 # It is a good idea to make this local in a function.
 OPTIND=1
@@ -55,7 +82,7 @@ OPTIND=1
 #
 # argument processing
 # 
-while getopts "hdvglbs:t:" opt; do
+while getopts "hdvglbs:t:a" opt; do
   case "$opt" in
        h)  show_help; exit 0;;
        v)  verbose=$((verbose+1));;
@@ -64,7 +91,8 @@ while getopts "hdvglbs:t:" opt; do
        t)  tomcat_root=$OPTARG;;              
        g)  gg=1;;
        l)  gl=1;;       
-       b)  
+       a)  build=1;;
+       b)
        gg=1
        gl=1
        ;;
@@ -86,6 +114,7 @@ fi
 
 tomcat_web=$tomcat_root/webapps
 
+[[ "$build" -gt 0 ]] && build_all
 [[ "$gl" -gt 0 ]] && deploy_gl
 [[ "$gg" -gt 0 ]] && deploy_gg
 
