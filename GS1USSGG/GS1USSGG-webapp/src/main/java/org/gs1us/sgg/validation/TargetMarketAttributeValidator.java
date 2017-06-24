@@ -1,22 +1,12 @@
 package org.gs1us.sgg.validation;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Resource;
-
-import org.gs1us.sgg.gbservice.api.AttributeEnumValue;
 import org.gs1us.sgg.gbservice.api.HasAttributes;
-import org.gs1us.sgg.gbservice.api.Product;
-import org.gs1us.sgg.app.AttributeEnumValueImpl;
-import org.gs1us.sgg.dao.GBDao;
-import org.gs1us.sgg.dao.jpa.JpaGBDao;
 import org.gs1us.sgg.gbservice.api.AttributeDesc;
 import org.gs1us.sgg.gbservice.api.AttributeSet;
 import org.gs1us.sgg.gbservice.api.ProductValidationError;
-import org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl;
 
 public class TargetMarketAttributeValidator implements AttributeValidator
 {

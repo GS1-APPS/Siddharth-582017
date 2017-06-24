@@ -1,12 +1,10 @@
 package org.gs1us.sgg.validation;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.List;
 
 import org.gs1us.sgg.gbservice.api.AttributeDesc;
 import org.gs1us.sgg.gbservice.api.ProductValidationError;
-import org.gs1us.sgg.util.Util;
 
 public class UrlValidator extends SimpleAttributeValidator
 {

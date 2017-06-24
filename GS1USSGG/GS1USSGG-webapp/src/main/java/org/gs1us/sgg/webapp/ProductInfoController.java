@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 import org.gs1us.sgg.dao.GBDao;
-import org.gs1us.sgg.dao.ProductRecord;
 import org.gs1us.sgg.gbservice.api.GlobalBrokerException;
 import org.gs1us.sgg.gbservice.api.Product;
 import org.gs1us.sgg.product.ProductManager;

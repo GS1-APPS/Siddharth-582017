@@ -1,23 +1,15 @@
 package org.gs1us.sgg.dao.jpa;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.gs1us.sgg.dao.AuditEventRecord;
-import org.gs1us.sgg.dao.InvoiceRecord;
 import org.gs1us.sgg.daoutil.KeyMapper;
 import org.gs1us.sgg.daoutil.jpa.LongKeyMapper;
 import org.gs1us.sgg.gbservice.api.Amount;

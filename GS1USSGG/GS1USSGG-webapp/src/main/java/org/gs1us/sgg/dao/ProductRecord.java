@@ -1,7 +1,6 @@
 package org.gs1us.sgg.dao;
 
 import java.util.Date;
-import java.util.Map;
 
 import org.gs1us.sgg.gbservice.api.Product;
 import org.gs1us.sgg.gbservice.api.AttributeDesc;

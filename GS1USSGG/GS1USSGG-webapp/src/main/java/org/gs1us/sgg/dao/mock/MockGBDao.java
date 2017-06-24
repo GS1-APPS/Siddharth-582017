@@ -3,8 +3,6 @@ package org.gs1us.sgg.dao.mock;
 import java.util.Collection;
 import java.util.Comparator;
 
-import javax.annotation.Resource;
-
 import org.gs1us.sgg.dao.AppSubscriptionRecord;
 import org.gs1us.sgg.dao.AuditEventRecord;
 import org.gs1us.sgg.dao.GBAccountRecord;
@@ -17,7 +15,6 @@ import org.gs1us.sgg.dao.IsoCountryRefRecord;
 import org.gs1us.sgg.dao.PaymentRecord;
 import org.gs1us.sgg.dao.ProductRecord;
 import org.gs1us.sgg.dao.SalesOrderRecord;
-import org.gs1us.sgg.dao.jpa.JpaGBDao;
 import org.gs1us.sgg.gbservice.api.Amount;
 import org.gs1us.sgg.gbservice.api.GBAccount;
 import org.gs1us.sgg.gbservice.api.InvoiceExtra;

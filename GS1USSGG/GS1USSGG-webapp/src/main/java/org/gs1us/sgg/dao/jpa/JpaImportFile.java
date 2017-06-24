@@ -1,7 +1,5 @@
 package org.gs1us.sgg.dao.jpa;
 
-import java.util.Date;
-
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.gs1us.sgg.dao.ImportFile;
-import org.gs1us.sgg.dao.ImportRecord;
 import org.gs1us.sgg.daoutil.KeyMapper;
 import org.gs1us.sgg.daoutil.jpa.LongKeyMapper;
 import org.gs1us.sgg.gbservice.api.ImportStatus;

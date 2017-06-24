@@ -1,8 +1,6 @@
 package org.gs1us.sgg.dao.jpa;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Convert;
@@ -11,13 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.gs1us.sgg.dao.ProductRecord;
 import org.gs1us.sgg.daoutil.KeyMapper;
 import org.gs1us.sgg.daoutil.jpa.LongKeyMapper;
 import org.gs1us.sgg.gbservice.api.AttributeSet;
-import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name="product")

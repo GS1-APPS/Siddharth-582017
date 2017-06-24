@@ -3,10 +3,7 @@ package org.gs1us.sgg.app.dwcode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.Resource;
-
 import org.gs1us.sgg.app.AppEventHandler;
-import org.gs1us.sgg.attribute.AttributeDescImpl;
 import org.gs1us.sgg.dao.AgentUser;
 import org.gs1us.sgg.dao.AppSubscriptionRecord;
 import org.gs1us.sgg.dao.GBAccountRecord;

@@ -1,6 +1,5 @@
 package org.gs1us.sgg.validation;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.gs1us.sgg.gbservice.api.AttributeEnumValue;

@@ -1,7 +1,6 @@
 package org.gs1us.sgg.product;
 
 import org.gs1us.sgg.dao.AgentUser;
-import org.gs1us.sgg.dao.GBAccountRecord;
 import org.gs1us.sgg.dao.ProductRecord;
 import org.gs1us.sgg.gbservice.api.GBAccount;
 

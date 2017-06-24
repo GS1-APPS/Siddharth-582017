@@ -1,6 +1,5 @@
 package org.gs1us.sgg.dao;
 
-import java.util.Collection;
 import java.util.Date;
 
 import org.gs1us.sgg.gbservice.api.Import;

@@ -1,6 +1,5 @@
 package org.gs1us.sgg.dao.jpa;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -9,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.gs1us.sgg.dao.ImportRecord;
 import org.gs1us.sgg.daoutil.KeyMapper;

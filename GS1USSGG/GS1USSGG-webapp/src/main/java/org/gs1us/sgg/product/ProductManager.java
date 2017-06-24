@@ -3,9 +3,7 @@ package org.gs1us.sgg.product;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,7 +14,6 @@ import org.gs1us.sgg.dao.AuditEventRecord;
 import org.gs1us.sgg.dao.GBDao;
 import org.gs1us.sgg.dao.IsoCountryRefRecord;
 import org.gs1us.sgg.dao.ProductRecord;
-import org.gs1us.sgg.dao.jpa.ProductAttributesConverter;
 import org.gs1us.sgg.gbservice.api.AttributeEnumValue;
 import org.gs1us.sgg.gbservice.api.AttributeSet;
 import org.gs1us.sgg.gbservice.api.AuditEventType;

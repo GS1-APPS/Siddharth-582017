@@ -1,9 +1,7 @@
 package org.gs1us.sgg.app;
 
-import java.util.Date;
 import java.util.List;
 
-import org.gs1us.sgg.commerce.OrderableItemDesc;
 import org.gs1us.sgg.gbservice.api.AppDesc;
 import org.gs1us.sgg.gbservice.api.AttributeDesc;
 import org.gs1us.sgg.gbservice.api.AttributeSet;

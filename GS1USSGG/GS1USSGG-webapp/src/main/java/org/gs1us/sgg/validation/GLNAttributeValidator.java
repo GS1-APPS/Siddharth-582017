@@ -1,11 +1,9 @@
 package org.gs1us.sgg.validation;
-import java.text.ParseException;
 import java.util.List;
 
 import org.gs1us.sgg.gbservice.api.AttributeDesc;
 import org.gs1us.sgg.gbservice.api.ProductValidationError;
 import org.gs1us.sgg.util.UserInputUtil;
-import org.gs1us.sgg.util.Util;
 
 public class GLNAttributeValidator extends SimpleAttributeValidator
 {

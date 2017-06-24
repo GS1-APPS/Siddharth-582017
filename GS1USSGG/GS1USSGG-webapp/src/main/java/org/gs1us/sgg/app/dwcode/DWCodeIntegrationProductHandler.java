@@ -1,7 +1,6 @@
 package org.gs1us.sgg.app.dwcode;
 
 import java.io.FilterOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.Resource;
 
 import org.gs1us.sgg.app.AppManager;
 import org.gs1us.sgg.attribute.AttributeDescImpl;
@@ -24,16 +21,9 @@ import org.gs1us.sgg.gbservice.api.AttributeType;
 import org.gs1us.sgg.gbservice.api.GBAccount;
 import org.gs1us.sgg.product.ProductEventHandler;
 import org.gs1us.sgg.util.UPCE;
-import org.gs1us.sgg.util.Util;
 import org.gs1us.sgg.webapp.ProductInfoController;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class DWCodeIntegrationProductHandler extends DWCodeIntegrationHandler implements ProductEventHandler
 {

@@ -1,9 +1,7 @@
 package org.gs1us.sgg.webapi;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +25,6 @@ import org.gs1us.sgg.gbservice.api.GBIllegalStateException;
 import org.gs1us.sgg.gbservice.api.GlobalBrokerException;
 import org.gs1us.sgg.gbservice.api.GlobalBrokerServiceException;
 import org.gs1us.sgg.gbservice.api.Import;
-import org.gs1us.sgg.gbservice.api.ImportValidationProduct;
 import org.gs1us.sgg.gbservice.api.Invoice;
 import org.gs1us.sgg.gbservice.api.InvoiceException;
 import org.gs1us.sgg.gbservice.api.IsoCountryRef;
@@ -40,7 +37,6 @@ import org.gs1us.sgg.gbservice.api.Payment;
 import org.gs1us.sgg.gbservice.api.PaymentException;
 import org.gs1us.sgg.gbservice.api.PaymentReceipt;
 import org.gs1us.sgg.gbservice.api.Product;
-import org.gs1us.sgg.gbservice.api.ProductState;
 import org.gs1us.sgg.gbservice.api.ProductStatus;
 import org.gs1us.sgg.gbservice.api.SalesOrder;
 import org.gs1us.sgg.gbservice.api.UploadValidationProduct;
@@ -50,20 +46,14 @@ import org.gs1us.sgg.gbservice.json.ExceptionInfo;
 import org.gs1us.sgg.gbservice.json.InboundAppSubscription;
 import org.gs1us.sgg.gbservice.json.InboundBillingInfo;
 import org.gs1us.sgg.gbservice.json.InboundGBAccount;
-import org.gs1us.sgg.gbservice.json.InboundImport;
-import org.gs1us.sgg.gbservice.json.InboundImportPrevalidationSegment;
 import org.gs1us.sgg.gbservice.json.InboundImportPrevalidationSegmentSettings;
 import org.gs1us.sgg.gbservice.json.InboundOrderIdsAndExtras;
 import org.gs1us.sgg.gbservice.json.InboundPayInvoicesInfo;
 import org.gs1us.sgg.gbservice.json.InboundProduct;
 import org.gs1us.sgg.gbservice.json.InboundProductAndPo;
 import org.gs1us.sgg.gbservice.json.InboundProductAttribute;
-import org.gs1us.sgg.gbservice.json.InboundProductStatus;
-import org.gs1us.sgg.transport.HttpTransport.HttpMethod;
 import org.gs1us.sgg.util.UserInputUtil;
-import org.gs1us.sgg.util.Util;
 import org.gs1us.sgg.dao.memberservice.Member;
-import org.gs1us.sgg.dao.memberservice.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -81,9 +71,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller

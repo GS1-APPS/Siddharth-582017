@@ -1,12 +1,6 @@
 package org.gs1us.sgg.dao;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
-
-import javax.persistence.Query;
 
 import org.gs1us.sgg.gbservice.api.Amount;
 import org.gs1us.sgg.gbservice.api.GBAccount;

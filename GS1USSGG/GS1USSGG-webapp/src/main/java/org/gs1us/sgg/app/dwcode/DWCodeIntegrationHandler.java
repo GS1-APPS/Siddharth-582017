@@ -4,7 +4,6 @@ import org.gs1us.sgg.attribute.AttributeDescImpl;
 import org.gs1us.sgg.dao.AgentUser;
 import org.gs1us.sgg.gbservice.api.AttributeDesc;
 import org.gs1us.sgg.gbservice.api.AttributeType;
-import org.gs1us.sgg.product.ProductEventHandler;
 
 public class DWCodeIntegrationHandler
 {

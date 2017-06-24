@@ -22,11 +22,22 @@
 
     <modules>
         <module>GS1USSGG-webapp</module>
-        <!--<module>GS1USSGG-client</module>-->
+        <module>GS1USSGG-client</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <!--<dependency>-->
+                <!--<groupId>org.gs1</groupId>-->
+                <!--<artifactId>GS1USSGG-webapp</artifactId>-->
+                <!--<version>${project.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.gs1</groupId>-->
+                <!--<artifactId>GS1USSGG-client</artifactId>-->
+                <!--<version>${project.version}</version>-->
+            <!--</dependency>-->
+
             <dependency>
                 <groupId>org.gs1</groupId>
                 <artifactId>gs1-substrate</artifactId>

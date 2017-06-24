@@ -1,9 +1,7 @@
 package org.gs1us.sgg.dao.mock;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.gs1us.sgg.dao.ProductRecord;

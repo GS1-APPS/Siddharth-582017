@@ -1,6 +1,5 @@
 package org.gs1us.sgg.dao.memberservice.standalone.jpa;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Basic;
