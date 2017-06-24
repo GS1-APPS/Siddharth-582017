@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.gs1</groupId>
-        <artifactId>gs1-parent</artifactId>
+        <artifactId>gs1-parent-pom</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

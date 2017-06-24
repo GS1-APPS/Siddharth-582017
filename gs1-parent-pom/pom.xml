@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>gs1-parent</name>
+    <name>gs1-parent-pom</name>
     <description>Parent pom for all gs1 projects</description>
 
     <scm>
