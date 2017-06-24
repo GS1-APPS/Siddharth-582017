@@ -230,7 +230,7 @@ public class AppManager
                                                                          new AttributeValidator[]{new WhitelistedCharValidator()}));
 
         
-        return new AppDescImpl(GlobalBrokerService.BASIC_APP_NAME, 
+        return new AppDescImpl(GlobalBrokerService.BASIC_APP_NAME,
                                          "Basic product info", 
                                          "gs1", 
                                          "Basic product attributes, published by GS1, free for use to all", 
