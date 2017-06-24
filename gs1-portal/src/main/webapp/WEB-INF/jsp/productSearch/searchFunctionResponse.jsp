@@ -298,6 +298,10 @@
   </div>
 </c:if>
 
+<!--
+	https://stackoverflow.com/questions/19724565/how-is-using-request-getcontextpath-better-than
+-->
+<c:set var="context" value="${pageContext.request.contextPath}" />
 
 <div class="row">
 <div class="col-md-6">
@@ -305,7 +309,7 @@
  Choose the Global Product Classification (GPC) and Target Market to see a list of available products                	
 </i>               
 <br/><br/>
-<form method="post" action="/GS1USSGL/ui/searchByProduct">
+<form method="post" action="${context}/ui/searchByProduct">
 <table>
 <tr>
 <td>

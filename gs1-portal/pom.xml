@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.gs1</groupId>
-    <artifactId>GS1USSGL</artifactId>
+    <artifactId>gs1-portal</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>GS1USSGL</name>
-    <description>Frontent implementation of GS1 US Cloud Phase1</description>
+    <name>gs1-portal</name>
+    <description>Front-end implementation of GS1 US Cloud Phase1</description>
 
     <scm>
         <connection>scm:git@github.com:GS1-APPS/Siddharth-582017.git</connection>

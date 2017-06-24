@@ -23,7 +23,7 @@ generic_copy() {
 }
 
 deploy_gl() {
-    generic_copy GS1USSGL "${src_root}/GS1USSGL/target/GS1USSGL-1.0-SNAPSHOT.war"
+    generic_copy GS1USSGL "${src_root}/gs1-portal/target/gs1-portal-1.0-SNAPSHOT.war"
 }
 
 deploy_gg() {
@@ -43,7 +43,7 @@ build_all() {
     generic_build $src_root/gs1-parent-pom
     generic_build $src_root/gs1-substrate
     generic_build $src_root/gs1-pds
-    generic_build $src_root/GS1USSGL
+    generic_build $src_root/gs1-portal
 }
 
 show_help() {
@@ -59,8 +59,8 @@ Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a]
 
       -a   build ALL modules
       -g   deploy gs1-pds
-      -l   deploy GS1USSGL
-      -b   deploy both gs1-pds and GS1USSGL
+      -l   deploy gs1-portal
+      -b   deploy both gs1-pds and gs1-portal
 EOF
 }
 
