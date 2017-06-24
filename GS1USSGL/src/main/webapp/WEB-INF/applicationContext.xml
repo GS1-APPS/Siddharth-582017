@@ -354,7 +354,8 @@
 	<beans profile="dev">
 	 	<bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />	 	
 		<bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
-	    	<constructor-arg index="0" value="http://localhost:8080/GS1USSGG"/>
+			<!-- TODO: the endpoint here needs to be a spring config value -->
+	    	<constructor-arg index="0" value="http://localhost:8077/GS1USSGG"/>
 	    	<!--  index="1" value="gs1us" -->
 	    	<!--  constructor-arg index="2" value="MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo" -->
 	    	<constructor-arg index="1" value="gs1us"/>

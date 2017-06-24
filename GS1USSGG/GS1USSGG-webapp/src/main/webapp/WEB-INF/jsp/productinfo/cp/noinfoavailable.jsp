@@ -13,7 +13,7 @@
 	
 %>
     
-<jsp:include page="/WEB-INF/jsp/productinfo/basic/header.jsp" flush="true">
+<jsp:include page="/src/main/webapp/WEB-INF/jsp/productinfo/cp/header.jsp" flush="true">
   <jsp:param name="pageTitle" value="Product" />
 </jsp:include>
 
@@ -26,4 +26,4 @@
 </section>
 
 
-<jsp:include page="/WEB-INF/jsp/productinfo/basic/footer.jsp" flush="true" />
+<jsp:include page="/src/main/webapp/WEB-INF/jsp/productinfo/cp/footer.jsp" flush="true" />
