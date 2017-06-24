@@ -1,0 +1,12 @@
+#product-mobileDeviceImage {
+	width: 345px;
+	/*height: 345px;*/
+}
+
+#product-mobileDeviceImage img {
+	object-fit: contain;
+	width: 345px;
+	max-height: 345px;
+	object-position: left;
+	/*height: 345px;*/
+}
