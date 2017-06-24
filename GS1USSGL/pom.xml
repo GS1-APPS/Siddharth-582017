@@ -25,7 +25,7 @@
     <dependencies>
         <dependency>
             <groupId>org.gs1</groupId>
-            <artifactId>GS1USSGG-client</artifactId>
+            <artifactId>gs1-pds-client</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -27,8 +27,7 @@ deploy_gl() {
 }
 
 deploy_gg() {
-    generic_copy GS1USSGG "${src_root}/GS1USSGG/GS1USSGG-webapp/target/GS1USSGG-webapp-1.0-SNAPSHOT.war"
-    tomcat_files="${tomcat_web}/${app_name}*"
+    generic_copy GS1USSGG "${src_root}/gs1-pds/gs1-pds-webapp/target/gs1-pds-webapp-1.0-SNAPSHOT.war"
 }
 
 generic_build() {
@@ -43,7 +42,7 @@ generic_build() {
 build_all() {
     generic_build $src_root/gs1-parent-pom
     generic_build $src_root/gs1-substrate
-    generic_build $src_root/GS1USSGG
+    generic_build $src_root/gs1-pds
     generic_build $src_root/GS1USSGL
 }
 
@@ -59,9 +58,9 @@ Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a]
       -t TOMCAT_ROOT where to find tomcat, default is $tomcat_root
 
       -a   build ALL modules
-      -g   deploy GS1USSGG
+      -g   deploy gs1-pds
       -l   deploy GS1USSGL
-      -b   deploy both GS1USSGG and GS1USSGL
+      -b   deploy both gs1-pds and GS1USSGL
 EOF
 }
 
