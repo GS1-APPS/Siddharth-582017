@@ -23,11 +23,11 @@ generic_copy() {
 }
 
 deploy_gl() {
-    generic_copy GS1USSGL "${src_root}/gs1-portal/target/gs1-portal-1.0-SNAPSHOT.war"
+    generic_copy gs1-portal "${src_root}/gs1-portal/target/gs1-portal-1.0-SNAPSHOT.war"
 }
 
 deploy_gg() {
-    generic_copy GS1USSGG "${src_root}/gs1-pds/gs1-pds-webapp/target/gs1-pds-webapp-1.0-SNAPSHOT.war"
+    generic_copy gs1-pds "${src_root}/gs1-pds/gs1-pds-webapp/target/gs1-pds-webapp-1.0-SNAPSHOT.war"
 }
 
 generic_build() {
