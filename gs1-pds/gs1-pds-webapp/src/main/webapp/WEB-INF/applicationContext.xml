@@ -19,6 +19,20 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd"
        >
 
+	<!--
+	https://stackoverflow.com/questions/13297157/best-ways-to-deal-with-properties-values-in-xml-file-in-spring-maven-and-eclips
+	-->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:application.properties</value>
+				<value>classpath:application-${spring.profiles.active}.properties</value>
+				<value>file://opt/gs1/gs1-pds/conf/application.properties</value>
+			</list>
+		</property>
+		<property name="ignoreResourceNotFound" value="true" />
+	</bean>
+
   <!-- the application context definition for the DispatcherServlet -->
 
 	<context:component-scan base-package="org.gs1us.sgg.webapp" />
@@ -96,9 +110,9 @@
 <property name="username" value="postgres"/>
 <property name="password" value="rescuegs1!!"/>
 -->
-		<property name="url" value="jdbc:postgresql://localhost/sgg"/>
-		<property name="username" value="chrismaki"/>
-		<property name="password" value="password"/>
+		<property name="url" value="${jdbc.sgg.url}"/>
+		<property name="username" value="${jdbc.sgg.username}"/>
+		<property name="password" value="${jdbc.sgg.password}"/>
 
     	<!--<property name="url" value="jdbc:postgresql://34.207.229.65/sgg"/>-->
     	<!--<property name="username" value="sgg"/>-->
@@ -114,9 +128,9 @@
 <property name="username" value="postgres"/>
 <property name="password" value="rescuegs1!!"/>
 -->
-        <property name="url" value="jdbc:postgresql://localhost/gs1ussgl"/>
-        <property name="username" value="chrismaki"/>
-        <property name="password" value="password"/>
+        <property name="url" value="${jdbc.gs1ussgl.url}"/>
+        <property name="username" value="${jdbc.gs1ussgl.username}"/>
+        <property name="password" value="${jdbc.gs1ussgl.password}"/>
 
 
     	<!--<property name="url" value="jdbc:postgresql://34.207.229.65/gs1ussgl"/>-->
@@ -165,8 +179,8 @@
 	
 	<bean id="templateEmail" class="org.springframework.mail.SimpleMailMessage">
 		<!--  Depending on the email, either from or to will be changed to something else -->
-	    <property name="from" value="kt@kentraub.com" />
-	    <property name="to" value="kt@kentraub.com" />
+	    <property name="from" value="{email.template.from}" />
+	    <property name="to" value="${email.template.to}" />
 	</bean>
 		
 	<!-- 
@@ -195,7 +209,20 @@
 	<mvc:default-servlet-handler /> 
 	
 	<bean id="objectMapper" class="org.gs1us.sgg.gbservice.json.ObjectMapperFactoryBean" />
-	
+
+	<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
+		<constructor-arg index="0" value="${gb.service.impl}"/>
+	</bean>
+
+	<bean id="productInfoControllerOptions" class="org.gs1us.sgg.webapp.ProductInfoController.Options">
+		<constructor-arg index="0" value="${product.info.controller.path}"/>
+	</bean>
+
+	<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
+		<property name="defaultExperienceUrlHost" value="${digimarc.exp.url}" />
+		<property name="defaultExperienceUrlPort" value="${digimarc.exp.port}" />
+	</bean>
+
 	<!-- prod profile is production -->
 	<beans profile="prod">
 		<security:http>
@@ -213,39 +240,31 @@
 	 		<security:csrf disabled="true"/>
  		</security:http>
  		
- 		<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
- 			<constructor-arg index="0" value="basic"/>
- 		</bean> 		
 
- 		<bean id="productInfoControllerOptions" class="org.gs1us.sgg.webapp.ProductInfoController.Options">
- 			<constructor-arg index="0" value="/WEB-INF/jsp/productinfo/basic"/>
- 		</bean> 		
 
-		<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
-			<property name="defaultExperienceUrlHost" value="dwbroker.gs1us.org" />
-		</bean>
 		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-    		<property name="host" value="192.168.12.65 "/>
+    		<property name="host" value="${mail.sender.host}"/>
 		</bean>
 		<!-- 
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DummyDigimarcClient" />
 		 -->
 
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
-  			<constructor-arg index="0" value="https://api.digimarc.net" />
-			<constructor-arg index="1" value="integrator-gs1@gs1.org" />
-			<constructor-arg index="2" value="4o4WxQm2wry2lLYbG4tEwSG1kD0vzDVG" />
+  			<constructor-arg index="0" value="${digimarc.service.url}" />
+			<constructor-arg index="1" value="${digimarc.service.email}" />
+			<constructor-arg index="2" value="${digimarc.service.password}" />
 			<constructor-arg index="3" ref="httpTransport" />
 		</bean>
 
 		<bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
-				<value>gs1us:3RdL5gHIPPfbOhdlw-Oq8BARTh-5Rx7YUiwZtrm6CLU:ADMIN</value>
-				<value>digimarc:AJTN00cid4eul3-2Ttby3JoGw_vBPH7xZGWli9V0YNg:PRODUCT</value>			
+				<value>${mock.dao.user.0}</value>
+				<value>${mock.dao.user.1:#{null}}</value>
 			</list></constructor-arg>
 		</bean>
+
 	</beans>
-	
+
 	<!-- qa profile is qa servers  -->
 	<beans profile="qa">
 		<security:http>
@@ -263,33 +282,23 @@
 	 		<security:csrf disabled="true"/>
  		</security:http>
 
- 		<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
- 			<constructor-arg index="0" value="basic"/>
- 		</bean> 		
-
- 		<bean id="productInfoControllerOptions" class="org.gs1us.sgg.webapp.ProductInfoController.Options">
- 			<constructor-arg index="0" value="/WEB-INF/jsp/productinfo/basic"/>
- 		</bean> 		
-
-		<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
-			<property name="defaultExperienceUrlHost" value="dwbroker.qa.gs1us.org" />
-		</bean>
 		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-    		<property name="host" value="192.168.12.65"/>
+    		<property name="host" value="${mail.sender.host}"/>
 		</bean>
 		<!-- 
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DummyDigimarcClient" />
 		 -->
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
-  			<constructor-arg index="0" value="https://labs-api.digimarc.net" />
-			<constructor-arg index="1" value="integrator-gs1@gs1.org" />
-			<constructor-arg index="2" value="7dyF9Ofq3Q6CasADTWB4XrSPoytMdPhU" />
+			<constructor-arg index="0" value="${digimarc.service.url}" />
+			<constructor-arg index="1" value="${digimarc.service.email}" />
+			<constructor-arg index="2" value="${digimarc.service.password}" />
 			<constructor-arg index="3" ref="httpTransport" />
 		</bean>
+
 		<bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
-				<value>gs1us:hobJLFJtxc7JDxTi-T8O8fe-N6z9p95BA0TmW9e_zwk:ADMIN</value>
-				<value>digimarc:d2EYI81GLMCDsr8aI43BCnd0kWycuKN-r3r9s95xwls:PRODUCT</value>			
+				<value>${mock.dao.user.0}</value>
+				<value>${mock.dao.user.1:#{null}}</value>
 			</list></constructor-arg>
 		</bean>
 	</beans>
@@ -311,17 +320,6 @@
 	 		<security:csrf disabled="true"/>
  		</security:http>
 
- 		<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
- 			<constructor-arg index="0" value="basic"/>
- 		</bean> 		
-
- 		<bean id="productInfoControllerOptions" class="org.gs1us.sgg.webapp.ProductInfoController.Options">
- 			<constructor-arg index="0" value="/WEB-INF/jsp/productinfo/basic"/>
- 		</bean> 		
-
-		<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
-			<property name="defaultExperienceUrlHost" value="52.3.147.85" />
-		</bean>
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
 
 		<!-- 
@@ -329,16 +327,16 @@
 		 -->
 		 
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
-  			<constructor-arg index="0" value="https://test-api.digimarc.net" />
-			<constructor-arg index="1" value="integrator-gs1@gs1.org" />
-			<constructor-arg index="2" value="a02UppWH4g2OAtIgoYHb3s6Zc32Ukk/s" />
+			<constructor-arg index="0" value="${digimarc.service.url}" />
+			<constructor-arg index="1" value="${digimarc.service.email}" />
+			<constructor-arg index="2" value="${digimarc.service.password}" />
 			<constructor-arg index="3" ref="httpTransport" />
 		</bean>
-		
+
 		<bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
-				<value>gs1us:MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo:ADMIN</value>
-				<value>digimarc:265SS17FHbZV6uqz18Lf7kwW6mzQDZ4A1X1iI94mGiU:PRODUCT</value>			
+				<value>${mock.dao.user.0}</value>
+				<value>${mock.dao.user.1:#{null}}</value>
 			</list></constructor-arg>
 		</bean>
 	</beans>
@@ -360,32 +358,15 @@
 	 		<security:csrf disabled="true"/>
  		</security:http>
 
- 		<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
- 			<constructor-arg index="0" value="basic"/>
- 		</bean> 		
-
- 		<bean id="productInfoControllerOptions" class="org.gs1us.sgg.webapp.ProductInfoController.Options">
- 			<constructor-arg index="0" value="/WEB-INF/jsp/productinfo/basic"/>
- 		</bean> 		
-
-		<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
-			<property name="defaultExperienceUrlHost" value="52.70.229.92" />
-		</bean>
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
 	 	<!-- 
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DummyDigimarcClient" />
 		 -->
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
-  			<constructor-arg index="0" value="https://dev-api.digimarc.net" />
-			<constructor-arg index="1" value="integrator-gs1@gs1.org" />
-			<constructor-arg index="2" value="a02UppWH4g2OAtIgoYHb3s6Zc32Ukk/s" />
+			<constructor-arg index="0" value="${digimarc.service.url}" />
+			<constructor-arg index="1" value="${digimarc.service.email}" />
+			<constructor-arg index="2" value="${digimarc.service.password}" />
 			<constructor-arg index="3" ref="httpTransport" />
-		</bean>
-		<bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
-			<constructor-arg index="0"><list>
-				<value>gs1us:MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo:ADMIN</value>
-				<value>digimarc:265SS17FHbZV6uqz18Lf7kwW6mzQDZ4A1X1iI94mGiU:PRODUCT</value>			
-			</list></constructor-arg>
 		</bean>
 	</beans>
 	
@@ -418,18 +399,6 @@
  			<property name="enabled" value="true" />
  		</bean>
 
- 		<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
- 			<constructor-arg index="0" value="cp"/>
- 		</bean> 		
-
- 		<bean id="productInfoControllerOptions" class="org.gs1us.sgg.webapp.ProductInfoController.Options">
- 			<constructor-arg index="0" value="/WEB-INF/jsp/productinfo/cp"/>
- 		</bean> 		
-
-		<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
-               <!-- Original Value: 52.55.25.90 -->
-            <property name="defaultExperienceUrlHost" value="107.22.7.19" />
-		</bean>
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.MockDigimarcClient" />
 		<!-- 
@@ -442,7 +411,8 @@
 		 -->
 		<bean id="mockUserDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
-				<value>gs1:k0rbQPY9yADMnxUAmpA4kOnNaTHy8Ps5wuevV2GKsvU:ADMIN</value>
+				<value>${mock.dao.user.0}</value>
+				<value>${mock.dao.user.1:#{null}}</value>
 			</list></constructor-arg>
 		</bean>
 	</beans>
@@ -477,19 +447,6 @@
  			<property name="enabled" value="true" />
  		</bean>
 
-		 
- 		<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
- 			<constructor-arg index="0" value="cp"/>
- 		</bean> 		
-
- 		<bean id="productInfoControllerOptions" class="org.gs1us.sgg.webapp.ProductInfoController.Options">
- 			<constructor-arg index="0" value="/WEB-INF/jsp/productinfo/cp"/>
- 		</bean> 		
-
-		<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
-			<property name="defaultExperienceUrlHost" value="localhost" />
-			<property name="defaultExperienceUrlPort" value="7070" />
-		</bean>
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
 
 		 
@@ -506,8 +463,8 @@
 			 
 		<bean id="mockUserDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
-				<value>gs1us:MTKOyEmsZrDR6PM0_NIhj5zdKHeYwiOQBhAZyFR-wjo:ADMIN</value>
-				<value>digimarc:265SS17FHbZV6uqz18Lf7kwW6mzQDZ4A1X1iI94mGiU:PRODUCT</value>			
+				<value>${mock.dao.user.0}</value>
+				<value>${mock.dao.user.1}</value>
 			</list></constructor-arg>
 		</bean>
 	</beans>
