@@ -20,6 +20,19 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <!--
+            NOTE: Unless we switch to another DB, there's no need to change this. If we switch
+            DBs you'll want to update the driver used with Liquibase.
+        -->
+        <jdbc.driver>org.postgresql.Driver</jdbc.driver>
+        <!--
+            file that defines properties to be used in the pom.xml, properties like jdbc.username
+        -->
+        <build.properties.file>pom.xml</build.properties.file>
+        <!--
+            projects override this property to point to their liquibase changelog
+        -->
+        <liquibase.changelog>DEFINE-PATH-TO-CHANGELOG.xml</liquibase.changelog>
     </properties>
 
     <dependencyManagement>
@@ -330,10 +343,8 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>2.5</version>
                     <configuration>
-                        <!--<webappDirectory>${project.basedir}/WebContent</webappDirectory>-->
-                        <!--<packagingExcludes>**/WEB-INF/lib/*</packagingExcludes>-->
-                        <!--<webXml>${project.basedir}/WebContent/WEB-INF/web.xml</webXml>-->
                         <archive>
+                            <!-- TODO: git commit ID not being injected -->
                             <manifestEntries>
                                 <git-SHA-1>${git.commit.id}</git-SHA-1>
                             </manifestEntries>
@@ -345,9 +356,93 @@
                     <artifactId>tomcat7-maven-plugin</artifactId>
                     <version>2.2</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>3.5.3</version>
+                    <configuration>
+                        <changeLogFile>${liquibase.changelog}</changeLogFile>
+                        <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                        <username>${jdbc.username}</username>
+                        <password>${jdbc.password}</password>
+                        <url>${jdbc.url}</url>
+                        <contexts>${liquibase.contexts}</contexts>
+                        <driver>${jdbc.driver}</driver>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.postgresql</groupId>
+                            <artifactId>postgresql</artifactId>
+                            <version>9.3-1102-jdbc4</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <quite>true</quite>
+                            <files>
+                                <file>${build.properties.file}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>database-update</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>update</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>database-create</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>dropAll</goal>
+                                    <goal>update</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <!--
     This will point to the Nexus setup Sean started, this tells Maven where to 'deploy' artifacts

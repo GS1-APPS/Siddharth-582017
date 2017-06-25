@@ -46,6 +46,27 @@
                         <port>9000</port>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>3.5.3</version>
+                    <configuration>
+                        <changeLogFile>src/main/liquibase/dbchangelog.xml</changeLogFile>
+                        <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                        <username>${jdbc.username}</username>
+                        <password>${jdbc.password}</password>
+                        <url>${jdbc.url}</url>
+                        <contexts>${liquibase.contexts}</contexts>
+                        <driver>${jdbc.driver}</driver>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.postgresql</groupId>
+                            <artifactId>postgresql</artifactId>
+                            <version>9.3-1102-jdbc4</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
