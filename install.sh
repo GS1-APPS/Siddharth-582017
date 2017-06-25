@@ -40,15 +40,22 @@ generic_build() {
 }
 
 build_all() {
+    [[ "$verbose" -gt 0 ]] && echo "building all gs1  modules"
     generic_build $src_root/gs1-parent-pom
     generic_build $src_root/gs1-substrate
     generic_build $src_root/gs1-pds
     generic_build $src_root/gs1-portal
 }
 
+build_core() {
+    [[ "$verbose" -gt 0 ]] && echo "building core modules only gs1-pds and gs1-portal"    
+    generic_build $src_root/gs1-pds
+    generic_build $src_root/gs1-portal
+}
+
 show_help() {
 cat << EOF
-Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a]
+Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a] [-c]
   Tools for analyzing data created by inventory.sh
       -h   display this help and exit
       -d   debug
@@ -58,6 +65,7 @@ Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a]
       -t TOMCAT_ROOT where to find tomcat, default is $tomcat_root
 
       -a   build ALL modules
+      -c   buld CORE modules (gs1-pds and gs1-portal)
       -g   deploy gs1-pds
       -l   deploy gs1-portal
       -b   deploy both gs1-pds and gs1-portal
@@ -74,6 +82,7 @@ gl=0
 src_root=
 tomcat_root=/usr/local/apache-tomcat-8.0.44
 build=0
+core=0
 # Reset is necessary if getopts was used previously in the script.
 # It is a good idea to make this local in a function.
 OPTIND=1
@@ -81,7 +90,7 @@ OPTIND=1
 #
 # argument processing
 # 
-while getopts "hdvglbs:t:a" opt; do
+while getopts "hdvglbs:t:ac" opt; do
   case "$opt" in
        h)  show_help; exit 0;;
        v)  verbose=$((verbose+1));;
@@ -91,6 +100,7 @@ while getopts "hdvglbs:t:a" opt; do
        g)  gg=1;;
        l)  gl=1;;       
        a)  build=1;;
+       c)  core=1;;       
        b)
        gg=1
        gl=1
@@ -114,6 +124,7 @@ fi
 tomcat_web=$tomcat_root/webapps
 
 [[ "$build" -gt 0 ]] && build_all
+[[ "$core" -gt 0 ]] && build_core
 [[ "$gl" -gt 0 ]] && deploy_gl
 [[ "$gg" -gt 0 ]] && deploy_gg
 

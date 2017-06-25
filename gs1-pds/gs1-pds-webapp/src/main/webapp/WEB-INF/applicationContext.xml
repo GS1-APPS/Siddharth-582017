@@ -34,7 +34,6 @@
 	</bean>
 
   <!-- the application context definition for the DispatcherServlet -->
-
 	<context:component-scan base-package="org.gs1us.sgg.webapp" />
 	<context:component-scan base-package="org.gs1us.sgg.webapi" />
 	<context:component-scan base-package="org.gs1us.sgg.app" />
@@ -105,37 +104,17 @@
 	<!-- Set up driver for persistence -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.postgresql.Driver"/>
-<!--
-<property name="url" value="jdbc:postgresql://54.227.212.245/sgg"/>
-<property name="username" value="postgres"/>
-<property name="password" value="rescuegs1!!"/>
--->
 		<property name="url" value="${jdbc.sgg.url}"/>
 		<property name="username" value="${jdbc.sgg.username}"/>
 		<property name="password" value="${jdbc.sgg.password}"/>
-
-    	<!--<property name="url" value="jdbc:postgresql://34.207.229.65/sgg"/>-->
-    	<!--<property name="username" value="sgg"/>-->
-    	<!--<property name="password" value="gt1n++"/>-->
-
 	</bean>
 
 	<!-- GS1USSGL Datasource -->
 	<bean id="gs1ussglDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.postgresql.Driver"/>
-<!--
-<property name="url" value="jdbc:postgresql://54.227.212.245/gs1ussgl"/>
-<property name="username" value="postgres"/>
-<property name="password" value="rescuegs1!!"/>
--->
         <property name="url" value="${jdbc.gs1ussgl.url}"/>
         <property name="username" value="${jdbc.gs1ussgl.username}"/>
         <property name="password" value="${jdbc.gs1ussgl.password}"/>
-
-
-    	<!--<property name="url" value="jdbc:postgresql://34.207.229.65/gs1ussgl"/>-->
-    	<!--<property name="username" value="sgg"/>-->
-    	<!--<property name="password" value="gt1n++"/>-->
 	</bean>
 
 	
@@ -161,41 +140,18 @@
 	<!-- Standalone User -->
 	<bean id="userDao" class="org.gs1us.sgg.dao.memberservice.standalone.jpa.JpaStandaloneUserDao" />
 	<bean id="memberDao" class="org.gs1us.sgg.dao.memberservice.standalone.jpa.JpaStandaloneMemberDao" />	
-
-	 
-	 <!-- 
-	<bean id="userDao" class="org.gs1us.sgl.memberservice.standalone.jpa.JpaStandaloneUserDao" />
-	<bean id="memberDao" class="org.gs1us.sgl.memberservice.standalone.jpa.JpaStandaloneMemberDao" />
-	 -->
-	<!-- 
-	<bean id="gbService" class="org.gs1us.sgl.gbservice.mock.MockGlobalBrokerService" />
-	 -->
 	<bean id="gbService" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceBridge" />
-	<!-- 
-	<bean id="billingService" class="org.gs1us.sgl.billingservice.mock.MockBillingService" />
-	 -->
 	<bean id="clockService" class="org.gs1us.sgg.clockservice.ClockService" />
 	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-	
 	<bean id="templateEmail" class="org.springframework.mail.SimpleMailMessage">
 		<!--  Depending on the email, either from or to will be changed to something else -->
 	    <property name="from" value="{email.template.from}" />
 	    <property name="to" value="${email.template.to}" />
 	</bean>
-		
-	<!-- 
-	<bean id="termsOfService" class="org.gs1us.sgl.serviceterms.TermsOfService">
-		<property name="version" value="1.0" />
-		<property name="url" value="/static/GS1USSmartGtinTermsofService1.0-28MAY2015.pdf" />
-	</bean>
-	 -->
 	<bean id="httpTransport" class="org.gs1us.sgg.transport.JavaHttpTransport" />
-	
-		
 	<bean id="versionOracle" class="org.gs1us.sgg.util.VersionOracle">
 	    	<constructor-arg index="0" value="/sgg-version.text"/>
 	</bean>
-	
 	<bean id="testManager" class="org.gs1us.sgg.gbservice.test.TestManager" />
  
 	<mvc:annotation-driven>
@@ -209,15 +165,12 @@
 	<mvc:default-servlet-handler /> 
 	
 	<bean id="objectMapper" class="org.gs1us.sgg.gbservice.json.ObjectMapperFactoryBean" />
-
 	<bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
 		<constructor-arg index="0" value="${gb.service.impl}"/>
 	</bean>
-
 	<bean id="productInfoControllerOptions" class="org.gs1us.sgg.webapp.ProductInfoController.Options">
 		<constructor-arg index="0" value="${product.info.controller.path}"/>
 	</bean>
-
 	<bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
 		<property name="defaultExperienceUrlHost" value="${digimarc.exp.url}" />
 		<property name="defaultExperienceUrlPort" value="${digimarc.exp.port}" />
@@ -233,9 +186,6 @@
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/nonprod*/**" access="denyAll()" />
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
-
-			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
-
 	 		<security:http-basic />
 	 		<security:csrf disabled="true"/>
  		</security:http>
@@ -245,10 +195,6 @@
 		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     		<property name="host" value="${mail.sender.host}"/>
 		</bean>
-		<!-- 
-		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DummyDigimarcClient" />
-		 -->
-
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
   			<constructor-arg index="0" value="${digimarc.service.url}" />
 			<constructor-arg index="1" value="${digimarc.service.email}" />
@@ -275,9 +221,6 @@
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/nonprod*/**" access="denyAll()" />
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
-
-			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
-
 	 		<security:http-basic />
 	 		<security:csrf disabled="true"/>
  		</security:http>
@@ -285,9 +228,6 @@
 		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     		<property name="host" value="${mail.sender.host}"/>
 		</bean>
-		<!-- 
-		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DummyDigimarcClient" />
-		 -->
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
 			<constructor-arg index="0" value="${digimarc.service.url}" />
 			<constructor-arg index="1" value="${digimarc.service.email}" />
@@ -313,19 +253,11 @@
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('PRODUCT','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
-
-			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
-
 	 		<security:http-basic />
 	 		<security:csrf disabled="true"/>
  		</security:http>
 
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
-
-		<!-- 
-		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DummyDigimarcClient" />
-		 -->
-		 
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
 			<constructor-arg index="0" value="${digimarc.service.url}" />
 			<constructor-arg index="1" value="${digimarc.service.email}" />
@@ -351,17 +283,11 @@
 			<security:intercept-url pattern="/api/payment*/**" access="hasAnyRole('BILLING','ADMIN')" />
 			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('PRODUCT','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
-
-			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
-
 	 		<security:http-basic />
 	 		<security:csrf disabled="true"/>
  		</security:http>
 
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
-	 	<!-- 
-		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DummyDigimarcClient" />
-		 -->
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
 			<constructor-arg index="0" value="${digimarc.service.url}" />
 			<constructor-arg index="1" value="${digimarc.service.email}" />
@@ -387,9 +313,6 @@
 			
 			<security:intercept-url pattern="/api/import*/**" access="hasAnyRole('USER','ADMIN')" />
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
-
-			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
-
 	 		<security:http-basic />
 	 		<security:csrf disabled="true"/>
  		</security:http>
@@ -401,14 +324,6 @@
 
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.MockDigimarcClient" />
-		<!-- 
-		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
-  			<constructor-arg index="0" value="https://dev-api.digimarc.net" />
-			<constructor-arg index="1" value="integrator-gs1@gs1.org" />
-			<constructor-arg index="2" value="a02UppWH4g2OAtIgoYHb3s6Zc32Ukk/s" />
-			<constructor-arg index="3" ref="httpTransport" />
-		</bean>
-		 -->
 		<bean id="mockUserDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
 				<value>${mock.dao.user.0}</value>
@@ -416,16 +331,12 @@
 			</list></constructor-arg>
 		</bean>
 	</beans>
-	
-	
+
 	<!-- Dev profile is on KT's development machine -->
 	<beans profile="dev">
 		<security:http create-session="stateless" use-expressions="true">
 		   <!-- security:anonymous enabled="true" -->		   
 			<security:intercept-url pattern="/api/search/**" access="permitAll"/>
-			<!-- security:intercept-url pattern="/api/search/**" access="isAuthenticated() -->
-			<!-- security:intercept-url pattern="/api/search/**" access="isAnonymous() -->
-		
 			<security:intercept-url pattern="/api/product*/**" access="hasAnyRole('USER','PRODUCT','ADMIN')" />
 			<security:intercept-url pattern="/api/account*/**" access="hasAnyRole('USER','ACCOUNT','ADMIN')" />		
 			<security:intercept-url pattern="/api/order*/**"   access="hasAnyRole('BILLING','ADMIN')" />
@@ -434,9 +345,6 @@
 			<security:intercept-url pattern="/api/nonprod*/**" access="hasAnyRole('USER','BILLING','ADMIN')" /> <!-- Enable non-production only!! -->
 			<security:intercept-url pattern="/api/import*/**" access="hasAnyRole('USER','ADMIN')" />
 			<security:intercept-url pattern="/api/**" access="hasRole('ADMIN')" />
-
-			<!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
-
 	 		<security:http-basic />
 	 		<security:csrf disabled="true"/>
  		</security:http>
@@ -446,21 +354,8 @@
  		<bean id="demoController" class="org.gs1us.sgg.webapp.DemoController">
  			<property name="enabled" value="true" />
  		</bean>
-
 	 	<bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender" />
-
-		 
 		<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.MockDigimarcClient" />
-		
-		<!-- 
-	 	<bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
-  			<constructor-arg index="0" value="https://labs-api.digimarc.net" />
-			<constructor-arg index="1" value="integrator2-gs1@gs1.org" />
-			<constructor-arg index="2" value="5YaQIJKJRnF9kfMJ/erX0m1jv7gq/t8n" />
-			<constructor-arg index="3" ref="httpTransport" />
-		</bean>
-		 -->		 			
-			 
 		<bean id="mockUserDao" class="org.gs1us.sgg.temp.MockUserDao">
 			<constructor-arg index="0"><list>
 				<value>${mock.dao.user.0}</value>
