@@ -14,10 +14,10 @@
     <packaging>war</packaging>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <build.properties.file>${user.home}/gs1-pds.properties</build.properties.file>
+        <liquibase.changelog>src/main/liquibase/dbchangelog.xml</liquibase.changelog>
     </properties>
+
 
     <dependencies>
         <dependency>
@@ -276,57 +276,16 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <configuration>
+                    <port>9002</port>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-    <!--<build>-->
-    <!--<plugins>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-compiler-plugin</artifactId>-->
-    <!--</plugin>-->
-    <!--&lt;!&ndash;-->
-    <!--https://docs.spring.io/spring-boot/docs/current/reference/html/howto-build.html#howto-git-info-->
-    <!--&ndash;&gt;-->
-    <!--<plugin>-->
-    <!--<groupId>pl.project13.maven</groupId>-->
-    <!--<artifactId>git-commit-id-plugin</artifactId>-->
-    <!--<version>2.2.2</version>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<goals>-->
-    <!--<goal>revision</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--<configuration>-->
-    <!--<verbose>true</verbose>-->
-    <!--<dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>-->
-    <!--<generateGitPropertiesFile>true</generateGitPropertiesFile>-->
-    <!--<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>-->
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-war-plugin</artifactId>-->
-    <!--<version>2.5</version>-->
-    <!--<configuration>-->
-    <!--&lt;!&ndash;<webappDirectory>${project.basedir}/WebContent</webappDirectory>&ndash;&gt;-->
-    <!--&lt;!&ndash;<packagingExcludes>**/WEB-INF/lib/*</packagingExcludes>&ndash;&gt;-->
-    <!--&lt;!&ndash;<webXml>${project.basedir}/WebContent/WEB-INF/web.xml</webXml>&ndash;&gt;-->
-    <!--<archive>-->
-    <!--<manifestEntries>-->
-    <!--<git-SHA-1>${git.commit.id}</git-SHA-1>-->
-    <!--</manifestEntries>-->
-    <!--</archive>-->
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.tomcat.maven</groupId>-->
-    <!--<artifactId>tomcat7-maven-plugin</artifactId>-->
-    <!--<version>2.2</version>-->
-    <!--<configuration>-->
-    <!--<port>9000</port>-->
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--</plugins>-->
-    <!--</build>-->
 </project>

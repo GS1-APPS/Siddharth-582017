@@ -22,7 +22,7 @@
 
     <properties>
         <build.properties.file>${user.home}/gs1-portal.properties</build.properties.file>
-        <liquibase.changelog>src/main/liquibase/dbchangeset.xml</liquibase.changelog>
+        <liquibase.changelog>src/main/liquibase/dbchangelog.xml</liquibase.changelog>
     </properties>
 
     <dependencies>
