@@ -11,23 +11,23 @@
 
 Install the following
 * [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Maven](https://maven.apache.org/download.cgi)
+* [Tomcat 8](https://tomcat.apache.org/download-80.cgi)
 * [Postgres](https://www.postgresql.org/download/)
-    * Create two databases in your database
-        * gs1ussgl - DB for the UI (gs1-portal)
-        * sgg      - DB for the backend (gs1-pds)
+    * Create two databases in Postgres
+        * `gs1ussgl`- DB for the UI (gs1-portal)
+        * `sgg`      - DB for the backend (gs1-pds)
     * Create two files in your home directory
-        * gs1-portal.properties
+        * `~/gs1-portal.properties`
             * `jdbc.url=jdbc:postgres://localhost/gs1ussgl`
             * `jdbc.username=yyy`
             * `jdbc.password=zzz`
             * `liquibase.contexts=dev`
-        * gs1-pds.properties
+        * `~/gs1-pds.properties`
             * `jdbc.url=jdbc:postgres://localhost/sgg`
             * `jdbc.username=yyy`
             * `jdbc.password=zzz`
             * `liquibase.contexts=dev`
-* [Maven](https://maven.apache.org/download.cgi)
-* [Tomcat 8](https://tomcat.apache.org/download-80.cgi)
 
 Clone the github repo
 
@@ -35,10 +35,10 @@ Clone the github repo
     $ clone git@github.com:GS1-APPS/Siddharth-582017.git
     $ cd Siddharth-582017
     
-update databases and deploy everything
+<a name="one_command"></a>update databases and deploy everything with one command
 
     $ cd $root
-    $ ./install.sh  -s $root -t $tomcat_path -e b -a -v
+    $ ./install.sh  -s $source_root -t $tomcat_path -e b -a -v
 
 ## Helpful commands
 
@@ -46,13 +46,19 @@ create DB from scratch, will drop existing DB and recreate all tables and popula
 
     $ cd $root/gs1-portal
     $ mvn process-resources -Pdatabase-create
-
+    $ cd $root/gs1-pds
+    $ mvn process-resources -Pdatabase-create
+    
 update you database    
 
     $ cd $root/gs1-portal
     $ mvn process-resources -Pdatabase-update
+    $ cd $root/gs1-pds
+    $ mvn process-resources -Pdatabase-update
 
-biuld and redeploy both apps to the same tomcat instance
+or just [use one command](#one_command)
+
+build and redeploy both apps to the same tomcat instance
 
     $ cd $root
     $ ./install.sh  -s $root -t $tomcat_path -b -v
