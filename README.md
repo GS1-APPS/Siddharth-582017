@@ -56,12 +56,13 @@ update you database
     $ cd $root/gs1-pds
     $ mvn process-resources -Pdatabase-update
 
-or just [use one command](#one_command)
 
 build and redeploy both apps to the same tomcat instance
 
     $ cd $root
     $ ./install.sh  -s $root -t $tomcat_path -b -v
+
+or just [use one command](#one_command) to build and deploy everything 
 
 ## Build Properties
 
