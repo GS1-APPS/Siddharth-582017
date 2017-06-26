@@ -1,5 +1,55 @@
 # Developer Guide
  
+## tl;dr
+
+Install the following
+* [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Postgres](https://www.postgresql.org/download/)
+    * Create two databases in your database
+        * gs1ussgl - DB for the UI (gs1-portal)
+        * sgg      - DB for the backend (gs1-pds)
+    * Create two files in your home directory
+        * gs1-portal.properties
+            * `jdbc.url=jdbc:postgres://localhost/gs1ussgl`
+            * `jdbc.username=yyy`
+            * `jdbc.password=zzz`
+            * `liquibase.contexts=dev`
+        * gs1-pds.properties
+            * `jdbc.url=jdbc:postgres://localhost/sgg`
+            * `jdbc.username=yyy`
+            * `jdbc.password=zzz`
+            * `liquibase.contexts=dev`
+* [Maven](https://maven.apache.org/download.cgi)
+* [Tomcat 8](https://tomcat.apache.org/download-80.cgi)
+
+Clone the github repo
+
+    $ cd $root
+    $ clone git@github.com:GS1-APPS/Siddharth-582017.git
+    $ cd Siddharth-582017
+    
+update databases and deploy everything
+
+    $ cd $root
+    $ ./install.sh  -s $root -t $tomcat_path -e b -a -v
+
+## Helpful commands
+
+create DB from scratch, will drop existing DB and recreate all tables and populate data
+
+    $ cd $root/gs1-portal
+    $ mvn process-resources -Pdatabase-create
+
+update you database    
+
+    $ cd $root/gs1-portal
+    $ mvn process-resources -Pdatabase-update
+
+biuld and redeploy both apps to the same tomcat instance
+
+    $ cd $root
+    $ ./install.sh  -s $root -t $tomcat_path -b -v
+
 ## Build Properties
 
 To assist in making your Maven `pom.xml` a little more flexible, we've added the 
@@ -14,6 +64,16 @@ There are two properties defined in `gs1-parent-pom` that  you need to override 
     1. build.properties.file
     2. liquibase.changelog
     
+Here is how you'd define the properties above in your `pom.xml` file:
+
+     <properties>
+        <build.properties.file>${user.home}/gs1-pds.properties</build.properties.file>
+        <liquibase.changelog>src/main/liquibase/dbchangelog.xml</liquibase.changelog>
+    </properties>
+
+The settings above allow you to set the URL, username and password to a database you will create,
+ update or rebuild.  
+
 If you want to use the `properties-maven-plugin` you need to define a path to your local jdbc 
 settings, the properties you need to define are: 
 

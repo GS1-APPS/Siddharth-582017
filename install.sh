@@ -22,6 +22,39 @@ generic_copy() {
     cp -pr $webapp $tomcat_web/${app_name}.war
 }
 
+generic_liquibase() {
+    path=$1
+
+    [[ "$verbose" -gt 0 ]] && echo "cd $path"
+    cd $path
+    [[ "$verbose" -gt 0 ]] && echo "mvn process-resources -Pdatabase-update"
+    mvn process-resources -Pdatabase-update
+
+}
+
+build_liquibase() {
+    if [ "$liquibase" != "g" ] && [ "$liquibase" != "l" ] && [ "$liquibase" != "b" ]; then
+        cat << EOF
+        In order to run liquibase with this script, you need to provide one of the following values:
+                     g - gs1-pds
+                     l - gs1-portal
+                     b - gs1-pds and then gs1-portal
+
+        You provided the values: $liquibase
+EOF
+        exit 1;
+    fi
+
+    gs1_pds="${src_root}/gs1-pds/gs1-pds-webapp"
+    gs1_portal="${src_root}/gs1-portal"
+
+    [[ "$verbose" -gt 0 ]] && echo "about to build liquibase with param $liquibase"
+
+    [[ "$liquibase" == "g" ]] && generic_liquibase $gs1_pds
+    [[ "$liquibase" == "l" ]] && generic_liquibase $gs1_portal
+    [[ "$liquibase" == "b" ]] && generic_liquibase  $gs1_pds && generic_liquibase $gs1_portal
+}
+
 deploy_gl() {
     generic_copy gs1-portal "${src_root}/gs1-portal/target/gs1-portal-1.0-SNAPSHOT.war"
 }
@@ -55,7 +88,7 @@ build_core() {
 
 show_help() {
 cat << EOF
-Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a] [-c]
+Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a] [-c] [-e g|l|b]
   Tools for analyzing data created by inventory.sh
       -h   display this help and exit
       -d   debug
@@ -63,6 +96,10 @@ Usage: ${0##*/} [-hdv] -s SRC_ROOT [-g] [-l] [-b] [-t TOMCAT_ROOT] [-a] [-c]
 
       -s SRC_ROOT    where to find your src root
       -t TOMCAT_ROOT where to find tomcat, default is $tomcat_root
+      -e g|l|b       run liquibase on projects using the -P datatbase-update profile
+                     g - gs1-pds
+                     l - gs1-portal
+                     b - gs1-pds and then gs1-portal
 
       -a   build ALL modules
       -c   buld CORE modules (gs1-pds and gs1-portal)
@@ -83,6 +120,7 @@ src_root=
 tomcat_root=/usr/local/apache-tomcat-8.0.44
 build=0
 core=0
+liquibase=
 # Reset is necessary if getopts was used previously in the script.
 # It is a good idea to make this local in a function.
 OPTIND=1
@@ -90,13 +128,14 @@ OPTIND=1
 #
 # argument processing
 # 
-while getopts "hdvglbs:t:ac" opt; do
+while getopts "hdvglbs:t:ace:" opt; do
   case "$opt" in
        h)  show_help; exit 0;;
        v)  verbose=$((verbose+1));;
        d)  debug=1;;
        s)  src_root=$OPTARG;;
        t)  tomcat_root=$OPTARG;;              
+       e)  liquibase=$OPTARG;;
        g)  gg=1;;
        l)  gl=1;;       
        a)  build=1;;
@@ -123,6 +162,7 @@ fi
 
 tomcat_web=$tomcat_root/webapps
 
+[[ ! -z "$liquibase" ]] && build_liquibase
 [[ "$build" -gt 0 ]] && build_all
 [[ "$core" -gt 0 ]] && build_core
 [[ "$gl" -gt 0 ]] && deploy_gl
