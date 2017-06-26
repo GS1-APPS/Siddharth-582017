@@ -1,4 +1,11 @@
 # Developer Guide
+
+## Table of Contents
+
+1. [tl;dr](#tldr)
+2. [Helpful commands](#Helpful-commands)
+3. [Build Properties](#Build-Properties)
+4. [Database Migration](#Database-Migration)
  
 ## tl;dr
 
