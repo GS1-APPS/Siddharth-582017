@@ -231,8 +231,7 @@ Make sure you follow the [tl;dr](#tldr) section above to install all the tools y
  
  1. Start Eclipse
  1. Choose File -> Import...
- 1. Select the `Maven` import wizard
- 1. and choose "Existing Maven Projects"
+ 1. Select the `Maven` import wizard and choose "Existing Maven Projects"
  ![Eclipse Import Wizard Screen Shot](/images/maven-wizard.png?raw=true "Eclipse Import Wizard")
  1. Click `Next >`
  1. Click `Browse...` and navigate to either `gs1-portal` or `gs1-pds`
