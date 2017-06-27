@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        classpath:org/springframework/beans/factory/xml/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--
+https://stackoverflow.com/questions/13297157/best-ways-to-deal-with-properties-values-in-xml-file-in-spring-maven-and-eclips
+-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+                <value>classpath:application-${spring.profiles.active}.properties</value>
+                <value>file://opt/gs1/gs1-portal/conf/application.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+
+    <!-- the application context definition for the DispatcherServlet -->
+
+    <context:component-scan base-package="org.gs1us.sgl.webapp"/>
+    <context:component-scan base-package="org.gs1us.sgl.webapp.standalone"/>
+    <context:component-scan base-package="org.gs1us.sgl.memberservice.standalone"/>
+    <context:component-scan base-package="org.gs1us.sgl.security"/>
+
+    <!--  The following is boilerplate to get Spring transactions and Spring/JPA/Hibernate persistence working -->
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>
+        <property name="persistenceUnitName" value="gs1ussglPersistenceUnit"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.id.new_generator_mappings">true</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.ejb.naming_strategy">
+                    org.gs1us.sgg.daoutil.jpa.HibernateNamingStrategy
+                </prop>
+            </props>
+        </property>
+
+    </bean>
+
+    <bean id="jpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <!-- <property name="database" value="PostgreSQL" /> -->
+        <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
+    </bean>
+
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- Set up driver for persistence -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <!--
+        <property name="url" value="jdbc:postgresql://54.227.212.245/gs1ussgl"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="rescuegs1!!"/>
+        -->
+        <property name="url" value="${jdbc.gs1ussgl.url}"/>
+        <property name="username" value="${jdbc.gs1ussgl.username}"/>
+        <property name="password" value="${jdbc.gs1ussgl.password}"/>
+
+        <!--<property name="url" value="jdbc:postgresql://34.207.229.65/gs1ussgl"/>-->
+        <!--<property name="username" value="gs1ussgl"/>-->
+        <!--<property name="password" value="emc2glocal"/>-->
+
+    </bean>
+
+    <security:authentication-manager>
+        <security:authentication-provider ref="daoAuthenticationProvider"/>
+    </security:authentication-manager>
+
+    <bean id="daoAuthenticationProvider"
+          class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="userDao"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+    </bean>
+
+    <bean id="userDao" class="org.gs1us.sgl.memberservice.standalone.jpa.JpaStandaloneUserDao"/>
+    <bean id="memberDao" class="org.gs1us.sgl.memberservice.standalone.jpa.JpaStandaloneMemberDao"/>
+    <!--
+    <bean id="gbService" class="org.gs1us.sgl.gbservice.mock.MockGlobalBrokerService" />
+     -->
+    <bean id="billingService" class="org.gs1us.sgl.billingservice.mock.MockBillingService"/>
+    <bean id="clockService" class="org.gs1us.sgg.clockservice.ClockService"/>
+    <bean id="passwordEncoder"
+          class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <!--
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="A.1.1.X "/>
+        </bean>
+    -->
+
+    <!--
+    <bean id="gbService" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceBridge" />
+     -->
+
+    <!--
+       <bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
+           <constructor-arg index="0" value="http://54.210.247.186"/>
+           <constructor-arg index="1" value="gs1us"/>
+           <constructor-arg index="2" value="aaa"/>
+           <constructor-arg index="3" ref="httpTransport"/>
+       </bean>
+     -->
+
+    <bean id="httpTransport" class="org.gs1us.sgg.transport.JavaHttpTransport"/>
+
+    <bean id="versionOracle" class="org.gs1us.sgg.util.VersionOracle">
+        <constructor-arg index="0" value="/sgl-version.text"/>
+    </bean>
+
+
+    <bean id="templateEmail" class="org.springframework.mail.SimpleMailMessage">
+        <!--  Depending on the email, either from or to will be changed to something else -->
+        <property name="from" value="${template.email.from}"/>
+        <property name="to" value="${template.email.to}"/>
+    </bean>
+
+
+    <bean id="termsOfService" class="org.gs1us.sgl.serviceterms.TermsOfService">
+        <property name="version" value="1.0"/>
+        <property name="url" value="/static/GS1USSmartGtinTermsofService1.0-28MAY2015.pdf"/>
+    </bean>
+
+    <mvc:annotation-driven>
+        <mvc:path-matching suffix-pattern="false"/>
+    </mvc:annotation-driven>
+    <mvc:default-servlet-handler/>
+
+
+    <!-- prod profile is production -->
+    <beans profile="prod">
+        <!--
+         <bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
+        -->
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="${mail.sender.host}"/>
+        </bean>
+
+        <bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
+            <constructor-arg index="0" value="${gb.service.url}"/>
+            <constructor-arg index="1" value="${gb.service.username}"/>
+            <constructor-arg index="2" value="${gb.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+        </bean>
+        <security:http>
+            <security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/user*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedbackSent*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/changePassword*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/account*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/agreements" access="hasRole('USER')"/>
+            <!-- Important to deny all access by anybody to test URIs in production! -->
+            <security:intercept-url pattern="/ui/test*/**" access="false"/>
+
+            <security:intercept-url pattern="/**" requires-channel="https"/>
+
+            <security:logout delete-cookies="JSESSIONID"/>
+            <security:form-login login-page="/ui/login"/>
+            <security:access-denied-handler error-page="/ui/accessDenied"/>
+        </security:http>
+
+    </beans>
+
+    <!-- qa profile is QA -->
+    <beans profile="qa">
+        <!--
+         <bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
+        -->
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="${mail.sender.host}"/>
+        </bean>
+
+        <bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
+            <constructor-arg index="0" value="${gb.service.url}"/>
+            <constructor-arg index="1" value="${gb.service.username}"/>
+            <constructor-arg index="2" value="${gb.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+        </bean>
+        <security:http>
+            <security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/user*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedbackSent*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/changePassword*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/account*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/agreements" access="hasRole('USER')"/>
+            <!-- Important to deny all access by anybody to test URIs in production! -->
+            <security:intercept-url pattern="/ui/test*/**" access="false"/>
+
+            <security:intercept-url pattern="/**" requires-channel="https"/>
+
+            <security:logout delete-cookies="JSESSIONID"/>
+            <security:form-login login-page="/ui/login"/>
+            <security:access-denied-handler error-page="/ui/accessDenied"/>
+        </security:http>
+
+    </beans>
+
+    <!-- test1 profile is first set of test servers -->
+    <beans profile="test1">
+        <bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender"/>
+        <bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
+            <constructor-arg index="0" value="${gb.service.url}"/>
+            <constructor-arg index="1" value="${gb.service.username}"/>
+            <constructor-arg index="2" value="${gb.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+        </bean>
+        <security:http>
+            <security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/user*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedbackSent*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/changePassword*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/account*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/agreements" access="hasRole('USER')"/>
+            <!-- Important to deny all access by anybody to test URIs in production! -->
+            <security:intercept-url pattern="/ui/test*/**" access="hasRole('TESTER')"/>
+
+            <!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
+
+            <security:logout delete-cookies="JSESSIONID"/>
+            <security:form-login login-page="/ui/login"/>
+            <security:access-denied-handler error-page="/ui/accessDenied"/>
+        </security:http>
+    </beans>
+
+    <!-- test2 profile is second set of test servers -->
+    <beans profile="test2">
+        <bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender"/>
+        <bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
+            <constructor-arg index="0" value="${gb.service.url}"/>
+            <constructor-arg index="1" value="${gb.service.username}"/>
+            <constructor-arg index="2" value="${gb.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+        </bean>
+        <security:http>
+            <security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/user*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedbackSent*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/changePassword*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/account*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/agreements" access="hasRole('USER')"/>
+            <!-- Important to deny all access by anybody to test URIs in production! -->
+            <security:intercept-url pattern="/ui/test*/**" access="hasRole('TESTER')"/>
+
+            <!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
+
+            <security:logout delete-cookies="JSESSIONID"/>
+            <security:form-login login-page="/ui/login"/>
+            <security:access-denied-handler error-page="/ui/accessDenied"/>
+        </security:http>
+    </beans>
+
+    <!-- gtinregistry profile is second set of test servers -->
+    <beans profile="gtinregistry">
+
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="${mail.sender.host}"/>
+            <property name="port" value="${mail.sender.port}"/>
+            <property name="username" value="${mail.sender.username}"/>
+            <property name="password" value="${mail.sender.password}"/>
+            <property name="javaMailProperties">
+                <props>
+                    <prop key="mail.transport.protocol">smtp</prop>
+                    <prop key="mail.smtp.auth">true</prop>
+                    <prop key="mail.smtp.starttls.enable">true</prop>
+                    <prop key="mail.debug">true</prop>
+                </props>
+            </property>
+        </bean>
+        <!--
+        <bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender" />
+        -->
+
+        <!-- Arg0 org. value 'http://52.55.25.90/GS1USSGG' -->
+        <bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
+            <constructor-arg index="0" value="${gb.service.url}"/>
+            <constructor-arg index="1" value="${gb.service.username}"/>
+            <constructor-arg index="2" value="${gb.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+            <constructor-arg index="4"
+                             value="org.gs1us.sgl.memberservice.standalone.jpa.JpaStandaloneUser"/>
+            <constructor-arg index="5" value="getUsername"/>
+            <constructor-arg index="6" value="getApiKey"/>
+            <constructor-arg index="7" value="false"/>
+        </bean>
+
+        <bean
+                class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+            <property name="staticMethod" value="org.gs1us.sgl.webapp.WebappUtil.setBranding"/>
+            <property name="arguments">
+                <list>
+                    <value>GS1</value>
+                    <value>http://www.gs1.org</value>
+                    <value>Cloud Phase 1</value>
+                    <value>Cloud Phase 1</value>
+                    <value>logo-global.png</value>
+                    <value></value>  <!-- no value added phrase -->
+                    <value>gtinRegistryHome.jsp</value>
+                    <value>brandName</value>
+                    <value>tradeItemDescription</value>
+                    <value>true</value>
+                </list>
+            </property>
+        </bean>
+
+        <security:http>
+            <security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/user*/**" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedbackSent*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/changePassword*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/account*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/agreements" access="hasRole('USER')"/>
+            <!-- Important to deny all access by anybody to test URIs in production! -->
+            <security:intercept-url pattern="/ui/test*/**" access="hasRole('TESTER')"/>
+
+            <!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
+
+            <security:logout delete-cookies="JSESSIONID"/>
+            <security:form-login login-page="/ui/login"/>
+            <security:access-denied-handler error-page="/ui/accessDenied"/>
+        </security:http>
+    </beans>
+
+
+    <!-- Dev profile is on KT's development machine -->
+    <beans profile="dev">
+        <bean id="mailSender" class="org.gs1us.sgl.webapp.MockMailSender"/>
+        <bean id="gbService" class="org.gs1us.sgg.gbservice.client.GlobalBrokerServiceClient">
+            <constructor-arg index="0" value="${gb.service.url}"/>
+            <constructor-arg index="1" value="${gb.service.username}"/>
+            <constructor-arg index="2" value="${gb.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+            <constructor-arg index="4"
+                             value="org.gs1us.sgl.memberservice.standalone.jpa.JpaStandaloneUser"/>
+            <constructor-arg index="5" value="getUsername"/>
+            <constructor-arg index="6" value="getApiKey"/>
+            <constructor-arg index="7" value="false"/>
+        </bean>
+
+        <bean
+                class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+            <property name="staticMethod" value="org.gs1us.sgl.webapp.WebappUtil.setBranding"/>
+            <property name="arguments">
+                <list>
+                    <value>GS1</value>
+                    <value>http://www.gs1.org</value>
+                    <value>Cloud Phase 1</value>
+                    <value>Cloud Phase 1</value>
+                    <value>logo-global.png</value>
+                    <value></value>  <!-- no value added phrase -->
+                    <value>gtinRegistryHome.jsp</value>
+                    <value>brandName</value>
+                    <value>tradeItemDescription</value>
+                    <value>true</value>
+                </list>
+            </property>
+        </bean>
+
+        <security:http>
+            <security:intercept-url pattern="/ui/billing*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/user*/**" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/member*/**" access="hasRole('ADMIN')"/>
+            <security:intercept-url pattern="/ui/product*/**" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedback*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/feedbackSent*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/changePassword*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/account*" access="hasRole('USER')"/>
+            <security:intercept-url pattern="/ui/agreements" access="hasRole('USER')"/>
+            <!-- Important to deny all access by anybody to test URIs in production! -->
+            <security:intercept-url pattern="/ui/test*/**" access="hasRole('TESTER')"/>
+
+            <!-- <security:intercept-url pattern="/**" requires-channel="https" />  -->
+
+            <security:logout delete-cookies="JSESSIONID"/>
+            <security:form-login login-page="/ui/login"/>
+            <security:access-denied-handler error-page="/ui/accessDenied"/>
+        </security:http>
+    </beans>
+</beans>

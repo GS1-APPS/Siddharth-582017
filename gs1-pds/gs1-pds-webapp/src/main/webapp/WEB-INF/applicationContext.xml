@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        classpath:org/springframework/beans/factory/xml/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+>
+
+    <!--
+    https://stackoverflow.com/questions/13297157/best-ways-to-deal-with-properties-values-in-xml-file-in-spring-maven-and-eclips
+    -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+                <value>classpath:application-${spring.profiles.active}.properties</value>
+                <value>file://opt/gs1/gs1-pds/conf/application.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+
+    <!-- the application context definition for the DispatcherServlet -->
+    <context:component-scan base-package="org.gs1us.sgg.webapp"/>
+    <context:component-scan base-package="org.gs1us.sgg.webapi"/>
+    <context:component-scan base-package="org.gs1us.sgg.app"/>
+
+
+    <!--  The following is boilerplate to get Spring transactions and Spring/JPA/Hibernate persistence working -->
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>
+        <property name="persistenceUnitName" value="gs1ussggPersistenceUnit"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.id.new_generator_mappings">true</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.ejb.naming_strategy">
+                    org.gs1us.sgg.daoutil.jpa.HibernateNamingStrategy
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--  GS1USSGL Entity Factory -->
+    <bean id="gs1ussglEntityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>
+        <property name="persistenceUnitName" value="gs1ussglPersistenceUnit"/>
+        <property name="dataSource" ref="gs1ussglDataSource"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.id.new_generator_mappings">true</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.ejb.naming_strategy">
+                    org.gs1us.sgg.daoutil.jpa.HibernateNamingStrategy
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="jpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <!-- <property name="database" value="PostgreSQL" /> -->
+        <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
+    </bean>
+
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+
+    <!--   SGG transactionManager -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+    </bean>
+
+    <!--   GS1USSGL transactionManager -->
+    <bean id="gs1ussglTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="gs1ussglEntityManagerFactory"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+    </bean>
+
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- Set up driver for persistence -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="${jdbc.sgg.url}"/>
+        <property name="username" value="${jdbc.sgg.username}"/>
+        <property name="password" value="${jdbc.sgg.password}"/>
+    </bean>
+
+    <!-- GS1USSGL Datasource -->
+    <bean id="gs1ussglDataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="${jdbc.gs1ussgl.url}"/>
+        <property name="username" value="${jdbc.gs1ussgl.username}"/>
+        <property name="password" value="${jdbc.gs1ussgl.password}"/>
+    </bean>
+
+
+    <!-- Global Broker -->
+    <bean id="accountManager" class="org.gs1us.sgg.account.AccountManager"/>
+    <bean id="appManager" class="org.gs1us.sgg.app.AppManager"/>
+    <bean id="commerceManager" class="org.gs1us.sgg.commerce.CommerceManager"/>
+    <bean id="gbDao" class="org.gs1us.sgg.dao.jpa.JpaGBDao"/>
+    <bean id="nextIdDao" class="org.gs1us.sgg.dao.jpa.JpaNextIdDao"/>
+    <bean id="productManager" class="org.gs1us.sgg.product.ProductManager"/>
+    <bean id="productOpsManager" class="org.gs1us.sgg.gbservice.impl.ProductOpsManager"/>
+    <bean id="importManager" class="org.gs1us.sgg.gbservice.impl.ImportManager"/>
+
+    <security:authentication-manager>
+        <security:authentication-provider ref="daoAuthenticationProvider"/>
+    </security:authentication-manager>
+
+    <bean id="daoAuthenticationProvider"
+          class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="userDao"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+    </bean>
+
+    <!-- Standalone User -->
+    <bean id="userDao" class="org.gs1us.sgg.dao.memberservice.standalone.jpa.JpaStandaloneUserDao"/>
+    <bean id="memberDao"
+          class="org.gs1us.sgg.dao.memberservice.standalone.jpa.JpaStandaloneMemberDao"/>
+    <bean id="gbService" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceBridge"/>
+    <bean id="clockService" class="org.gs1us.sgg.clockservice.ClockService"/>
+    <bean id="passwordEncoder"
+          class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <bean id="templateEmail" class="org.springframework.mail.SimpleMailMessage">
+        <!--  Depending on the email, either from or to will be changed to something else -->
+        <property name="from" value="{email.template.from}"/>
+        <property name="to" value="${email.template.to}"/>
+    </bean>
+    <bean id="httpTransport" class="org.gs1us.sgg.transport.JavaHttpTransport"/>
+    <bean id="versionOracle" class="org.gs1us.sgg.util.VersionOracle">
+        <constructor-arg index="0" value="/sgg-version.text"/>
+    </bean>
+    <bean id="testManager" class="org.gs1us.sgg.gbservice.test.TestManager"/>
+
+    <mvc:annotation-driven>
+        <mvc:path-matching suffix-pattern="false"/>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper" ref="objectMapper"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <mvc:default-servlet-handler/>
+
+    <bean id="objectMapper" class="org.gs1us.sgg.gbservice.json.ObjectMapperFactoryBean"/>
+    <bean id="gbServiceImpl" class="org.gs1us.sgg.gbservice.impl.GlobalBrokerServiceImpl">
+        <constructor-arg index="0" value="${gb.service.impl}"/>
+    </bean>
+    <bean id="productInfoControllerOptions"
+          class="org.gs1us.sgg.webapp.ProductInfoController.Options">
+        <constructor-arg index="0" value="${product.info.controller.path}"/>
+    </bean>
+    <bean id="digimarcOptions" class="org.gs1us.sgg.app.dwcode.DigimarcOptions">
+        <property name="defaultExperienceUrlHost" value="${digimarc.exp.url}"/>
+        <property name="defaultExperienceUrlPort" value="${digimarc.exp.port}"/>
+    </bean>
+
+    <!-- prod profile is production -->
+    <beans profile="prod">
+        <security:http>
+            <security:intercept-url pattern="/api/product*/**"
+                                    access="hasAnyRole('PRODUCT','ADMIN')"/>
+            <security:intercept-url pattern="/api/account*/**"
+                                    access="hasAnyRole('ACCOUNT','ADMIN')"/>
+            <security:intercept-url pattern="/api/order*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/invoice*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/payment*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/nonprod*/**" access="denyAll()"/>
+            <security:intercept-url pattern="/api/**" access="hasRole('ADMIN')"/>
+            <security:http-basic/>
+            <security:csrf disabled="true"/>
+        </security:http>
+
+
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="${mail.sender.host}"/>
+        </bean>
+        <bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
+            <constructor-arg index="0" value="${digimarc.service.url}"/>
+            <constructor-arg index="1" value="${digimarc.service.email}"/>
+            <constructor-arg index="2" value="${digimarc.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+        </bean>
+
+        <bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
+            <constructor-arg index="0">
+                <list>
+                    <value>${mock.dao.user.0}</value>
+                    <value>${mock.dao.user.1:#{null}}</value>
+                </list>
+            </constructor-arg>
+        </bean>
+
+    </beans>
+
+    <!-- qa profile is qa servers  -->
+    <beans profile="qa">
+        <security:http>
+            <security:intercept-url pattern="/api/product*/**"
+                                    access="hasAnyRole('PRODUCT','ADMIN')"/>
+            <security:intercept-url pattern="/api/account*/**"
+                                    access="hasAnyRole('ACCOUNT','ADMIN')"/>
+            <security:intercept-url pattern="/api/order*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/invoice*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/payment*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/nonprod*/**" access="denyAll()"/>
+            <security:intercept-url pattern="/api/**" access="hasRole('ADMIN')"/>
+            <security:http-basic/>
+            <security:csrf disabled="true"/>
+        </security:http>
+
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="${mail.sender.host}"/>
+        </bean>
+        <bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
+            <constructor-arg index="0" value="${digimarc.service.url}"/>
+            <constructor-arg index="1" value="${digimarc.service.email}"/>
+            <constructor-arg index="2" value="${digimarc.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+        </bean>
+
+        <bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
+            <constructor-arg index="0">
+                <list>
+                    <value>${mock.dao.user.0}</value>
+                    <value>${mock.dao.user.1:#{null}}</value>
+                </list>
+            </constructor-arg>
+        </bean>
+    </beans>
+
+    <!-- test1 profile is first set of test servers -->
+    <beans profile="test1">
+        <security:http>
+            <security:intercept-url pattern="/api/product*/**"
+                                    access="hasAnyRole('PRODUCT','ADMIN')"/>
+            <security:intercept-url pattern="/api/account*/**"
+                                    access="hasAnyRole('ACCOUNT','ADMIN')"/>
+            <security:intercept-url pattern="/api/order*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/invoice*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/payment*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/nonprod*/**"
+                                    access="hasAnyRole('PRODUCT','ADMIN')"/> <!-- Enable non-production only!! -->
+            <security:intercept-url pattern="/api/**" access="hasRole('ADMIN')"/>
+            <security:http-basic/>
+            <security:csrf disabled="true"/>
+        </security:http>
+
+        <bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender"/>
+        <bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
+            <constructor-arg index="0" value="${digimarc.service.url}"/>
+            <constructor-arg index="1" value="${digimarc.service.email}"/>
+            <constructor-arg index="2" value="${digimarc.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+        </bean>
+
+        <bean id="userDao" class="org.gs1us.sgg.temp.MockUserDao">
+            <constructor-arg index="0">
+                <list>
+                    <value>${mock.dao.user.0}</value>
+                    <value>${mock.dao.user.1:#{null}}</value>
+                </list>
+            </constructor-arg>
+        </bean>
+    </beans>
+
+    <!-- test2 profile is second set of test servers -->
+    <beans profile="test2">
+        <security:http>
+            <security:intercept-url pattern="/api/product*/**"
+                                    access="hasAnyRole('PRODUCT','ADMIN')"/>
+            <security:intercept-url pattern="/api/account*/**"
+                                    access="hasAnyRole('ACCOUNT','ADMIN')"/>
+            <security:intercept-url pattern="/api/order*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/invoice*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/payment*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/nonprod*/**"
+                                    access="hasAnyRole('PRODUCT','ADMIN')"/> <!-- Enable non-production only!! -->
+            <security:intercept-url pattern="/api/**" access="hasRole('ADMIN')"/>
+            <security:http-basic/>
+            <security:csrf disabled="true"/>
+        </security:http>
+
+        <bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender"/>
+        <bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.DigimarcClient">
+            <constructor-arg index="0" value="${digimarc.service.url}"/>
+            <constructor-arg index="1" value="${digimarc.service.email}"/>
+            <constructor-arg index="2" value="${digimarc.service.password}"/>
+            <constructor-arg index="3" ref="httpTransport"/>
+        </bean>
+    </beans>
+
+    <!-- gtinregistry profile is for Mike Wehrs -->
+    <beans profile="gtinregistry">
+        <security:http create-session="stateless" use-expressions="true">
+            <!-- security:anonymous enabled="true" -->
+            <security:intercept-url pattern="/api/search/**" access="permitAll"/>
+            <!-- security:intercept-url pattern="/api/search/**" access="isAuthenticated() -->
+            <!-- security:intercept-url pattern="/api/search/**" access="isAnonymous() -->
+
+            <security:intercept-url pattern="/api/product*/**"
+                                    access="hasAnyRole('USER','PRODUCT','ADMIN')"/>
+            <security:intercept-url pattern="/api/account*/**"
+                                    access="hasAnyRole('USER','ACCOUNT','ADMIN')"/>
+            <security:intercept-url pattern="/api/order*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/invoice*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/payment*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/nonprod*/**"
+                                    access="hasAnyRole('USER','BILLING','ADMIN')"/> <!-- Enable non-production only!! -->
+
+            <security:intercept-url pattern="/api/import*/**" access="hasAnyRole('USER','ADMIN')"/>
+            <security:intercept-url pattern="/api/**" access="hasRole('ADMIN')"/>
+            <security:http-basic/>
+            <security:csrf disabled="true"/>
+        </security:http>
+
+        <!-- Hack to enable the demo features -->
+        <bean id="demoController" class="org.gs1us.sgg.webapp.DemoController">
+            <property name="enabled" value="true"/>
+        </bean>
+
+        <bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender"/>
+        <bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.MockDigimarcClient"/>
+        <bean id="mockUserDao" class="org.gs1us.sgg.temp.MockUserDao">
+            <constructor-arg index="0">
+                <list>
+                    <value>${mock.dao.user.0}</value>
+                    <value>${mock.dao.user.1:#{null}}</value>
+                </list>
+            </constructor-arg>
+        </bean>
+    </beans>
+
+    <!-- Dev profile is on KT's development machine -->
+    <beans profile="dev">
+        <security:http create-session="stateless" use-expressions="true">
+            <!-- security:anonymous enabled="true" -->
+            <security:intercept-url pattern="/api/search/**" access="permitAll"/>
+            <security:intercept-url pattern="/api/product*/**"
+                                    access="hasAnyRole('USER','PRODUCT','ADMIN')"/>
+            <security:intercept-url pattern="/api/account*/**"
+                                    access="hasAnyRole('USER','ACCOUNT','ADMIN')"/>
+            <security:intercept-url pattern="/api/order*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/invoice*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/payment*/**"
+                                    access="hasAnyRole('BILLING','ADMIN')"/>
+            <security:intercept-url pattern="/api/nonprod*/**"
+                                    access="hasAnyRole('USER','BILLING','ADMIN')"/> <!-- Enable non-production only!! -->
+            <security:intercept-url pattern="/api/import*/**" access="hasAnyRole('USER','ADMIN')"/>
+            <security:intercept-url pattern="/api/**" access="hasRole('ADMIN')"/>
+            <security:http-basic/>
+            <security:csrf disabled="true"/>
+        </security:http>
+
+        <!-- Hack to enable the demo features -->
+
+        <bean id="demoController" class="org.gs1us.sgg.webapp.DemoController">
+            <property name="enabled" value="true"/>
+        </bean>
+        <bean id="mailSender" class="org.gs1us.sgg.mail.MockMailSender"/>
+        <bean id="digimarcService" class="org.gs1us.sgg.app.dwcode.MockDigimarcClient"/>
+        <bean id="mockUserDao" class="org.gs1us.sgg.temp.MockUserDao">
+            <constructor-arg index="0">
+                <list>
+                    <value>${mock.dao.user.0}</value>
+                    <value>${mock.dao.user.1}</value>
+                </list>
+            </constructor-arg>
+        </bean>
+    </beans>
+</beans>
