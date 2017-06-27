@@ -40,7 +40,7 @@ this:
 
 For more on the `install.sh` command use
 ```bash
-    $./install.sh
+    $./install.sh -h
 ```
 
 ## <a name="helpful-commands"></a>Helpful commands
