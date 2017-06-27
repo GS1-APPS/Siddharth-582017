@@ -7,6 +7,7 @@
 1. [Too Many Properties Files](#too-many) 
 1. [Build Properties](#build-properties)
 1. [Database Migration](#database-migration)
+1. [Helpful Tomcat Commands](#tomcat)
  
 ## tl;dr
 
@@ -181,3 +182,40 @@ there are no changes, nothing will hapen.
 #### database-create
 
 Use this if you want to destroy your database and start fresh.
+
+## <a name="tomcat"></a>Helpful Tomcat Commands
+To better manage tomcat and to make sure nothing is cached as you deploy and test your 
+application, I use the following sequence of steps to test my application in Tomcat:
+```bash
+    
+    # tomcat-root => /usr/local/apache-tomcat-8.0.44
+    
+    $ cd $project-root 
+
+    # stop tomcat and clear all logs 
+    $ $tomcat-root/bin/catalina.sh stop;rm -fr $tomcat-root/logs/*
+    
+    # install.sh will not only build your war files, it will also remove all appropriate war
+    # files from $tomcat-root/webapps (we use option -c below to only build the war files, this 
+    # assumes you've built everything at least once using the -a option instead)
+    $ ./install.sh -s $(pwd) -t $tomcat-root -c -b -vv
+    
+    # start tomcat in jpda mode, that's remote debugging mode, by default tomcat listens on port 
+    # 8000 for jpda debugging.
+    $ $tomcat-root/bin/catalina.sh jpda start;tail -f $tomcat-root/logs/catalina.out
+```
+
+If you followed the steps above, you should see all tomcat logs being displayed in your terminal.
+ If you want to see Postgres logs, do the following:
+```bash
+    $ cd $project-root/Docker
+    $ docker-compose logs -f
+```
+
+Now you should be able to see exactly what's happening with your applications. To tweak the 
+logging level, update the `logging.properties` file in either the `gs1-pds` or `gs1-portal` 
+projects. If you change the file, repeat the steps in this section:
+
+1. stop tomcat
+1. rebuild sources
+1. start tomcat
