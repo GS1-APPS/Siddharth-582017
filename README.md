@@ -13,34 +13,35 @@
 Install the following
 * [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * [Maven](https://maven.apache.org/download.cgi)
-* [Docker CD](https://docs.docker.com/engine/installation/)
+* [Docker CE](https://docs.docker.com/engine/installation/)
 * [Tomcat 8](https://tomcat.apache.org/download-80.cgi)
-* [Postgres](https://www.postgresql.org/download/)
-    * Create two databases in Postgres
-        * `gs1ussgl`- DB for the UI (gs1-portal)
-        * `sgg`      - DB for the backend (gs1-pds)
-    * Create two files in your home directory
-        * `~/gs1-portal.properties`
-            * `jdbc.url=jdbc:postgres://localhost/gs1ussgl`
-            * `jdbc.username=postgres`
-            * `jdbc.password=password`
-            * `liquibase.contexts=dev`
-        * `~/gs1-pds.properties`
-            * `jdbc.url=jdbc:postgres://localhost/sgg`
-            * `jdbc.username=postgres`
-            * `jdbc.password=password`
-            * `liquibase.contexts=dev`
+
 
 Clone the github repo
-
+```bash
     $ cd $root
     $ clone git@github.com:GS1-APPS/Siddharth-582017.git
     $ cd Siddharth-582017
+```
     
 <a name="one_command"></a>update databases and deploy everything with one command
+```bash
+    $ cd $root/Siddharth-582017
+    $ docker-compose up -d
+    $ ./install.sh  -s $(pwd) -t $tomcat_path -e b -a -vv
+```
 
-    $ cd $root
-    $ ./install.sh  -s $source_root -t $tomcat_path -e b -a -v
+Once your application is running, you can rebuild all modules and re-deploy them to Tomcat like 
+this:
+```bash
+    $ cd $root/Siddharth-582017
+    $ ./install.sh  -s $(pwd) -t $tomcat_path -e b -a -vv
+```
+
+For more on the `install.sh` command use
+```bash
+    $./install.sh
+```
 
 ## <a name="helpful-commands"></a>Helpful commands
 
