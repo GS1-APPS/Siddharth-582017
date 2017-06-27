@@ -197,8 +197,8 @@ application, I use the following sequence of steps to test my application in Tom
     
     # install.sh will not only build your war files, it will also remove all appropriate war
     # files from $tomcat-root/webapps (we use option -c below to only build the war files, this 
-    # assumes you've built everything at least once using the -a option instead)
-    $ ./install.sh -s $(pwd) -t $tomcat-root -c -b -vv
+    # assumes you've built everything at least once using the -a option)
+        $ ./install.sh -s $(pwd) -t $tomcat-root -c -b -vv
     
     # start tomcat in jpda mode, that's remote debugging mode, by default tomcat listens on port 
     # 8000 for jpda debugging.
