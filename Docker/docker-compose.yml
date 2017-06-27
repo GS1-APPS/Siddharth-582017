@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+  postgres:
+    # https://hub.docker.com/_/postgres/
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/postgres-data:/var/lib/postgresql/data
+      # https://stackoverflow.com/questions/26598738/how-to-create-user-database-in-script-for-docker-postgres
+      - ./postgres/postgres-init:/docker-entrypoint-initdb.d/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    restart: always
+
+#  tomcat:
+#    # https://hub.docker.com/r/cloudesire/tomcat/
+#    image: cloudesire/tomcat:8-jre8
+#    ports:
+#      - 8200:8080
+#    environment:
+#      - TOMCAT_PASS=password
+#      - JAVA_OPTS="-Dspring.profiles.active=dev -Xmx8192m -XX:MaxPermSize=256m"
+#    volumes:
+##      - ./tomcat-base/webapps:/tomcat/webapps
+##      - ./tomcat-base/logs:/tomcat/logs
+#    restart: always
+
+

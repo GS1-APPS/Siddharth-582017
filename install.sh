@@ -69,7 +69,16 @@ generic_build() {
     cd $dir
 
     [[ "$verbose" -gt 0 ]] && echo "mvn clean install"
-    mvn -B -q clean install
+
+    quiet=-q
+    if test "$verbose" -gt 1
+    then
+        quiet=
+        echo "    disabling maven quiet mode."
+        echo "    mvn -B $quiet clean install"
+    fi
+
+    mvn -B $quiet clean install
 }
 
 build_all() {
@@ -148,7 +157,7 @@ while getopts "hdvglbs:t:ace:" opt; do
    esac
 done
 
-if test "$verbose" -gt 1
+if test "$verbose" -gt 2
 then
     echo "turning on bash debugging"
     set -x

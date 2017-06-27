@@ -3,15 +3,17 @@
 ## Table of Contents
 
 1. [tl;dr](#tldr)
-2. [Helpful commands](#helpful-commands)
-3. [Build Properties](#build-properties)
-4. [Database Migration](#database-migration)
+1. [Helpful commands](#helpful-commands)
+1. [Too Many Properties Files](#too-many) 
+1. [Build Properties](#build-properties)
+1. [Database Migration](#database-migration)
  
 ## tl;dr
 
 Install the following
 * [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * [Maven](https://maven.apache.org/download.cgi)
+* [Docker CD](https://docs.docker.com/engine/installation/)
 * [Tomcat 8](https://tomcat.apache.org/download-80.cgi)
 * [Postgres](https://www.postgresql.org/download/)
     * Create two databases in Postgres
@@ -20,13 +22,13 @@ Install the following
     * Create two files in your home directory
         * `~/gs1-portal.properties`
             * `jdbc.url=jdbc:postgres://localhost/gs1ussgl`
-            * `jdbc.username=yyy`
-            * `jdbc.password=zzz`
+            * `jdbc.username=postgres`
+            * `jdbc.password=password`
             * `liquibase.contexts=dev`
         * `~/gs1-pds.properties`
             * `jdbc.url=jdbc:postgres://localhost/sgg`
-            * `jdbc.username=yyy`
-            * `jdbc.password=zzz`
+            * `jdbc.username=postgres`
+            * `jdbc.password=password`
             * `liquibase.contexts=dev`
 
 Clone the github repo
@@ -40,7 +42,7 @@ Clone the github repo
     $ cd $root
     $ ./install.sh  -s $source_root -t $tomcat_path -e b -a -v
 
-## Helpful commands
+## <a name="helpful-commands"></a>Helpful commands
 
 create DB from scratch, will drop existing DB and recreate all tables and populate data
 
@@ -64,7 +66,23 @@ build and redeploy both apps to the same tomcat instance
 
 or just [use one command](#one_command) to build and deploy everything 
 
-## Build Properties
+## <a name="too-many"></a>Too Many Properties Files
+There are two sets of properties files used in the GS1 projects. One set of files is used for 
+`Liquibase` and lives outside of this project (you specify the file used by `Liquibase` as a 
+command line argument).
+
+The other set of properties files are used by Spring. These properties files are contained in the
+ source code and can be overridden on the server the WAR is deployed by placing a `.properties` 
+ file in the appropriate directory:
+   ```bash
+   /opt/gs1/gs1-pds/conf/application.properties
+   /opt/gs1/gs1-portal/conf/application.properties
+   ```
+As you can see, each application has it's own path to override it's own Spring configuration 
+values. See each projects `applicationContext.xml` file and look for `${xxxx}` where `xxx` is the
+ property being defined in one of the above files.
+
+## <a name="build-properties"></a>Build Properties
 
 To assist in making your Maven `pom.xml` a little more flexible, we've added the 
 `properties-maven-plugin` to enable Maven to read a properties file and inject those properties 
@@ -101,7 +119,7 @@ The `liquibase.changelog` is the path to your projects `dbchangelog.xml` file. `
 optional, the default value is `org.postgresql.Driver`.
 
 
-## Database Migration
+## <a name="database-migration"></a>Database Migration
 
 All projects inherit from the `gs1-parent-pom` file which defines liquibase:
 
