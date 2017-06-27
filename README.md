@@ -233,14 +233,17 @@ Make sure you follow the [tl;dr](#tldr) section above to install all the tools y
  1. Choose File -> Import...
  1. Select the `Maven` import wizard
  1. and choose "Existing Maven Projects"
- ![Eclipse Import Wizard Screen Shot](/images/maven-wizard.png?raw=true "Eclipse Import Wizard")
+ ![Eclipse Import Wizard Screen Shot](/images/maven-wizard.png?raw=true =460x480 "Eclipse Import 
+ Wizard")
  1. Click `Next >`
  1. Click `Browse...` and navigate to either `gs1-portal` or `gs1-pds`
- ![Eclipse Select Maven projects Screen Shot](/images/import-project.png?raw=true "Eclipse Select 
+ ![Eclipse Select Maven projects Screen Shot](/images/import-project.png?raw=true =517x480 "Eclipse 
+ Select 
  Maven projects")
  1. To edit classes or resources use `Open Type...` or `Open Resource...`. You want to navigate 
  to classes using the `Java Resources` section in the `Project Explorer`
- ![Eclipse Project Explorer Screen Shot](/images/project-explorer.png?raw=true "Eclipse Project 
+ ![Eclipse Project Explorer Screen Shot](/images/project-explorer.png?raw=true =640x465 "Eclipse 
+ Project 
  Explorer")
  
  Note: you can ignore the `build`, `target` and `src` directories. While this is where the code 
